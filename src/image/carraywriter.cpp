@@ -85,7 +85,7 @@ bool CArrayImageWriter::Export(QFile& file) {
     return true;
 }
 
-QImage* CArrayImageWriter::reload(QFile& file) {
+QImage* CArrayImageWriter::reload([[maybe_unused]] QFile& file) {
     QImage* img = 0;
 
     return img;

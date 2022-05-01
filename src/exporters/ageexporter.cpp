@@ -32,7 +32,7 @@ bool AGEExporter::sortSymbols(const Symbol& a, const Symbol& b)
 bool AGEExporter::Export(QByteArray& out)
 {
     QVector<Symbol> list = symbols();
-    qSort(list.begin(), list.end(), sortSymbols);
+    std::sort(list.begin(), list.end(), sortSymbols);
 
     unsigned charsCount = list.size();
     unsigned maxHeight = 0;

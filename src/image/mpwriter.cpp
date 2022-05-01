@@ -82,7 +82,7 @@ bool MPImageWriter::Export(QFile& file)
     return true;
 }
 
-QImage* MPImageWriter::reload(QFile& file) {
+QImage* MPImageWriter::reload([[maybe_unused]] QFile& file) {
     QImage* img = nullptr;
 
     return img;

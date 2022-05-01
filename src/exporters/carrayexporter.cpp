@@ -178,9 +178,11 @@ bool CArrayExporter::Export(QByteArray &out)
     }
 
     res += "\t};\n";
-//    entry += QString("\tconst uint16_t %1_KERNNUM = sizeof(fk_%1)/sizeof(fk_%1[0]);\n") \
-             .arg(filename.toUpper()) \
+/*
+    entry += QString("\tconst uint16_t %1_KERNNUM = sizeof(fk_%1)/sizeof(fk_%1[0]);\n")
+             .arg(filename.toUpper())
              .arg(filename);
+*/
     res += "#endif\n\n";
 
     /*

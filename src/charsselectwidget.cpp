@@ -94,7 +94,7 @@ void CharsSelectWidget::paintEvent(QPaintEvent *event) {
                  painter.setClipRect(column*cell_size, row*cell_size, cell_size, cell_size);
 
                  QString qs = QString::fromUcs4(&key, 1);
-                 painter.drawText(column*cell_size + (cell_size / 2) - fontMetrics.width(qs)/2,
+                 painter.drawText(column*cell_size + (cell_size / 2) - fontMetrics.horizontalAdvance(qs) / 2,
                                   row*cell_size + 4 + fontMetrics.ascent(),
                                   qs);
              }

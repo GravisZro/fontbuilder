@@ -78,9 +78,9 @@ void FontOptionsFrame::setConfig(FontConfig *config) {
 }
 
 
-void FontOptionsFrame::on_checkBoxAutohinting_toggled(bool checked)
+void FontOptionsFrame::on_checkBoxAutohinting_toggled([[maybe_unused]] bool checked)
 {
-
+  Q_ASSERT(false);
 }
 
 void FontOptionsFrame::on_checkBoxMissingGlypths_toggled(bool checked)
@@ -139,10 +139,12 @@ void FontOptionsFrame::on_comboBoxDPI_currentIndexChanged(QString val)
 
 void FontOptionsFrame::on_comboBox_Hinting_currentIndexChanged(int index)
 {
-    if (index>=0) if (m_config) m_config->setHinting(static_cast<FontConfig::HintingMethod>(index));
+    if (index>=0 && m_config)
+      m_config->setHinting(static_cast<FontConfig::HintingMethod>(index));
 }
 
 void FontOptionsFrame::on_comboBoxAA_currentIndexChanged(int index)
 {
-    if (index>0) if (m_config) m_config->setAntiAliasing(static_cast<FontConfig::AAMethod>(index));
+    if (index > 0 && m_config)
+      m_config->setAntiAliasing(static_cast<FontConfig::AAMethod>(index));
 }

@@ -46,7 +46,6 @@ bool JSONFontExporter::Export(QByteArray &out)
     }
 
     QJsonArray jsonKernels;
-    typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
     foreach(const Symbol& c , symbols())
     {
         if (c.kerning.empty())

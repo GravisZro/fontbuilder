@@ -79,7 +79,6 @@ bool MPExporter::Export(QByteArray &out)
     QByteArray imgArray;
 
     uint32_t offset = 0;
-    uint32_t fsize = 0;
     //this loop goes over all characters and writes to stream information about glyph's dimension and offset to pixmap data
     foreach(const Symbol& c , symbols()) {
         FontGlyph glyph;
@@ -100,7 +99,6 @@ bool MPExporter::Export(QByteArray &out)
         glyph.xadvance = static_cast<uint16_t>(c.advance);
         offset += glyph.width * glyph.height;
 
-        fsize+= glyph.width *  glyph.height;
         glyph.save( out );
         //char* glyph_ptr = reinterpret_cast<char*>(&glyph);
         //out.append(QByteArray::fromRawData( glyph_ptr, sizeof(gui_font_glyph_t)));

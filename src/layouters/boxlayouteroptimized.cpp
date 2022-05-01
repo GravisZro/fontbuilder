@@ -29,7 +29,7 @@ bool BoxLayouterOptimized::SortCharsByHeight(const LayoutChar &a, const LayoutCh
 
 void BoxLayouterOptimized::OptimizeLayout(QVector<LayoutChar> &chars)
 {
-    qSort(chars.begin(), chars.end(), SortCharsByHeight);
+  std::sort(chars.begin(), chars.end(), SortCharsByHeight);
 }
 
 
