@@ -61,11 +61,11 @@ bool DivoExporter::Export(QByteArray& out) {
         ::snprintf(buf,63,"%d %d",c.offsetX,offset-c.offsetY);
         ce.setAttribute("offset",buf);
         ce.setAttribute("width",c.advance);
-        typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
-        for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
-            QDomElement ke = doc.createElement("Kerning");
-            ke.setAttribute("id",QString().append(k.key()));
-            ke.setAttribute("advance",k.value());
+
+        for (const auto& k : c.kerning) {
+            QDomElement ke = doc.createElement("kerning");
+            ke.setAttribute("id",QString().append(k.first));
+            ke.setAttribute("advance",k.second);
             ce.appendChild(ke);
         }
         root.appendChild(ce);

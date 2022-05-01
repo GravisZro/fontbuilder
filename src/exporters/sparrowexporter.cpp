@@ -45,14 +45,14 @@ bool SparrowExporter::Export(QByteArray& out) {
         ch.setAttribute("chnl", "0");
         ch.setAttribute("letter", c.id==32 ? "space" : QString().append(c.id));
         chars.appendChild(ch);
-        typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
-        for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
-            QDomElement ker = doc.createElement("kerning");
-            ker.setAttribute("first", QString::number(c.id));
-            ker.setAttribute("second", QString::number(k.key()));
-            ker.setAttribute("amount", k.value());
-            kernings.appendChild(ker);
-            kernNumber ++;
+
+        for (const auto& k : c.kerning) {
+            QDomElement ke = doc.createElement("kerning");
+            ke.setAttribute("first", QString::number(c.id));
+            ke.setAttribute("second",QString().append(k.first));
+            ke.setAttribute("amount",k.second);
+            kernings.appendChild(ke);
+            kernNumber++;
         }
     }
     kernings.setAttribute("count", QString::number(kernNumber));

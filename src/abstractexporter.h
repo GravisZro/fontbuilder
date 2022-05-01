@@ -82,7 +82,7 @@ protected:
         int32_t offsetX;
         int32_t offsetY;
         int32_t advance;
-        QMap<uint32_t,int32_t> kerning;
+        std::map<uint32_t,int32_t> kerning;
     };
 
     const FontConfig* fontConfig() const { return m_font_config;}

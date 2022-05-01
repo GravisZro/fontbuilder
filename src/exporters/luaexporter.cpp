@@ -38,82 +38,89 @@ LuaExporter::LuaExporter(bool write_function,QObject *parent) :
 {
     setExtension("lua");
 }
-static QString charCode(uint32_t code) {
-    if (code=='\"') return QString().append('\'').append(code).append('\'');
+
+static QString charCode(uint32_t code)
+{
+    if (code=='\"')
+      return QString("'\"'");
     if (code=='\\') return QString("\"\\\\\"");
-    return QString().append('\"').append(code).append('\"');
+    return QString("\"%1\"").arg(QChar(code));
 }
 
 bool LuaExporter::Export(QByteArray& out) {
-    QString res;
-    if (m_write_function)
-        res+="return {\n";
-    const QString p(m_write_function ? "\t":"");
-    res+=p+QString("file=\"")+texFilename()+QString(m_write_function ? "\",\n" : "\"\n");
-    res+=p+QString("height=")+QString().number(metrics().height)+QString(m_write_function?",\n":"\n");
-    res+=p+QString("description={\n");
-    res+=p+QString("\tfamily=\"")+fontConfig()->family()+QString("\",\n");
-    res+=p+QString("\tstyle=\"")+fontConfig()->style()+QString("\",\n");
-    res+=p+QString("\tsize=")+QString().number(fontConfig()->size())+QString("\n");
-    res+=p+QString(m_write_function?"},\n":"}\n");
+    QString res ="";
 
-    res+=p+QString("metrics={\n");
-    res+=p+QString("\tascender=")+QString().number(metrics().ascender)+QString(",\n");
-    res+=p+QString("\tdescender=")+QString().number(metrics().descender)+QString(",\n");
-    res+=p+QString("\theight=")+QString().number(metrics().height)+QString("\n");
-    res+=p+QString(m_write_function?"},\n":"}\n");
+    res += "%3";
+    res += QString("%%1file=\"%1\"%%2\n"
+                   "%%1height=%2%%2\n"
+                   "%%1description = {\n"
+                   "%%1\tfamily=\"%3\",\n"
+                   "%%1\tstyle=\"%4\",\n"
+                   "%%1\tsize=%5\n"
+                   "%%1}%%2\n"
+                   "%%1metrics = {\n"
+                   "%%1\tascender=%6,\n"
+                   "%%1\tdescender=%7,\n"
+                   "%%1\theight=%2\n"
+                   "%%1}%%2\n"
+                   "%%1texture = {\n"
+                   "%%1\tfile=\"%1\",\n"
+                   "%%1\twidth=%8,\n"
+                   "%%1\theight=%9\n"
+                   "%%1}%%2\n"
+                   "%%1chars = {\n")
+           .arg(texFilename())
+           .arg(metrics().height)
+           .arg(fontConfig()->family())
+           .arg(fontConfig()->style())
+           .arg(fontConfig()->size())
+           .arg(metrics().ascender)
+           .arg(metrics().descender)
+           .arg(texWidth())
+           .arg(texHeight());
 
-    res+=p+QString("texture={\n");
-    res+=p+QString("\tfile=\"")+texFilename()+QString("\",\n");
-    res+=p+QString("\twidth=")+QString().number(texWidth())+QString(",\n");
-    res+=p+QString("\theight=")+QString().number(texHeight())+QString("\n");
-    res+=p+QString(m_write_function?"},\n":"}\n");
 
-    res+=p+QString("chars={\n");
     foreach (const Symbol& c , symbols()) {
-        QString charDef="{char=";
-        charDef+=charCode(c.id);
-        charDef+=QString(",");
-        charDef+=QString("width=")+QString().number(c.advance)+QString(",");
-        charDef+=QString("x=")+QString().number(c.placeX)+QString(",");
-        charDef+=QString("y=")+QString().number(c.placeY)+QString(",");
-        charDef+=QString("w=")+QString().number(c.placeW)+QString(",");
-        charDef+=QString("h=")+QString().number(c.placeH)+QString(",");
-
-        charDef+=QString("ox=")+QString().number(c.offsetX)+QString(",");
-        charDef+=QString("oy=")+QString().number(c.offsetY)+QString("}");
-
-        res+=p+QString("\t")+charDef+QString(",\n");
+      res += QString("%%1\t{ char=%1, width=%2, x=%3, y=%4, w=%5, h=%6, ox=%7, oy=%8 },\n")
+             .arg(charCode(c.id))
+             .arg(c.advance)
+             .arg(c.placeX)
+             .arg(c.placeY)
+             .arg(c.placeW)
+             .arg(c.placeH)
+             .arg(c.offsetX)
+             .arg(c.offsetY);
     }
-    res+=p+QString(m_write_function?"},\n":"}\n");
-    QString kernings;
+    res += "}%2\n";
+
+    res += "%1kernings = {\n";
     foreach (const Symbol& c , symbols()) {
-        QString charDef="{from=";
-        charDef+=charCode(c.id);
-        charDef+=QString(",to=");
-        typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
-        for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
-            QString def = charDef;
-            def+=charCode(k.key());
-            def+=QString(",offset=")+QString().number(k.value())+QString("}");
-            kernings+=p+QString("\t")+def+QString(",\n");
-        }
+      for ( const auto& k : c.kerning)
+        res += QString("%%1\t{ from=%1, to=%2, offset=%3,\n")
+               .arg(charCode(c.id))
+               .arg(charCode(k.first))
+               .arg(k.second);
     }
-    if (kernings.length()>2) {
-        res+=p+QString("kernings={\n");
-        res+=kernings;
-        res+=p+QString("}\n");
-    }
+    res += "}%2\n";
+
+    res += "%4\n";
+
     if (m_write_function)
-        res+=QString("}\n");
-    out = res.toUtf8();
+      out = res
+            .arg("\t")
+            .arg(",")
+            .arg("return {\n")
+            .arg("}\n")
+            .toUtf8();
+    else
+      out = res.arg("").arg("").arg("").arg("").toUtf8();
+
     return true;
 }
 
-
 AbstractExporter* LuaTableExporterFactoryFunc (QObject* parent) {
-    return new LuaExporter(false,parent);
+    return new LuaExporter(false, parent);
 }
 AbstractExporter* LuaFunctionExporterFactoryFunc (QObject* parent) {
-    return new LuaExporter(true,parent);
+    return new LuaExporter(true, parent);
 }

@@ -64,8 +64,8 @@ int32_t FontTestWidget::lineWidth(const uint32_t * chars) const {
             const RenderedChar& rendered = m_renderer_data->chars[c];
             x+=rendered.advance + m_font_config->charSpacing();
             if (useKerning() && (*chars!=0)) {
-                if (rendered.kerning.contains(*chars)) {
-                    x+=rendered.kerning[*chars];
+                if (auto r = rendered.kerning.find(*chars); r != rendered.kerning.end()) {
+                    x += r->second;
                 }
             }
         }
@@ -122,9 +122,9 @@ void FontTestWidget::paintEvent ( QPaintEvent * event ) {
             }
             x+=rendered.advance + m_font_config->charSpacing();
             if (useKerning() && (*chars!=0)) {
-                if (rendered.kerning.contains(*chars)) {
-                    x+=rendered.kerning[*chars];
-                }
+              if (auto r = rendered.kerning.find(*chars); r != rendered.kerning.end()) {
+                  x += r->second;
+              }
             }
         }
 
@@ -174,9 +174,9 @@ void FontTestWidget::calcBBox() {
             x+=rendered.advance + m_font_config->charSpacing();
             first = false;
             if (useKerning() && (*chars!=0)) {
-                if (rendered.kerning.contains(*chars)) {
-                    x+=rendered.kerning[*chars];
-                }
+              if (auto r = rendered.kerning.find(*chars); r != rendered.kerning.end()) {
+                  x += r->second;
+              }
             }
             if (x>max_x)
                 max_x = x;

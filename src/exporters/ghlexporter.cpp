@@ -76,11 +76,11 @@ bool GHLExporter::Export(QByteArray& out) {
         ::snprintf(buf,63,"%d %d",c.offsetX,c.offsetY);
         ce.setAttribute("offset",buf);
         ce.setAttribute("advance",c.advance);
-        typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
-        for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
+
+        for (const auto& k : c.kerning) {
             QDomElement ke = doc.createElement("kerning");
-            ke.setAttribute("id",QString().append(k.key()));
-            ke.setAttribute("advance",k.value());
+            ke.setAttribute("id",QString().append(k.first));
+            ke.setAttribute("advance",k.second);
             ce.appendChild(ke);
         }
 

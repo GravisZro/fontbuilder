@@ -10,46 +10,41 @@ SimpleExporter::SimpleExporter(QObject *parent) :
 bool SimpleExporter::Export(QByteArray &out)
 {
     const FontConfig* cfg = fontConfig();
-    int32_t height = metrics().height;
+    QString res;
 
-    // Font family
-    out.append(cfg->family().toUtf8()).append('\n');
-    // Font size
-    out.append(QString::number(cfg->size()).toUtf8()).append(' ');
-    // Line height
-    out.append(QString::number(height).toUtf8()).append('\n');
-    // Texture filename
-    out.append(texFilename().toUtf8()).append('\n');
-    // Number of symbols
-    out.append(QString::number(symbols().size()).toUtf8()).append('\n');
+    res += QString("%1\n%2 %3\n%4\n%5\n")
+           .arg(cfg->family())
+           .arg(cfg->size())
+           .arg(metrics().height)
+           .arg(texFilename())
+           .arg(symbols().count());
+
     foreach(const Symbol& c , symbols()) {
-        // id, x, y, width, height, xoffset, yoffset, xadvance
-        out.append(QString::number(c.id).toUtf8()).append(' ');
-        out.append(QString::number(c.placeX).toUtf8()).append(' ');
-        out.append(QString::number(c.placeY).toUtf8()).append(' ');
-        out.append(QString::number(c.placeW).toUtf8()).append(' ');
-        out.append(QString::number(c.placeH).toUtf8()).append(' ');
-        out.append(QString::number(c.offsetX).toUtf8()).append(' ');
-        out.append(QString::number(height - c.offsetY).toUtf8()).append(' ');
-        out.append(QString::number(c.advance).toUtf8()).append(' ');
-        out.append('\n');
+      res += QString("%1 %2 %3 %4 %5 %6 %7 %8\n")
+             .arg(c.id)
+             .arg(c.placeX)
+             .arg(c.placeY)
+             .arg(c.placeW)
+             .arg(c.placeH)
+             .arg(c.offsetX)
+             .arg(metrics().height - c.offsetY)
+             .arg(c.advance);   out.append('\n');
     }
-    QByteArray kernings;
+
+    res += "%1\n";
     int32_t kerningsCount = 0;
-    typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
-    foreach(const Symbol& c , symbols()) {
-        for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
-            // first, second, amount
-            kernings.append(QString::number(c.id).toUtf8()).append(' ');
-            kernings.append(QString::number(k.key()).toUtf8()).append(' ');
-            kernings.append(QString::number(k.value()).toUtf8()).append(' ');
-            kernings.append('\n');
-            ++kerningsCount;
-        }
+    foreach (const Symbol& c , symbols()) {
+      for ( const auto& k : c.kerning)
+      {
+        res += QString("%1 %2 %3 \n")
+               .arg(c.id)
+               .arg(k.first)
+               .arg(k.second);
+        ++kerningsCount;
+      }
     }
-    // Number of kernings
-    out.append(QString::number(kerningsCount).toUtf8()).append('\n');
-    out.append(kernings);
+
+    out = res.arg(kerningsCount).toUtf8();
 
     return true;
 }

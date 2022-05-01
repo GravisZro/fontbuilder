@@ -43,7 +43,7 @@ struct RenderedChar {
     int32_t offsetY;
     int32_t advance;
     QImage img;
-    QMap<uint32_t,int32_t> kerning;
+    std::map<uint32_t,int32_t> kerning;
     bool    locked;
     RenderedChar() : symbol(0),locked(false) {}
     RenderedChar(uint32_t symbol,int32_t x,int32_t y,int32_t a,const QImage& img) :

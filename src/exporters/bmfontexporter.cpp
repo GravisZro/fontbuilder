@@ -14,52 +14,51 @@ bool BMFontExporter::Export(QByteArray &out)
 
     const FontConfig* cfg = fontConfig();
 
-    out.append( QString("info")
-        + QString(" face=\"%1\"").arg(cfg->family())
-        + QString(" size=%1").arg(cfg->size())
-        + QString(" bold=%1").arg(cfg->bold() ? 1 : 0)
-        + QString(" italic=%1").arg(cfg->italic() ? 1 : 0)
-        + QString(" smooth=%1").arg(cfg->antialiased() ? 1 : 0)
-        + QString(" spacing=%1,%2").arg(cfg->charSpacing()).arg(cfg->lineSpacing())
-        .toUtf8()).append('\n');
+    QString res;
 
-    out.append( QString("common")
-        + QString(" lineHeight=%1").arg(metrics().height)
-        + QString(" base=%1").arg(metrics().ascender)
-        + QString(" scaleW=%1").arg(texWidth())
-        + QString(" scaleH=%1").arg(texHeight())
-        + QString(" pages=1")
-        .toUtf8()).append('\n');
+    res += QString("info face=\"%1\" size=%2 bold=%3 italic=%4 smooth=%5 spacing=%6,%7\n")
+             .arg(cfg->family())
+             .arg(cfg->size())
+             .arg(cfg->bold() ? 1 : 0)
+             .arg(cfg->italic() ? 1 : 0)
+             .arg(cfg->antialiased() ? 1 : 0)
+             .arg(cfg->charSpacing())
+             .arg(cfg->lineSpacing());
 
-    out.append( QString("page")
-        + QString(" id=%1").arg(0)
-        + QString(" file=\"%1\"").arg(texFilename())
-        .toUtf8()).append('\n');
+    res += QString("common lineHeight=%1 base=%2 scaleW=%3 scaleH=%4 pages=1\n")
+             .arg(metrics().height)
+             .arg(metrics().ascender)
+             .arg(texWidth())
+             .arg(texHeight());
+
+    res += QString("page id=%1 file=\"%1\"\n")
+             .arg(0)
+             .arg(texFilename());
+
 
     foreach(const Symbol& c , symbols()) {
-        out.append( QString("char")
-            + QString(" id=%1").arg(c.id)
-            + QString(" x=%1").arg(c.placeX)
-            + QString(" y=%1").arg(c.placeY)
-            + QString(" width=%1").arg(c.placeW)
-            + QString(" height=%1").arg(c.placeH)
-            + QString(" xoffset=%1").arg(c.offsetX)
-            + QString(" yoffset=%1").arg(metrics().ascender - c.offsetY)
-            + QString(" xadvance=%1").arg(c.advance)
-            + QString(" page=%1").arg(0)
-            .toUtf8()).append('\n');
+        res += QString("char id=%1 x=%2 y=%3 width=%4 height=%5 xoffset=%6 yoffset=%7 xadvance=%8 page=%9\n")
+                 .arg(c.id)
+                 .arg(c.placeX)
+                 .arg(c.placeY)
+                 .arg(c.placeW)
+                 .arg(c.placeH)
+                 .arg(c.offsetX)
+                 .arg(metrics().ascender - c.offsetY)
+                 .arg(c.advance)
+                 .arg(0);
     }
 
-    typedef QMap<uint,int>::ConstIterator Kerning;
     foreach(const Symbol& c , symbols()) {
-        for (Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
-            out.append( QString("kerning")
-                + QString(" first=%1").arg(c.id)
-                + QString(" second=%1").arg(k.key())
-                + QString(" amount=%1").arg(k.value())
-                .toUtf8()).append('\n');
-        }
+      for(auto& k : c.kerning) {
+        res += QString("kerning first=%1 second=%2 amount=%3")
+                 .arg(c.id)
+                 .arg(k.first)
+                 .arg(k.second);
+      }
     }
+
+    out = res.toUtf8();
 
     return true;
 }

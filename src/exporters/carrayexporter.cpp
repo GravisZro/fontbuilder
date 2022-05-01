@@ -21,10 +21,16 @@ bool CArrayExporter::Export(QByteArray &out)
         if (!cfg->bold() && !cfg->italic())
             tmp = QString("_regular");
 */
-    out.append( QString("#ifndef ") + QString("%1%2_%3_H\n").arg(cfg->family()).arg(filename).arg(cfg->size()).toUpper().toUtf8());
-    out.append( QString("#define ") + QString("%1%2_%3_H\n\n").arg(cfg->family()).arg(filename).arg(cfg->size()).toUpper().toUtf8());
+    QString res;
 
-    out.append( QString("#include \"pf_gui_font.h\"\n\n").toUtf8());
+    res += QString("#ifndef %1%2_%3_H\n"
+                     "#define %1%2_%3_H\n"
+                     "\n"
+                     "#include \"pf_gui_font.h\"\n"
+                     "\n")
+             .arg(cfg->family().toUpper())
+             .arg(filename.toUpper())
+             .arg(cfg->size());
 
 /*
  * struct font_info
@@ -38,21 +44,30 @@ bool CArrayExporter::Export(QByteArray &out)
  *      uint8_t lineSpacing;
  * }
  */
+    res += QString("#ifndef FI_%1\n"
+                     "#define FI_%1 \\\n"
+                     "\tstatic const struct font_info __attribute__((section(\".ExtFlash\"))) fi_%2 = { \\\n"
+                     "\t\t.face=\"%3\", \\\n"
+                     "\t\t.size=%4, \\\n"
+                     "\t\t.bold=%5, \\\n"
+                     "\t\t.italic=%6, \\\n"
+                     "\t\t.smooth=%7, \\\n"
+                     "\t\t.charSpacing=%8, \\\n"
+                     "\t\t.lineSpacing=%9 \\\n"
+                     "\t};\n"
+                     "#endif\n"
+                     "\n")
+             .arg(filename).toUpper()
+             .arg(filename).toLower()
+             .arg(cfg->family())
+             .arg(cfg->size())
+             .arg(cfg->bold() ? 1 : 0)
+             .arg(cfg->italic() ? 1 : 0)
+             .arg(cfg->antialiased() ? 1 : 0)
+             .arg(cfg->charSpacing())
+             .arg(cfg->lineSpacing());
 
-    out.append( QString("#ifndef ") + QString("FI_%1\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("#define ") + QString("FI_%1 \\\n").arg(filename).toUpper().toUtf8());
 
-    out.append( QString("\tstatic const struct font_info __attribute__((section(\".ExtFlash\"))) fi_%1 = { \\\n").arg(filename).toLower()
-        + QString("\t\t.face=\"%1\", \\\n").arg(cfg->family())
-        + QString("\t\t.size=%1, \\\n").arg(cfg->size())
-        + QString("\t\t.bold=%1, \\\n").arg(cfg->bold() ? 1 : 0)
-        + QString("\t\t.italic=%1, \\\n").arg(cfg->italic() ? 1 : 0)
-        + QString("\t\t.smooth=%1, \\\n").arg(cfg->antialiased() ? 1 : 0)
-        + QString("\t\t.charSpacing=%1, \\\n").arg(cfg->charSpacing())
-        + QString("\t\t.lineSpacing=%1 \\\n};").arg(cfg->lineSpacing())
-        .toUtf8()).append('\n');
-
-    out.append( QString("#endif\n\n").toUtf8());
 /*
  * struct font_common
  * {
@@ -63,17 +78,23 @@ bool CArrayExporter::Export(QByteArray &out)
  *      uint8_t pages;
  * }
  */
-    out.append( QString("#ifndef ") + QString("FC_%1\n").arg(filename).toUpper().toUtf8());
-        out.append( QString("#define ") + QString("FC_%1 \\\n").arg(filename).toUpper().toUtf8());
-
-    out.append( QString("\tstatic const struct font_common __attribute__((section(\".ExtFlash\"))) fc_%1 = { \\\n").arg(filename).toLower()
-        + QString("\t\t.lineHeight=%1, \\\n").arg(metrics().height)
-        + QString("\t\t.base=%1, \\\n").arg(metrics().ascender)
-        + QString("\t\t.scaleW=%1, \\\n").arg(texWidth())
-        + QString("\t\t.scaleH=%1, \\\n").arg(texHeight())
-        + QString("\t\t.pages=1 \\\n};")
-        .toUtf8()).append('\n');
-    out.append( QString("#endif\n\n").toUtf8());
+    res += QString("#ifndef FC_%1\n"
+                     "#define FC_%1 \\\n"
+                     "\tstatic const struct font_common __attribute__((section(\".ExtFlash\"))) fc_%2 = { \\\n"
+                     "\t\t.lineHeight=%3, \\\n"
+                     "\t\t.base=%4, \\\n"
+                     "\t\t.scaleW=%5, \\\n"
+                     "\t\t.scaleH=%6, \\\n"
+                     "\t\t.pages=%7 \\\n"
+                     "\t};\n"
+                     "#endif\n\n")
+             .arg(filename.toUpper())
+             .arg(filename.toUpper())
+             .arg(metrics().height)
+             .arg(metrics().ascender)
+             .arg(texWidth())
+             .arg(texHeight())
+             .arg(1);
 /*
  * struct font_page
  * {
@@ -81,15 +102,18 @@ bool CArrayExporter::Export(QByteArray &out)
  *      char file[];
  * }
  */
-    out.append( QString("#ifndef ") + QString("FP_%1\n").arg(filename).toUpper().toUtf8());
-        out.append( QString("#define ") + QString("FP_%1 \\\n").arg(filename).toUpper().toUtf8());
+    res += QString("#ifndef FP_%1\n"
+                     "#define FP_%1 \\\n"
+                     "\tstatic const struct font_page __attribute__((section(\".ExtFlash\"))) fp_%2 = { \\\n"
+                     "\t\t.id=%3, \\\n"
+                     "\t\t.file=\"%4\" \\\n"
+                     "\t};\n"
+                     "#endif\n\n")
+             .arg(filename.toUpper())
+             .arg(filename.toLower())
+             .arg(0)
+             .arg(texFilename());
 
-    out.append( QString("\tstatic const struct font_page __attribute__((section(\".ExtFlash\"))) fp_%1 = { \\\n").arg(filename).toLower()
-        + QString("\t\t.id=%1, \\\n").arg(0)
-        + QString("\t\t.file=\"%1\" \\\n};").arg(texFilename())
-        .toUtf8()).append('\n');
-
-    out.append( QString("#endif\n\n").toUtf8());
 /*
  * struct font_char
  * {
@@ -104,29 +128,30 @@ bool CArrayExporter::Export(QByteArray &out)
  *      uint8_t page;
  * }
  */
-    out.append( QString("#ifndef ") + QString("FCH_%1\n").arg(filename).toUpper().toUtf8());
-        out.append( QString("#define ") + QString("FCH_%1 \\\n").arg(filename).toUpper().toUtf8());
+    res += QString("#ifndef FCH_%1\n"
+                     "#define FCH_%1 \\\n"
+                     "\tstatic const struct font_char __attribute__((section(\".ExtFlash\"))) fch_%2[] = { \\\n")
+             .arg(filename.toUpper())
+             .arg(filename.toLower());
 
-    out.append( QString("\tstatic const struct font_char __attribute__((section(\".ExtFlash\"))) fch_%1[] = { \\\n").arg(filename).toLower().toUtf8());
     foreach(const Symbol& c , symbols()) {
-        out.append( QString("\t\t{ ")
-            + QString(".id=%1, ").arg(c.id)
-            + QString(".x=%1, ").arg(c.placeX)
-            + QString(".y=%1, ").arg(c.placeY)
-            + QString(".width=%1, ").arg(c.placeW)
-            + QString(".height=%1, ").arg(c.placeH)
-            + QString(".xoffset=%1, ").arg(c.offsetX)
-            + QString(".yoffset=%1, ").arg(metrics().ascender - c.offsetY)
-            + QString(".xadvance=%1, ").arg(c.advance)
-            + QString(".page=%1 }, /*%2*/ \\").arg(0).arg( QString(c.id) )
-            .toUtf8()).append('\n');
+        res += QString("\t\t{ .id=%1,\t.x=%2,\t.y=%3,\t.width=%4,\t.height=%5,\t.xoffset=%6,\t.yoffset=%7,\t.xadvance=%8,\t.page=%9 }, /* %2 */ \\\n")
+                 .arg(c.id)
+                 .arg(c.placeX)
+                 .arg(c.placeY)
+                 .arg(c.placeW)
+                 .arg(c.placeH)
+                 .arg(c.offsetX)
+                 .arg(metrics().ascender - c.offsetY)
+                 .arg(c.advance)
+                 .arg(0);
         charsnum++;
     }
-    out.append( QString("\t};\n").toUtf8());
+    res += "\t};\n";
 
     //out.append( QString("\tconst uint16_t ").toUtf8() + QString("%1_CHARSNUM").arg(filename).toUpper().toUtf8() + QString(" = sizeof(fch_%1)/sizeof(fch_%1[0]);\n").arg(filename).toUtf8());
 
-    out.append( QString("#endif\n\n").toUtf8());
+    res += "#endif\n\n";
 /*
  * struct font_kerning
  * {
@@ -135,24 +160,28 @@ bool CArrayExporter::Export(QByteArray &out)
  *      int16_t amount;
  * }
  */
-    out.append( QString("#ifndef ") + QString("FK_%1\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("#define ") + QString("FK_%1 \\\n").arg(filename).toUpper().toUtf8());
 
-    out.append( QString("\tstatic const struct font_kerning __attribute__((section(\".ExtFlash\"))) fk_%1[] = { \\\n").arg(filename).toUtf8());
-    typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
+    res += QString("#ifndef FK_%1\n"
+                     "#define FK_%1 \\\n"
+                     "\tstatic const struct font_kerning __attribute__((section(\".ExtFlash\"))) fk_%1[] = { \\\n")
+             .arg(filename.toUpper())
+             .arg(filename);
+
     foreach(const Symbol& c , symbols()) {
-        for (Kerning k = c.kerning.begin(); k != c.kerning.end(); k++) {
-            out.append( QString("\t\t{ ")
-                + QString(".first=%1, ").arg(c.id)
-                + QString(".second=%1, ").arg(k.key())
-                + QString(".amount=%1 }, \\").arg(k.value())
-                .toUtf8()).append('\n');
-            kernnum++;
-        }
+            for(auto& k : c.kerning) {
+              res += QString("\t\t{ .first = %1, .second = %2, .amount = %4 }, \\\n")
+                       .arg(c.id)
+                       .arg(k.first)
+                       .arg(k.second);
+              kernnum++;
+            }
     }
-    out.append( QString("\t};\n").toUtf8());
-    //out.append( QString("\tconst uint16_t ").toUtf8() + QString("%1_KERNNUM").arg(filename).toUpper().toUtf8() + QString(" = sizeof(fk_%1)/sizeof(fk_%1[0]);\n").arg(filename).toUtf8());
-    out.append( QString("#endif\n\n").toUtf8());
+
+    res += "\t};\n";
+//    entry += QString("\tconst uint16_t %1_KERNNUM = sizeof(fk_%1)/sizeof(fk_%1[0]);\n") \
+             .arg(filename.toUpper()) \
+             .arg(filename);
+    res += "#endif\n\n";
 
     /*
      * struct font
@@ -170,40 +199,41 @@ bool CArrayExporter::Export(QByteArray &out)
      * const struct font NAME;
      */
 
+    res += QString("#ifndef F_%1\n"
+                     "#define F_%1 \\\n"
+                     "const struct font __attribute__((section(\".ExtFlash\"))) f_%2 = { \\\n"
+                     "\t.fi=&fi_%2, \\\n"
+                     "\t.fc=&fc_%2, \\\n"
+                     "\t.fch=fch_%2, \\\n"
+                     "\t.fk=fk_%2, \\\n"
+                     "\t.ff=font_data_%3, \\\n"
+                     "\t.charsnum=%4, \\\n"
+                     "\t.kernnum=%5 \\\n"
+                     "};\n\n"
+                     "#endif\n\n")
+             .arg(filename.toUpper())
+             .arg(filename.toLower())
+             .arg(filename)
+             .arg(charsnum)
+             .arg(kernnum);
 
-    out.append( QString("#ifndef ") + QString("F_%1\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("#define ") + QString("F_%1 \\\n").arg(filename).toUpper().toUtf8());
+    res += QString("extern const struct font f_%1;\n"
+//                     "extern const uint16_t %2_CHARSNUM;\n\n"
+//                     "extern const uint16_t %2_KERNNUM;\n\n"
+                     "#ifndef %2\n"
+                     "#define %2 \\\n"
+                     "\tFI_%2 \\\n"
+                     "\tFP_%2 \\\n"
+                     "\tFCH_%2 \\\n"
+                     "\tFK_%2 \\\n"
+                     "\tF_%2\n"
+                     "#endif\n\n")
+             .arg(filename.toLower())
+             .arg(filename.toUpper());
 
-    out.append( QString("const struct font __attribute__((section(\".ExtFlash\"))) f_%1 = { \\\n").arg(filename).toLower().toUtf8());
-    out.append( QString("\t.fi=&fi_%1, \\\n").arg(filename).toLower()
-            + QString("\t.fc=&fc_%1, \\\n").arg(filename).toLower()
-            + QString("\t.fp=&fp_%1, \\\n").arg(filename).toLower()
-            + QString("\t.fch=fch_%1, \\\n").arg(filename).toLower()
-            + QString("\t.fk=fk_%1, \\\n").arg(filename).toLower()
-            + QString("\t.fd=font_data_%1, \\\n").arg(filename)
-            + QString("\t.charsnum=%1, \\\n").arg(charsnum)
-            + QString("\t.kernnum=%1 \\").arg(kernnum)
-            .toUtf8()).append('\n');
-    out.append( QString("};\n\n").toUtf8());
+    res += "#endif\n";
 
-    out.append( QString("#endif\n\n").toUtf8());
-
-    out.append( QString("extern const struct font f_%1;\n").arg(filename).toLower().toUtf8());
-    //out.append( QString("extern const uint16_t ").toUtf8() + QString("%1_CHARSNUM;\n\n").arg(filename).toUpper().toUtf8());
-    //out.append( QString("extern const uint16_t ").toUtf8() + QString("%1_KERNNUM;\n\n").arg(filename).toUpper().toUtf8());
-
-    out.append( QString("#ifndef ") + QString("%1\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("#define ") + QString("%1 \\\n").arg(filename).toUpper().toUtf8());
-
-    out.append( QString("\tFI_%1 \\\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("\tFC_%1 \\\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("\tFP_%1 \\\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("\tFCH_%1 \\\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("\tFK_%1 \\\n").arg(filename).toUpper().toUtf8());
-    out.append( QString("\tF_%1 \n").arg(filename).toUpper().toUtf8());
-
-    out.append( QString("#endif\n\n").toUtf8());
-    out.append( QString("#endif\n").toUtf8());
+    out = res.toUtf8();
 
     return true;
 }

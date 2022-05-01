@@ -106,21 +106,18 @@ bool MPExporter::Export(QByteArray &out)
         //out.append(QByteArray::fromRawData( glyph_ptr, sizeof(gui_font_glyph_t)));
     }
 
-    //setting up and writing kerning data for each glyph
-    typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
-
     //this loop goes over all characters and writes to stream information about kerning for each glyph
     foreach(const Symbol& c , symbols())
     {
         FontKerning kern;
-        for (Kerning k = c.kerning.begin(); k != c.kerning.end(); k++)
+        for (const auto& k : c.kerning)
         {
             //utf16 id of the first character
             kern.first = static_cast<ucode32>(c.id);
             //utf16 id of the following character
-            kern.second = static_cast<ucode32>(k.key());
+            kern.second = static_cast<ucode32>(k.first);
             //distance in pixels between beginning of first character and beginning of second character
-            kern.amount = static_cast<int16_t>(k.value());
+            kern.amount = static_cast<int16_t>(k.second);
             //write to file
             kern.save( out );
             //char* kern_ptr = reinterpret_cast<char*>(&kern);
