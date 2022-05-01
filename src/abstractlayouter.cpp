@@ -35,8 +35,8 @@
 AbstractLayouter::AbstractLayouter(QObject *parent) :
     QObject(parent)
 {
-    m_config = 0;
-    m_data = 0;
+    m_config = nullptr;
+    m_data = nullptr;
 }
 
 
@@ -75,7 +75,7 @@ void AbstractLayouter::on_LayoutDataChanged() {
     if (m_data!=0 && m_config!=0 ) {
         QVector<LayoutChar> chars = m_chars;
         {
-            for( int i=0;i<m_chars.size();i++) {
+            for( int32_t i=0;i<m_chars.size();i++) {
                 if (m_config->onePixelOffset()) {
                     chars[i].w++;
                     chars[i].h++;
@@ -89,7 +89,7 @@ void AbstractLayouter::on_LayoutDataChanged() {
     }
 }
 
-static unsigned int nextpot(unsigned int val) {
+static uint32_t nextpot(uint32_t val) {
     val--;
     val = (val >> 1) | val;
     val = (val >> 2) | val;
@@ -100,7 +100,7 @@ static unsigned int nextpot(unsigned int val) {
     return val;
 }
 
-void AbstractLayouter::resize(int w,int h) {
+void AbstractLayouter::resize(int32_t w,int32_t h) {
     if (m_config) {
         if (m_config->onePixelOffset())
         {
@@ -113,7 +113,7 @@ void AbstractLayouter::resize(int w,int h) {
             h = nextpot(h);
         }
 
-        int sizeIncrement = m_config->sizeIncrement();
+        int32_t sizeIncrement = m_config->sizeIncrement();
         if (sizeIncrement > 1)
         {
             w = ((w + sizeIncrement - 1) / sizeIncrement) * sizeIncrement;
@@ -125,8 +125,8 @@ void AbstractLayouter::resize(int w,int h) {
     }
 }
 
-int AbstractLayouter::width() const {
-    int w = 0;
+int32_t AbstractLayouter::width() const {
+    int32_t w = 0;
     if (m_data) {
         w = m_data->width();
     }
@@ -136,8 +136,8 @@ int AbstractLayouter::width() const {
     }
     return w;
 }
-int AbstractLayouter::height() const {
-    int h= 0;
+int32_t AbstractLayouter::height() const {
+    int32_t h= 0;
     if (m_data) {
         h = m_data->height();
     }

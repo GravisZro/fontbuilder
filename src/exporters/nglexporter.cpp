@@ -77,7 +77,7 @@ bool NGLExporter::Export(QByteArray& out) {
         ce.setAttribute("offset_x",c.offsetX);
         ce.setAttribute("offset_y",c.offsetY);
         ce.setAttribute("advance",c.advance);
-        typedef QMap<uint,int>::ConstIterator Kerning;
+        typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
         for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
             QDomElement ke = doc.createElement("kerning");
             ke.setAttribute("id",QString().append(k.key()));

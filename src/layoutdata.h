@@ -42,14 +42,14 @@ class LayoutData : public QObject
 {
 Q_OBJECT
 public:
-    explicit LayoutData(QObject *parent = 0);
+    explicit LayoutData(QObject *parent = nullptr);
     ~LayoutData();
 
-    int width() const { return m_width;}
-    int height() const { return m_height;}
-    Q_PROPERTY( int width READ width );
-    Q_PROPERTY( int height READ height );
-    void resize(int w,int h);
+    int32_t width() const { return m_width;}
+    int32_t height() const { return m_height;}
+    Q_PROPERTY( int32_t width READ width );
+    Q_PROPERTY( int32_t height READ height );
+    void resize(int32_t w,int32_t h);
     void beginPlacing();
     void placeChar(const LayoutChar& c);
     void endPlacing();
@@ -58,8 +58,8 @@ public:
     void setImage(const QImage& image) { m_image = image;}
     const QImage& image() const { return m_image;}
 private:
-    int m_width;
-    int m_height;
+    int32_t m_width;
+    int32_t m_height;
     QVector<LayoutChar> m_placed;
     QImage    m_image;
 signals:

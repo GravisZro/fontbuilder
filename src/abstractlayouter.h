@@ -52,14 +52,14 @@ private:
     const LayoutConfig*   m_config;
     LayoutData* m_data;
     QVector<LayoutChar>    m_chars;
-    int m_compact_w;
-    int m_compact_h;
+    int32_t m_compact_w;
+    int32_t m_compact_h;
     void DoPlace(const QVector<LayoutChar>& chars);
     virtual void OptimizeLayout(QVector<LayoutChar>& chars);
 protected:
-    void resize(int w,int h);
-    int width() const;
-    int height() const;
+    void resize(int32_t w,int32_t h);
+    int32_t width() const;
+    int32_t height() const;
     void place(const LayoutChar&);
     virtual void PlaceImages(const QVector<LayoutChar>& chars) = 0;
 protected slots:

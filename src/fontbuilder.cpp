@@ -101,7 +101,7 @@ FontBuilder::FontBuilder(QWidget *parent) :
     ui->frameCharacters->setConfig(m_font_config);
     ui->frameFontOptions->setConfig(m_font_config);
     if (!m_layout_config->layouter().isEmpty()) {
-        for (int i=0;i<ui->comboBoxLayouter->count();i++)
+        for (int32_t i=0;i<ui->comboBoxLayouter->count();i++)
             if (ui->comboBoxLayouter->itemText(i)==m_layout_config->layouter())
                 ui->comboBoxLayouter->setCurrentIndex(i);
     }
@@ -160,8 +160,8 @@ void FontBuilder::saveConfig(QSettings& settings,
                              const QObject* object) {
     settings.beginGroup(name);
     const QMetaObject *metaobject = object->metaObject();
-     int count = metaobject->propertyCount();
-     for (int i=0; i<count; ++i) {
+     int32_t count = metaobject->propertyCount();
+     for (int32_t i=0; i<count; ++i) {
          QMetaProperty metaproperty = metaobject->property(i);
          const char *name = metaproperty.name();
          QVariant value = object->property(name);
@@ -175,8 +175,8 @@ void FontBuilder::readConfig(QSettings& settings,
                              QObject* object) {
     settings.beginGroup(name);
     const QMetaObject *metaobject = object->metaObject();
-     int count = metaobject->propertyCount();
-     for (int i=0; i<count; ++i) {
+     int32_t count = metaobject->propertyCount();
+     for (int32_t i=0; i<count; ++i) {
          QMetaProperty metaproperty = metaobject->property(i);
          const char *name = metaproperty.name();
          if (settings.contains(name))
@@ -476,7 +476,7 @@ void FontBuilder::onSpacingChanged() {
     ui->fontTestFrame->refresh();
 }
 
-void FontBuilder::on_comboBox_currentIndexChanged(int index)
+void FontBuilder::on_comboBox_currentIndexChanged(int32_t index)
 {
     static const float scales[] = { 0.5,1.0,2.0,4.0,8.0 };
     ui->widgetFontPreview->setScale(scales[index]);
@@ -527,21 +527,21 @@ void FontBuilder::on_pushButtonImportJson_clicked()
             QString font_file = val.toObject().value("font-file").toString();
             QString font = val.toObject().value("font").toString();
             QString style = val.toObject().value("style").toString();
-            int size = val.toObject().value("size").toInt();
-            int dpi = val.toObject().value("DPI").toInt();
-            int bold = val.toObject().value("bold").toInt();
-            int italic = val.toObject().value("italic").toInt();
+            int32_t size = val.toObject().value("size").toInt();
+            int32_t dpi = val.toObject().value("DPI").toInt();
+            int32_t bold = val.toObject().value("bold").toInt();
+            int32_t italic = val.toObject().value("italic").toInt();
             float scale_width = val.toObject().value("scale_width").toInt();
             float scale_height = val.toObject().value("scale_height").toInt();
-            int spacing_char = val.toObject().value("spacing_char").toInt();
-            int spacing_line = val.toObject().value("spacing_line").toInt();
+            int32_t spacing_char = val.toObject().value("spacing_char").toInt();
+            int32_t spacing_line = val.toObject().value("spacing_line").toInt();
             bool smoothing = val.toObject().value("smoothing").toBool();
             QString smoothing_option = val.toObject().value("smoothing_option").toString();
             QString hinting_option = val.toObject().value("hinting_option").toString();
-            int padding_top = val.toObject().value("padding_top").toInt();
-            int padding_bottom = val.toObject().value("padding_bottom").toInt();
-            int padding_left = val.toObject().value("padding_left").toInt();
-            int padding_right = val.toObject().value("padding_right").toInt();
+            int32_t padding_top = val.toObject().value("padding_top").toInt();
+            int32_t padding_bottom = val.toObject().value("padding_bottom").toInt();
+            int32_t padding_left = val.toObject().value("padding_left").toInt();
+            int32_t padding_right = val.toObject().value("padding_right").toInt();
             if (m_font_config) {
                 m_font_config->setFilename(font_file);
                 m_font_config->setStyle(style);

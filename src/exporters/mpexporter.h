@@ -7,7 +7,7 @@ class MPExporter : public AbstractExporter
 {
     Q_OBJECT
 public:
-    explicit MPExporter(QObject *parent = 0);
+    explicit MPExporter(QObject *parent = nullptr);
 
     virtual bool Export(QByteArray& out);
 signals:

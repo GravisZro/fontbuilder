@@ -38,7 +38,7 @@ class OutputConfig : public QObject
 {
 Q_OBJECT
 public:
-    explicit OutputConfig(QObject *parent = 0);
+    explicit OutputConfig(QObject *parent = nullptr);
 
     const QString& path() const { return m_path;}
     void setPath(const QString& path) { m_path=path;}

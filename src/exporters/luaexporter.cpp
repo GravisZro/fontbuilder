@@ -38,7 +38,7 @@ LuaExporter::LuaExporter(bool write_function,QObject *parent) :
 {
     setExtension("lua");
 }
-static QString charCode(uint code) {
+static QString charCode(uint32_t code) {
     if (code=='\"') return QString().append('\'').append(code).append('\'');
     if (code=='\\') return QString("\"\\\\\"");
     return QString().append('\"').append(code).append('\"');
@@ -91,7 +91,7 @@ bool LuaExporter::Export(QByteArray& out) {
         QString charDef="{from=";
         charDef+=charCode(c.id);
         charDef+=QString(",to=");
-        typedef QMap<uint,int>::ConstIterator Kerning;
+        typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
         for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
             QString def = charDef;
             def+=charCode(k.key());

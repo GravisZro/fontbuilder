@@ -57,35 +57,35 @@ void LayoutConfig::setPotImage(bool b) {
     }
 }
 
-void LayoutConfig::setSizeIncrement(int v) {
+void LayoutConfig::setSizeIncrement(int32_t v) {
     if (m_size_increment!=v) {
         m_size_increment = v;
         layoutConfigChanged();
     }
 }
 
-void LayoutConfig::setOffsetLeft(int v) {
+void LayoutConfig::setOffsetLeft(int32_t v) {
     if (m_offset_left!=v) {
         m_offset_left = v;
         layoutConfigChanged();
     }
 }
 
-void LayoutConfig::setOffsetRight(int v) {
+void LayoutConfig::setOffsetRight(int32_t v) {
     if (m_offset_right!=v) {
         m_offset_right= v;
         layoutConfigChanged();
     }
 }
 
-void LayoutConfig::setOffsetTop(int v) {
+void LayoutConfig::setOffsetTop(int32_t v) {
     if (m_offset_top!=v) {
         m_offset_top= v;
         layoutConfigChanged();
     }
 }
 
-void LayoutConfig::setOffsetBottom(int v) {
+void LayoutConfig::setOffsetBottom(int32_t v) {
     if (m_offset_bottom!=v) {
         m_offset_bottom= v;
         layoutConfigChanged();

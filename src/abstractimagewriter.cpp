@@ -42,7 +42,7 @@
 AbstractImageWriter::AbstractImageWriter(QObject *parent ) : QObject(parent),m_watcher(0) {
     setExtension("img");
     setReloadSupport(false);
-    m_reload_timer = 0;
+    m_reload_timer = nullptr;
 }
 
 
@@ -54,11 +54,11 @@ void AbstractImageWriter::setData(const LayoutData* data,const LayoutConfig* con
     m_tex_height = data->height();
 }
 
-static void placeImage(QImage& dst,int x,int y,const QImage& src) {
-    int size = src.width()*4;
-    for (int yy=0;yy<src.height();yy++) {
-        const uchar* src_d = src.constScanLine(yy);
-        uchar* dst_d = dst.scanLine(y+yy);
+static void placeImage(QImage& dst,int32_t x,int32_t y,const QImage& src) {
+    int32_t size = src.width()*4;
+    for (int32_t yy=0;yy<src.height();yy++) {
+        const uint8_t* src_d = src.constScanLine(yy);
+        uint8_t* dst_d = dst.scanLine(y+yy);
         dst_d += x*4;
         ::memcpy(dst_d,src_d,size);
     }
@@ -86,8 +86,8 @@ QImage AbstractImageWriter::buildImage() {
     foreach (const LayoutChar& c,layout()->placed())
             if (rendered()->chars.contains(c.symbol)) {
                 const RenderedChar& rend = rendered()->chars[c.symbol];
-                int x = c.x + layoutConfig()->offsetLeft();
-                int y = c.y + layoutConfig()->offsetTop();
+                int32_t x = c.x + layoutConfig()->offsetLeft();
+                int32_t y = c.y + layoutConfig()->offsetTop();
                 placeImage(pixmap,x,y,rend.img);
             }
     return pixmap;
@@ -106,7 +106,7 @@ QImage* AbstractImageWriter::Read(QFile& file) {
 
 void AbstractImageWriter::watch(const QString& file) {
     delete m_watcher;
-    m_watcher = 0;
+    m_watcher = nullptr;
     if (m_reload_support) {
         m_watcher = new QFileSystemWatcher(this);
         m_watcher->addPath(file);
@@ -135,10 +135,10 @@ void AbstractImageWriter::onReload() {
 void AbstractImageWriter::forget() {
     if (m_watcher) {
         delete m_watcher;
-        m_watcher = 0;
+        m_watcher = nullptr;
     }
     if (m_reload_timer) {
         delete m_reload_timer;
-        m_reload_timer = 0;
+        m_reload_timer = nullptr;
     }
 }

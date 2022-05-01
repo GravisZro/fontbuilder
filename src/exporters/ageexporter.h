@@ -7,7 +7,7 @@ class AGEExporter : public AbstractExporter
 Q_OBJECT
 
 public:
-    explicit AGEExporter(QObject* parent = 0);
+    explicit AGEExporter(QObject* parent = nullptr);
 
 protected:
     virtual bool Export(QByteArray& out);

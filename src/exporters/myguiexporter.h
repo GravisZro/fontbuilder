@@ -37,7 +37,7 @@ class MyGUIExporter : public AbstractExporter
 {
     Q_OBJECT
 public:
-    explicit MyGUIExporter(QObject *parent = 0);
+    explicit MyGUIExporter(QObject *parent = nullptr);
 
     virtual bool Export(QByteArray& out);
 signals:

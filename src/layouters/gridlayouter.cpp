@@ -8,9 +8,9 @@ GridLayouter::GridLayouter(QObject *parent)
 
 void GridLayouter::PlaceImages(const QVector<LayoutChar> &chars)
 {
-    int minY = INT_MAX;
-    int maxW = 0;
-    int maxH = 0;
+    int32_t minY = INT_MAX;
+    int32_t maxW = 0;
+    int32_t maxH = 0;
 
     foreach (const LayoutChar& c, chars)
     {
@@ -22,20 +22,20 @@ void GridLayouter::PlaceImages(const QVector<LayoutChar> &chars)
 
     calculateSize(maxW, maxH, chars.size());
 
-    int w = width();
-    int h = height();
+    int32_t w = width();
+    int32_t h = height();
 
-    int charsPerRow = chars.size()
+    int32_t charsPerRow = chars.size()
             ? w / maxW
             : 0;
-    int rows = charsPerRow
+    int32_t rows = charsPerRow
             ? (chars.size() + charsPerRow - 1) / charsPerRow
             : 0;
 
     resize(maxW * charsPerRow, maxH * rows);
 
-    int row = 0;
-    int col = 0;
+    int32_t row = 0;
+    int32_t col = 0;
     foreach (const LayoutChar& c, chars)
     {
         LayoutChar l = c;
@@ -51,11 +51,11 @@ void GridLayouter::PlaceImages(const QVector<LayoutChar> &chars)
     }
 }
 
-void GridLayouter::calculateSize(int maxW, int maxH, size_t count)
+void GridLayouter::calculateSize(int32_t maxW, int32_t maxH, size_t count)
 {
-    int area = maxW * maxH * count;
+    int32_t area = maxW * maxH * count;
 
-    int dim = ::sqrt(area);
+    int32_t dim = ::sqrt(area);
     resize(dim,dim);
 }
 

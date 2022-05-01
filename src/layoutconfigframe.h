@@ -12,7 +12,7 @@ class LayoutConfig;
 class LayoutConfigFrame : public QFrame {
     Q_OBJECT
 public:
-    LayoutConfigFrame(QWidget *parent = 0);
+    LayoutConfigFrame(QWidget *parent = nullptr);
     ~LayoutConfigFrame();
 
     void setConfig(LayoutConfig* config);
@@ -24,12 +24,12 @@ private:
     LayoutConfig*   m_config;
 
 private slots:
-    void on_spinBoxRightOffset_valueChanged(int );
-    void on_spinBoxBottomOffset_valueChanged(int );
-    void on_spinBoxLeftOffset_valueChanged(int );
-    void on_spinBoxTopOffset_valueChanged(int );
+    void on_spinBoxRightOffset_valueChanged(int32_t );
+    void on_spinBoxBottomOffset_valueChanged(int32_t );
+    void on_spinBoxLeftOffset_valueChanged(int32_t );
+    void on_spinBoxTopOffset_valueChanged(int32_t );
     void on_checkBoxPOT_toggled(bool checked);
-    void on_spinBoxSizeIncrement_valueChanged(int );
+    void on_spinBoxSizeIncrement_valueChanged(int32_t );
     void on_checkBoxOnePixelOffset_toggled(bool checked);
 };
 

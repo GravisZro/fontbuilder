@@ -33,7 +33,7 @@ bool JSONFontExporter::Export(QByteArray &out)
     foreach(const Symbol& c , symbols())
     {
         QJsonObject jsonSymbol;
-        jsonSymbol.insert("id", int(c.id));
+        jsonSymbol.insert("id", int32_t(c.id));
         jsonSymbol.insert("x", c.placeX);
         jsonSymbol.insert("y", c.placeY);
         jsonSymbol.insert("width", c.placeW);
@@ -46,7 +46,7 @@ bool JSONFontExporter::Export(QByteArray &out)
     }
 
     QJsonArray jsonKernels;
-    typedef QMap<uint,int>::ConstIterator Kerning;
+    typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
     foreach(const Symbol& c , symbols())
     {
         if (c.kerning.empty())
@@ -57,8 +57,8 @@ bool JSONFontExporter::Export(QByteArray &out)
         QJsonObject jsonKernel;
         for (Kerning k = c.kerning.begin();k!=c.kerning.end();k++)
         {
-            jsonKernel.insert("first", int(c.id));
-            jsonKernel.insert("second", int(k.key()));
+            jsonKernel.insert("first", int32_t(c.id));
+            jsonKernel.insert("second", int32_t(k.key()));
             jsonKernel.insert("amount", k.value());
         }
         jsonKernels.append( jsonKernel );

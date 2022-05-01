@@ -44,7 +44,7 @@ class FontConfig;
 class FontTestFrame : public QFrame {
     Q_OBJECT
 public:
-    FontTestFrame(QWidget *parent = 0);
+    FontTestFrame(QWidget *parent = nullptr);
     ~FontTestFrame();
 
     void setLayoutData(const LayoutData* data);

@@ -7,7 +7,7 @@ class SimpleExporter : public AbstractExporter
 {
     Q_OBJECT
 public:
-    explicit SimpleExporter(QObject *parent = 0);
+    explicit SimpleExporter(QObject *parent = nullptr);
 
     virtual bool Export(QByteArray& out);
 signals:

@@ -50,27 +50,27 @@ void LayoutConfigFrame::on_checkBoxPOT_toggled(bool checked)
     if (m_config) m_config->setPotImage(checked);
 }
 
-void LayoutConfigFrame::on_spinBoxSizeIncrement_valueChanged(int value)
+void LayoutConfigFrame::on_spinBoxSizeIncrement_valueChanged(int32_t value)
 {
     if (m_config) m_config->setSizeIncrement(value);
 }
 
-void LayoutConfigFrame::on_spinBoxTopOffset_valueChanged(int value)
+void LayoutConfigFrame::on_spinBoxTopOffset_valueChanged(int32_t value)
 {
     if (m_config) m_config->setOffsetTop(value);
 }
 
-void LayoutConfigFrame::on_spinBoxLeftOffset_valueChanged(int value)
+void LayoutConfigFrame::on_spinBoxLeftOffset_valueChanged(int32_t value)
 {
     if (m_config) m_config->setOffsetLeft(value);
 }
 
-void LayoutConfigFrame::on_spinBoxBottomOffset_valueChanged(int value)
+void LayoutConfigFrame::on_spinBoxBottomOffset_valueChanged(int32_t value)
 {
     if (m_config) m_config->setOffsetBottom(value);
 }
 
-void LayoutConfigFrame::on_spinBoxRightOffset_valueChanged(int value)
+void LayoutConfigFrame::on_spinBoxRightOffset_valueChanged(int32_t value)
 {
     if (m_config) m_config->setOffsetRight(value);
 }

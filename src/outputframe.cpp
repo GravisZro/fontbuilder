@@ -76,7 +76,7 @@ void OutputFrame::setConfig(OutputConfig* config) {
         onImageNameChanged(config->imageName());
         connect(config,SIGNAL(descriptionNameChanged(QString)),this,SLOT(onDescriptionNameChanged(QString)));
         onDescriptionNameChanged(config->descriptionName());
-        for (int i=0;i<ui->comboBoxImageFormat->count();i++)
+        for (int32_t i=0;i<ui->comboBoxImageFormat->count();i++)
             if (ui->comboBoxImageFormat->itemText(i)==config->imageFormat())
                 ui->comboBoxImageFormat->setCurrentIndex(i);
         ui->groupBoxImage->setChecked(config->writeImage());
@@ -85,7 +85,7 @@ void OutputFrame::setConfig(OutputConfig* config) {
         else
             config->setWriteDescription(false);
 
-        for (int i=0;i<ui->comboBoxDescriptionType->count();i++)
+        for (int32_t i=0;i<ui->comboBoxDescriptionType->count();i++)
             if (ui->comboBoxDescriptionType->itemText(i)==config->descriptionFormat())
                 ui->comboBoxDescriptionType->setCurrentIndex(i);
         config->setDescriptionFormat(ui->comboBoxDescriptionType->currentText());
@@ -162,7 +162,7 @@ void OutputFrame::on_comboBoxDescriptionType_currentIndexChanged(QString name)
     if (m_config) m_config->setDescriptionFormat(name);
 }
 
-void OutputFrame::on_checkBoxGenerateX2_stateChanged(int arg1)
+void OutputFrame::on_checkBoxGenerateX2_stateChanged(int32_t arg1)
 {
     if (m_config) m_config->setGenerateX2(arg1==Qt::Checked);
 }

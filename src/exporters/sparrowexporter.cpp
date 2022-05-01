@@ -18,7 +18,7 @@ bool SparrowExporter::Export(QByteArray& out) {
     info.setAttribute("size", fontConfig()->size());
     QDomElement common = doc.createElement("common");
     root.appendChild(common);
-    int height = metrics().height;
+    int32_t height = metrics().height;
     common.setAttribute("lineHeight", height);
     QDomElement pages = doc.createElement("pages");
     root.appendChild(pages);
@@ -30,7 +30,7 @@ bool SparrowExporter::Export(QByteArray& out) {
     root.appendChild(chars);
     chars.setAttribute("count", symbols().size());
     QDomElement kernings = doc.createElement("kernings");
-    int kernNumber = 0;
+    int32_t kernNumber = 0;
     foreach(const Symbol& c , symbols()) {
         QDomElement ch = doc.createElement("char");
         ch.setAttribute("id", QString::number(c.id));
@@ -45,7 +45,7 @@ bool SparrowExporter::Export(QByteArray& out) {
         ch.setAttribute("chnl", "0");
         ch.setAttribute("letter", c.id==32 ? "space" : QString().append(c.id));
         chars.appendChild(ch);
-        typedef QMap<uint,int>::ConstIterator Kerning;
+        typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
         for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
             QDomElement ker = doc.createElement("kerning");
             ker.setAttribute("first", QString::number(c.id));

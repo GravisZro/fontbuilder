@@ -37,7 +37,7 @@ class CArrayImageWriter : public AbstractImageWriter
 {
 Q_OBJECT
 public:
-    CArrayImageWriter(QString ext,QObject *parent = 0);
+    CArrayImageWriter(QString ext,QObject *parent = nullptr);
 
     virtual bool Export(QFile& file);
     virtual QImage* reload(QFile& file);

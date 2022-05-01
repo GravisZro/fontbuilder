@@ -7,7 +7,7 @@ class JSONFontExporter : public AbstractExporter
 {
     Q_OBJECT
 public:
-    explicit JSONFontExporter(QObject *parent = 0);
+    explicit JSONFontExporter(QObject *parent = nullptr);
 
     virtual bool Export(QByteArray& out);
 signals:

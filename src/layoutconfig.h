@@ -37,7 +37,7 @@ class LayoutConfig : public QObject
 {
 Q_OBJECT
 public:
-    explicit LayoutConfig(QObject *parent = 0);
+    explicit LayoutConfig(QObject *parent = nullptr);
 
     bool onePixelOffset() const { return m_one_pixel_offset;}
     void setOnePixelOffset(bool b);
@@ -47,24 +47,24 @@ public:
     void setPotImage(bool b);
     Q_PROPERTY( bool potImage READ potImage WRITE setPotImage );
 
-    int sizeIncrement() const { return m_size_increment;}
-    void setSizeIncrement(int v);
-    Q_PROPERTY( int sizeIncrement READ sizeIncrement WRITE setSizeIncrement);
+    int32_t sizeIncrement() const { return m_size_increment;}
+    void setSizeIncrement(int32_t v);
+    Q_PROPERTY( int32_t sizeIncrement READ sizeIncrement WRITE setSizeIncrement);
 
-    void setOffsetLeft(int v);
-    void setOffsetTop(int v);
-    void setOffsetRight(int v);
-    void setOffsetBottom(int v);
+    void setOffsetLeft(int32_t v);
+    void setOffsetTop(int32_t v);
+    void setOffsetRight(int32_t v);
+    void setOffsetBottom(int32_t v);
 
-    int offsetLeft() const { return m_offset_left;}
-    int offsetTop() const { return m_offset_top;}
-    int offsetRight() const { return m_offset_right;}
-    int offsetBottom() const { return m_offset_bottom;}
+    int32_t offsetLeft() const { return m_offset_left;}
+    int32_t offsetTop() const { return m_offset_top;}
+    int32_t offsetRight() const { return m_offset_right;}
+    int32_t offsetBottom() const { return m_offset_bottom;}
 
-    Q_PROPERTY( int offsetLeft READ offsetLeft WRITE setOffsetLeft );
-    Q_PROPERTY( int offsetTop READ offsetTop WRITE setOffsetTop );
-    Q_PROPERTY( int offsetRight READ offsetRight WRITE setOffsetRight );
-    Q_PROPERTY( int offsetBottom READ offsetBottom WRITE setOffsetBottom );
+    Q_PROPERTY( int32_t offsetLeft READ offsetLeft WRITE setOffsetLeft );
+    Q_PROPERTY( int32_t offsetTop READ offsetTop WRITE setOffsetTop );
+    Q_PROPERTY( int32_t offsetRight READ offsetRight WRITE setOffsetRight );
+    Q_PROPERTY( int32_t offsetBottom READ offsetBottom WRITE setOffsetBottom );
 
 
     const QString& layouter() const { return m_layouter;}
@@ -74,11 +74,11 @@ private:
     QString m_layouter;
     bool    m_one_pixel_offset;
     bool    m_pot_image;
-    int     m_size_increment;
-    int     m_offset_left;
-    int     m_offset_top;
-    int     m_offset_right;
-    int     m_offset_bottom;
+    int32_t     m_size_increment;
+    int32_t     m_offset_left;
+    int32_t     m_offset_top;
+    int32_t     m_offset_right;
+    int32_t     m_offset_bottom;
 signals:
     void layoutConfigChanged();
 

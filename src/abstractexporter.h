@@ -65,8 +65,8 @@ private:
     QString m_error_string;
     QString m_extension;
     QString m_texture_file;
-    int m_tex_width;
-    int m_tex_height;
+    int32_t m_tex_width;
+    int32_t m_tex_height;
     const FontConfig* m_font_config;
     const LayoutConfig* m_layout_config;
     RenderedMetrics m_metrics;
@@ -74,15 +74,15 @@ private:
     float   m_scale;
 protected:
     struct Symbol {
-        uint id;
-        int placeX;
-        int placeY;
-        int placeW;
-        int placeH;
-        int offsetX;
-        int offsetY;
-        int advance;
-        QMap<uint,int> kerning;
+        uint32_t id;
+        int32_t placeX;
+        int32_t placeY;
+        int32_t placeW;
+        int32_t placeH;
+        int32_t offsetX;
+        int32_t offsetY;
+        int32_t advance;
+        QMap<uint32_t,int32_t> kerning;
     };
 
     const FontConfig* fontConfig() const { return m_font_config;}
@@ -90,11 +90,11 @@ protected:
     const QVector<Symbol>& symbols() const { return m_symbols;}
     void setExtension(const QString& extension) { m_extension = extension;}
     void setErrorMessage(const QString& str) { m_error_string=str; }
-    int texWidth() const { return m_tex_width;}
-    int texHeight() const { return m_tex_height;}
+    int32_t texWidth() const { return m_tex_width;}
+    int32_t texHeight() const { return m_tex_height;}
     const QString& texFilename() const { return m_texture_file;}
     const RenderedMetrics& metrics() const { return m_metrics;}
-    int height() const;
+    int32_t height() const;
     virtual bool Export(QByteArray& out) = 0;
     FT_Face face() const {return m_face;}
     float scale() const { return m_scale; }

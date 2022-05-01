@@ -37,7 +37,7 @@ class DivoExporter : public AbstractExporter
 {
 Q_OBJECT
 public:
-    explicit DivoExporter(QObject *parent = 0);
+    explicit DivoExporter(QObject *parent = nullptr);
 
     virtual bool Export(QByteArray& out);
 signals:

@@ -40,7 +40,7 @@ CharactersFrame::CharactersFrame(QWidget *parent) :
     ui(new Ui::CharactersFrame)
 {
     ui->setupUi(this);
-    m_config = 0;
+    m_config = nullptr;
 }
 
 CharactersFrame::~CharactersFrame()
@@ -109,14 +109,14 @@ void CharactersFrame::setConfig(FontConfig* config) {
 }
 
 QString CharactersFrame::removeDuplicates(const QString& text) const {
-    std::vector<uint> ucs4chars = text.toUcs4().toStdVector();
+    std::vector<uint32_t> ucs4chars = [&text] { auto tmp = text.toUcs4(); return std::vector<uint32_t>(tmp.begin(), tmp.end()); }();
 
     // Remove duplicates with C++ algorithm
-    std::vector<uint>::const_iterator newEnd;
+    std::vector<uint32_t>::const_iterator newEnd;
     newEnd = std::unique(ucs4chars.begin(), ucs4chars.end());
 
     // Drop NUL character(s) at the beginning
-    std::vector<uint>::const_iterator newStart = ucs4chars.begin();
+    std::vector<uint32_t>::const_iterator newStart = ucs4chars.begin();
     while (newStart != newEnd && *newStart == 0)
         ++newStart;
 
@@ -124,8 +124,8 @@ QString CharactersFrame::removeDuplicates(const QString& text) const {
 }
 
 QString CharactersFrame::sortChars(const QString& text) const {
-    QVector<uint> ucs4chars = text.toUcs4();
-    qSort(ucs4chars);
+    QVector<uint32_t> ucs4chars = text.toUcs4();
+    std::sort(ucs4chars.begin(), ucs4chars.end());
     return QString::fromUcs4(&ucs4chars.front(), ucs4chars.size());
 }
 
@@ -140,7 +140,7 @@ void CharactersFrame::on_pushButton_SelectFromCharsMap_clicked()
     CharMapDialog dialog(this);
     dialog.setModal(true);
     dialog.setChars(m_config->characters());
-    int result = dialog.exec();
+    int32_t result = dialog.exec();
     (void)result;
     if (dialog.result()==QDialog::Accepted) {
         m_config->setCharacters(removeDuplicates(sortChars(dialog.getCharacters())));

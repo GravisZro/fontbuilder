@@ -10,10 +10,10 @@ CArrayExporter::CArrayExporter(QObject *parent) :
 bool CArrayExporter::Export(QByteArray &out)
 {
     QString filename = texFilename();
-    int _pos = filename.indexOf('.');
+    int32_t _pos = filename.indexOf('.');
     filename.truncate(_pos);
-    int charsnum = 0;
-    int kernnum = 0;
+    int32_t charsnum = 0;
+    int32_t kernnum = 0;
 
     const FontConfig* cfg = fontConfig();
 /*
@@ -139,7 +139,7 @@ bool CArrayExporter::Export(QByteArray &out)
     out.append( QString("#define ") + QString("FK_%1 \\\n").arg(filename).toUpper().toUtf8());
 
     out.append( QString("\tstatic const struct font_kerning __attribute__((section(\".ExtFlash\"))) fk_%1[] = { \\\n").arg(filename).toUtf8());
-    typedef QMap<uint,int>::ConstIterator Kerning;
+    typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
     foreach(const Symbol& c , symbols()) {
         for (Kerning k = c.kerning.begin(); k != c.kerning.end(); k++) {
             out.append( QString("\t\t{ ")

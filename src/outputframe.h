@@ -42,7 +42,7 @@ class OutputConfig;
 class OutputFrame : public QFrame {
     Q_OBJECT
 public:
-    OutputFrame(QWidget *parent = 0);
+    OutputFrame(QWidget *parent = nullptr);
     ~OutputFrame();
 
     void setExporters(const QStringList& exporters);
@@ -68,7 +68,7 @@ private slots:
     void on_lineEditDescriptionFilename_editingFinished( );
     void on_pushButtonSelectPath_clicked();
 
-    void on_checkBoxGenerateX2_stateChanged(int arg1);
+    void on_checkBoxGenerateX2_stateChanged(int32_t arg1);
 };
 
 #endif // OUTPUTFRAME_H

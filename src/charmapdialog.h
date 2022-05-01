@@ -44,7 +44,7 @@ namespace Ui {
 class CharMapDialog : public QDialog {
     Q_OBJECT
 public:
-    CharMapDialog(QWidget *parent = 0);
+    CharMapDialog(QWidget *parent = nullptr);
     ~CharMapDialog();
 
     void setChars(const QString& string);
@@ -56,12 +56,12 @@ protected:
 
 private:
     Ui::CharMapDialog *ui;
-    QSet<uint>  m_codes;
+    QSet<uint32_t>  m_codes;
 
 private slots:
     void on_listWidget_itemChanged(QListWidgetItem* item);
     void on_listWidget_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
-    void onCharsChanged(uint code,bool add);
+    void onCharsChanged(uint32_t code,bool add);
 };
 
 #endif // CHARMAPDIALOG_H

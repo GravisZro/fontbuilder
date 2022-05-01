@@ -71,7 +71,7 @@ void FontOptionsFrame::setConfig(FontConfig *config) {
         ui->spinBoxLineSpacing->setValue(m_config->lineSpacing());
         ui->spinBoxCharSpacing->setValue(m_config->charSpacing());
         QString dpi_val = QString::number(m_config->DPI());
-        for (int i=0;i<ui->comboBoxDPI->count();i++)
+        for (int32_t i=0;i<ui->comboBoxDPI->count();i++)
             if (ui->comboBoxDPI->itemText(i)==dpi_val)
                 ui->comboBoxDPI->setCurrentIndex(i);
     }
@@ -95,13 +95,13 @@ void FontOptionsFrame::on_checkBoxSmoothing_toggled(bool checked)
 
 
 
-void FontOptionsFrame::on_horizontalSliderBold_valueChanged(int value)
+void FontOptionsFrame::on_horizontalSliderBold_valueChanged(int32_t value)
 {
      if (m_config) m_config->setBold(value);
      ui->labelBold->setText(QString().number(value));
 }
 
-void FontOptionsFrame::on_horizontalSliderItalic_valueChanged(int value)
+void FontOptionsFrame::on_horizontalSliderItalic_valueChanged(int32_t value)
 {
     if (m_config) m_config->setItalic(value);
     ui->labelItalic->setText(QString().number(value));
@@ -117,12 +117,12 @@ void FontOptionsFrame::on_doubleSpinBoxHeight_valueChanged(double value)
     if (m_config) m_config->setHeight(value);
 }
 
-void FontOptionsFrame::on_spinBoxCharSpacing_valueChanged(int value)
+void FontOptionsFrame::on_spinBoxCharSpacing_valueChanged(int32_t value)
 {
     if (m_config) m_config->setCharSpacing(value);
 }
 
-void FontOptionsFrame::on_spinBoxLineSpacing_valueChanged(int value)
+void FontOptionsFrame::on_spinBoxLineSpacing_valueChanged(int32_t value)
 {
     if (m_config) m_config->setLineSpacing(value);
 }
@@ -131,18 +131,18 @@ void FontOptionsFrame::on_comboBoxDPI_currentIndexChanged(QString val)
 {
     if (m_config) {
         bool ok = false;
-        int new_dpi = val.toInt(&ok);
+        int32_t new_dpi = val.toInt(&ok);
         if (ok)
             m_config->setDPI(new_dpi);
     }
 }
 
-void FontOptionsFrame::on_comboBox_Hinting_currentIndexChanged(int index)
+void FontOptionsFrame::on_comboBox_Hinting_currentIndexChanged(int32_t index)
 {
     if (index>=0) if (m_config) m_config->setHinting(static_cast<FontConfig::HintingMethod>(index));
 }
 
-void FontOptionsFrame::on_comboBoxAA_currentIndexChanged(int index)
+void FontOptionsFrame::on_comboBoxAA_currentIndexChanged(int32_t index)
 {
     if (index>0) if (m_config) m_config->setAntiAliasing(static_cast<FontConfig::AAMethod>(index));
 }

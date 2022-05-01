@@ -42,7 +42,7 @@ class FontConfig;
 class CharactersFrame : public QFrame {
     Q_OBJECT
 public:
-    CharactersFrame(QWidget *parent = 0);
+    CharactersFrame(QWidget *parent = nullptr);
     ~CharactersFrame();
 
     void setConfig(FontConfig* config);

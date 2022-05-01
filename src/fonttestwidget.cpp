@@ -45,7 +45,7 @@ FontTestWidget::FontTestWidget(QWidget *parent) :
 }
 
 
-const LayoutChar*   FontTestWidget::layoutChar(uint c) const {
+const LayoutChar*   FontTestWidget::layoutChar(uint32_t c) const {
     foreach (const LayoutChar& lc, m_layout_data->placed()) {
         if (c==lc.symbol)
             return &lc;
@@ -53,10 +53,10 @@ const LayoutChar*   FontTestWidget::layoutChar(uint c) const {
     return 0;
 }
 
-int FontTestWidget::lineWidth(const uint * chars) const {
-    int x = 0;
+int32_t FontTestWidget::lineWidth(const uint32_t * chars) const {
+    int32_t x = 0;
     while (*chars) {
-        uint c = *chars++;
+        uint32_t c = *chars++;
         if (c=='\n') {
             break;
         } else
@@ -82,15 +82,15 @@ void FontTestWidget::paintEvent ( QPaintEvent * event ) {
     painter.fillRect(rect(),QBrush(m_bg_color));
     if (!m_renderer_data || !m_layout_data) return;
 
-    int x = m_left;
+    int32_t x = m_left;
 
-    int y = m_top;
-    QVector<uint> ucs4chars = m_text.toUcs4();
+    int32_t y = m_top;
+    QVector<uint32_t> ucs4chars = m_text.toUcs4();
     ucs4chars.push_back(0);
-    const uint* chars = ucs4chars.data();
+    const uint32_t* chars = ucs4chars.data();
 
     if (m_align!=ALIGN_LEFT) {
-        int width = lineWidth(chars);
+        int32_t width = lineWidth(chars);
         if (m_align==ALIGN_RIGHT) {
             x = m_left+m_width-width;
         } else {
@@ -98,11 +98,11 @@ void FontTestWidget::paintEvent ( QPaintEvent * event ) {
         }
     }
     while (*chars) {
-        uint c = *chars++;
+        uint32_t c = *chars++;
         if (c=='\n') {
             x = m_left;
             if (m_align!=ALIGN_LEFT) {
-                int width = lineWidth(chars);
+                int32_t width = lineWidth(chars);
                 if (m_align==ALIGN_RIGHT) {
                     x = m_left+m_width-width;
                 } else {
@@ -133,20 +133,20 @@ void FontTestWidget::paintEvent ( QPaintEvent * event ) {
 
 void FontTestWidget::calcBBox() {
     if (!m_renderer_data || !m_layout_data || !m_font_config) return;
-    int left = 0;
-    int right = 1;
-    int top = 0;
-    int bottom = 1;
-    QVector<uint> ucs4chars = m_text.toUcs4();
+    int32_t left = 0;
+    int32_t right = 1;
+    int32_t top = 0;
+    int32_t bottom = 1;
+    QVector<uint32_t> ucs4chars = m_text.toUcs4();
     ucs4chars.push_back(0);
-    const uint* chars = ucs4chars.data();
-    int x = left;
-    int y = top;
-    int max_x = x;
+    const uint32_t* chars = ucs4chars.data();
+    int32_t x = left;
+    int32_t y = top;
+    int32_t max_x = x;
     bool first = true;
     bool last = false;
     while (*chars) {
-        uint c = *chars++;
+        uint32_t c = *chars++;
         if (c=='\n') {
             x=0;
             y += m_renderer_data->metrics.height+m_font_config->lineSpacing();

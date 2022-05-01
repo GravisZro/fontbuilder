@@ -7,7 +7,7 @@ class CArrayExporter : public AbstractExporter
 {
     Q_OBJECT
 public:
-    explicit CArrayExporter(QObject *parent = 0);
+    explicit CArrayExporter(QObject *parent = nullptr);
 
     virtual bool Export(QByteArray& out);
 signals:

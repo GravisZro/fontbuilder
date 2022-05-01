@@ -37,7 +37,7 @@ class LineLayouter : public AbstractLayouter
 {
 Q_OBJECT
 public:
-    explicit LineLayouter(QObject *parent = 0);
+    explicit LineLayouter(QObject *parent = nullptr);
 
 protected:
     virtual void PlaceImages(const QVector<LayoutChar>& chars) ;

@@ -37,7 +37,7 @@ class TargaImageWriter : public AbstractImageWriter
 {
 Q_OBJECT
 public:
-    TargaImageWriter(QString ext,QObject *parent = 0);
+    TargaImageWriter(QString ext,QObject *parent = nullptr);
 
     virtual bool Export(QFile& file);
     virtual QImage* reload(QFile& file);

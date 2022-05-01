@@ -9,13 +9,13 @@ ZFIExporter::ZFIExporter(QObject *parent) :
 }
 
 bool ZFIExporter::Export(QByteArray& out) {
-  unsigned short Pages = 1;
-  unsigned short Chars = 0;
-  int MaxHeight = 0;
-  int MaxShiftY = 0;
-  int PageWidth = texWidth();
-  int PageHeight = texHeight();
-  unsigned char Padding[4] = { 0, 0, 0, 0 };
+  uint16_t Pages = 1;
+  uint16_t Chars = 0;
+  int32_t MaxHeight = 0;
+  int32_t MaxShiftY = 0;
+  int32_t PageWidth = texWidth();
+  int32_t PageHeight = texHeight();
+  uint8_t Padding[4] = { 0, 0, 0, 0 };
   zglTCharDesc CharDesc;
 
   foreach ( const Symbol& c, symbols() )
@@ -37,7 +37,7 @@ bool ZFIExporter::Export(QByteArray& out) {
 
   foreach ( const Symbol& c, symbols() )
   {
-    int id = c.id;
+    int32_t id = c.id;
     float u = 1.f / PageWidth, v = 1.f / PageHeight;
     out.append( (char*)&id, 4 );
 

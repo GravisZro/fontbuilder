@@ -39,16 +39,16 @@ BoxLayouter::BoxLayouter(QObject *parent) :
 }
 
 struct Line {
-    int min_y;
-    int max_y;
-    int y;
+    int32_t min_y;
+    int32_t max_y;
+    int32_t y;
     Line() : min_y(0),max_y(0),y(0) {}
     explicit Line(const LayoutChar& c) : y(0) {
         min_y = c.y;
         max_y = c.y + c.h;
         //chars.push_back(&c);
     }
-    int h() const { return max_y - min_y;}
+    int32_t h() const { return max_y - min_y;}
     void append(const LayoutChar& c) {
         if (c.y < min_y)
             min_y = c.y;
@@ -61,15 +61,15 @@ struct Line {
 };
 
 void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
-    int h = 0;
-    int w = 0;
+    int32_t h = 0;
+    int32_t w = 0;
     if (chars.isEmpty()) return;
 
     /// speed up
-    int area = 0;
+    int32_t area = 0;
     foreach (const LayoutChar& c, chars)
         area+=c.w*c.h;
-    int dim = ::sqrt(area);
+    int32_t dim = ::sqrt(area);
 
     resize(dim,dim);
     w = width();
@@ -80,7 +80,7 @@ void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
 
     bool iteration = true;
     while (iteration) {
-        int x = 0;
+        int32_t x = 0;
         lines.clear();
         lines.push_back(Line(chars.front()));
         iteration = false;
@@ -88,8 +88,8 @@ void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
 
             if ((x+c.w)>w) {
                 x = 0;
-                int y = lines.back().y;
-                int h = lines.back().h();
+                int32_t y = lines.back().y;
+                int32_t h = lines.back().h();
                 lines.push_back(Line(c));
                 lines.back().y = y + h;
             }
@@ -119,7 +119,7 @@ void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
 
     w = width();
     h = height();
-    int x = 0;
+    int32_t x = 0;
     foreach (const Line& line, lines) {
         x = 0;
         foreach (const LayoutChar* c , line.chars ) {

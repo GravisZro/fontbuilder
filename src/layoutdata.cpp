@@ -40,7 +40,7 @@ LayoutData::~LayoutData() {
 
 
 
-void LayoutData::resize(int w,int h) {
+void LayoutData::resize(int32_t w,int32_t h) {
     m_width = w;
     m_height = h;
 }

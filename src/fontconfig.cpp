@@ -91,7 +91,7 @@ void FontConfig::setStyle(const QString& style) {
     }
 }
 
-void FontConfig::setFaceIndex(int indx) {
+void FontConfig::setFaceIndex(int32_t indx) {
     if (m_face_index!=indx) {
         m_face_index = indx;
         m_size = 0;
@@ -100,7 +100,7 @@ void FontConfig::setFaceIndex(int indx) {
 }
 
 
-void FontConfig::setSize(int size) {
+void FontConfig::setSize(int32_t size) {
     if (m_size!=size) {
         m_size = size;
         sizeChanged();
@@ -116,7 +116,7 @@ void FontConfig::setCharacters(const QString& characters) {
 }
 
 
-void FontConfig::setHinting(int h) {
+void FontConfig::setHinting(int32_t h) {
     if (m_hinting!=h) {
         m_hinting = h;
         renderingOptionsChanged();
@@ -130,7 +130,7 @@ void FontConfig::setAntialiased(bool b) {
     }
 }
 
-void FontConfig::setAntiAliasing(int b) {
+void FontConfig::setAntiAliasing(int32_t b) {
     if (m_aamethod!=b) {
         m_aamethod = b;
         renderingOptionsChanged();
@@ -144,14 +144,14 @@ void FontConfig::setRenderMissing(bool b) {
     }
 }
 
-void FontConfig::setItalic(int b) {
+void FontConfig::setItalic(int32_t b) {
     if (m_italic!=b) {
         m_italic = b;
         renderingOptionsChanged();
     }
 }
 
-void FontConfig::setBold(int b) {
+void FontConfig::setBold(int32_t b) {
     if (m_bold!=b) {
         m_bold = b;
         renderingOptionsChanged();
@@ -178,21 +178,21 @@ void FontConfig::emmitChange() {
     sizeChanged();
 }
 
-void FontConfig::setLineSpacing(int s) {
+void FontConfig::setLineSpacing(int32_t s) {
     if (m_line_spacing!=s) {
         m_line_spacing = s;
         spacingChanged();
     }
 }
 
-void FontConfig::setCharSpacing(int s) {
+void FontConfig::setCharSpacing(int32_t s) {
     if (m_char_spacing!=s) {
         m_char_spacing = s;
         spacingChanged();
     }
 }
 
-void FontConfig::setDPI(int dpi) {
+void FontConfig::setDPI(int32_t dpi) {
     if (m_dpi!=dpi) {
         m_dpi = dpi;
         sizeChanged();

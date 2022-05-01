@@ -37,7 +37,7 @@ class BoxLayouter : public AbstractLayouter
 {
 Q_OBJECT
 public:
-    explicit BoxLayouter(QObject *parent = 0);
+    explicit BoxLayouter(QObject *parent = nullptr);
 
     virtual void PlaceImages(const QVector<LayoutChar>& chars) ;
 signals:

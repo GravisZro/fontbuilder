@@ -43,7 +43,7 @@ class ImageWriterFactory : public QObject
 {
 Q_OBJECT
 public:
-    explicit ImageWriterFactory(QObject *parent = 0);
+    explicit ImageWriterFactory(QObject *parent = nullptr);
     AbstractImageWriter* build(const QString& name,QObject *parent);
     QStringList names() const;
 private:

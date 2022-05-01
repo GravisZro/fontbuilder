@@ -5,7 +5,7 @@ GridLineLayouter::GridLineLayouter(QObject *parent)
 {
 }
 
-void GridLineLayouter::calculateSize(int maxW, int maxH, size_t count)
+void GridLineLayouter::calculateSize(int32_t maxW, int32_t maxH, size_t count)
 {
     resize(maxW * count, maxH);
 }

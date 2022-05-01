@@ -32,10 +32,9 @@
 #include "ui_fontselectframe.h"
 #include <QDebug>
 #include <QDir>
-#include <QDesktopServices>
 #include <QFileDialog>
 #include <QProgressDialog>
-#include <QDesktopServices>
+#include <QStandardPaths>
 
 #include "fontconfig.h"
 
@@ -57,8 +56,6 @@ FontSelectFrame::FontSelectFrame(QWidget *parent) :
     ui(new Ui::FontSelectFrame)
 {
     ui->setupUi(this);
-
-
 
 
     m_config = 0;
@@ -123,9 +120,9 @@ void FontSelectFrame::setFontsDirectory(QString dir_name) {
 
     ui->lineEditFontsDir->setText(dir_name);
 
-    FT_Library library = 0;
+    FT_Library library = nullptr;
 
-    int error = FT_Init_FreeType(&library);
+    int32_t error = FT_Init_FreeType(&library);
     if (error) {
         qDebug() << "FT_Open_Library error " << error;
         return;
@@ -153,7 +150,7 @@ void FontSelectFrame::setFontsDirectory(QString dir_name) {
         progress->setWindowModality(Qt::WindowModal);
         //progress->show();
     }
-    int progress_val = 0;
+    int32_t progress_val = 0;
     foreach (QString file_name, files) {
         //qDebug() << "found font file : " << file_name;
         QFile file(dir.filePath(file_name));
@@ -161,12 +158,12 @@ void FontSelectFrame::setFontsDirectory(QString dir_name) {
             QByteArray bytes = file.readAll();
             const FT_Byte* data = reinterpret_cast<const FT_Byte* >(bytes.data());
             FT_Face face;
-            int error =  FT_New_Memory_Face(library,
+            int32_t error =  FT_New_Memory_Face(library,
                                             data,bytes.size(),-1,&face);
             if (error==0) {
-                int faces_num = face->num_faces;
+                int32_t faces_num = face->num_faces;
                 FT_Done_Face(face);
-                for (int face_n = 0;face_n<faces_num;face_n++) {
+                for (int32_t face_n = 0;face_n<faces_num;face_n++) {
                     error =  FT_New_Memory_Face(library,
                                                 data,bytes.size(),face_n,&face);
                     /// skip font if load error
@@ -188,9 +185,9 @@ void FontSelectFrame::setFontsDirectory(QString dir_name) {
                                     face_n,
                                     fixedsizes));
                     if (fixedsizes) {
-                        for (int i=0;i<face->num_fixed_sizes;i++) {
+                        for (int32_t i=0;i<face->num_fixed_sizes;i++) {
                             m_database[family].back().fixedsizes.push_back(
-                                    QPair<int,int>(
+                                    QPair<int32_t,int32_t>(
                                             face->available_sizes[i].width,
                                             face->available_sizes[i].height));
                         }
@@ -231,9 +228,9 @@ void FontSelectFrame::on_pushButtonChangeDir_clicked()
     }
 }
 
-void FontSelectFrame::selectFile(const QString& file,int face) {
+void FontSelectFrame::selectFile(const QString& file,int32_t face) {
     foreach (const QString& name, m_database.keys()) {
-        int id = 0;
+        int32_t id = 0;
         const FontStyles &fs(m_database[name]);
         foreach (const FontDef &fd, fs) {
             if (fd.file == file &&
@@ -241,14 +238,14 @@ void FontSelectFrame::selectFile(const QString& file,int face) {
                 bool b = ui->comboBoxStyle->blockSignals(true);
                 bool block = ui->comboBoxSize->blockSignals(true);
 
-                for (int i=0;i<ui->comboBoxFamily->count();i++)
+                for (int32_t i=0;i<ui->comboBoxFamily->count();i++)
                     if (ui->comboBoxFamily->itemText(i)==name) {
                         ui->comboBoxFamily->setCurrentIndex(i);
                         break;
                     }
 
 
-                for (int i=0;i<ui->comboBoxStyle->count();i++)
+                for (int32_t i=0;i<ui->comboBoxStyle->count();i++)
                     if (ui->comboBoxStyle->itemData(i).toInt()==id) {
                         ui->comboBoxStyle->setCurrentIndex(i);
                         on_comboBoxStyle_currentIndexChanged(i);
@@ -262,9 +259,9 @@ void FontSelectFrame::selectFile(const QString& file,int face) {
     }
 }
 
-void FontSelectFrame::selectSize(int size) {
+void FontSelectFrame::selectSize(int32_t size) {
     QString ss = QString().number(size);
-    for (int i=0;i<ui->comboBoxSize->count();i++) {
+    for (int32_t i=0;i<ui->comboBoxSize->count();i++) {
         if (ss==ui->comboBoxSize->itemText(i)) {
             ui->comboBoxSize->setCurrentIndex(i);
             return;
@@ -279,7 +276,7 @@ void FontSelectFrame::on_comboBoxFamily_currentIndexChanged(QString family)
     if (m_config)
         m_config->setFamily(family);
     ui->comboBoxStyle->clear();
-    int item_no = 0;
+    int32_t item_no = 0;
     foreach (const FontDef& def ,m_database[family]) {
         ui->comboBoxStyle->addItem(def.style,item_no);
         item_no++;
@@ -287,12 +284,12 @@ void FontSelectFrame::on_comboBoxFamily_currentIndexChanged(QString family)
     ui->comboBoxStyle->setEnabled(item_no>1);
 }
 
-void FontSelectFrame::on_comboBoxStyle_currentIndexChanged(int index )
+void FontSelectFrame::on_comboBoxStyle_currentIndexChanged(int32_t index )
 {
     if (index<0)
         return;
 
-    int item_no = ui->comboBoxStyle->itemData(index).toInt();
+    int32_t item_no = ui->comboBoxStyle->itemData(index).toInt();
     QString family = ui->comboBoxFamily->currentText();
 
     if (item_no>=0 && item_no<m_database[family].size()) {
@@ -313,11 +310,11 @@ void FontSelectFrame::on_comboBoxStyle_currentIndexChanged(int index )
 
 
 void FontSelectFrame::readFontSizes(const FontDef& def) {
-    int index = ui->comboBoxSize->currentIndex();
+    int32_t index = ui->comboBoxSize->currentIndex();
     bool block = ui->comboBoxSize->blockSignals(true);
     ui->comboBoxSize->clear();
     if (def.fixedsize) {
-        typedef QPair<int,int> Pair;
+        typedef QPair<int32_t,int32_t> Pair;
         foreach (Pair size , def.fixedsizes) {
             ui->comboBoxSize->addItem(
                     QString().number(size.first)+"x"+
@@ -326,7 +323,7 @@ void FontSelectFrame::readFontSizes(const FontDef& def) {
         ui->comboBoxSize->setEnabled(def.fixedsizes.size()>1);
         ui->comboBoxSize->setEditable(false);
     } else {
-        static const int sizes[] = {5,8,10,12,14,17,20,24,32,48,65};
+        static const int32_t sizes[] = {5,8,10,12,14,17,20,24,32,48,65};
         for (size_t i=0;i<sizeof(sizes)/sizeof(sizes[0]);i++)
             ui->comboBoxSize->addItem(QString().number(
                     sizes[i]));
@@ -345,7 +342,7 @@ void FontSelectFrame::on_comboBoxSize_editTextChanged(QString size_str)
     Q_UNUSED(size_str);
     /*
     bool ok = false;
-    int size = size_str.toInt(&ok);
+    int32_t size = size_str.toInt(&ok);
     if (!ok) {
         ui->comboBoxSize->setCurrentIndex(0);
         return;
@@ -358,7 +355,7 @@ void FontSelectFrame::on_comboBoxSize_editTextChanged(QString size_str)
 void FontSelectFrame::on_comboBoxSize_currentIndexChanged(QString size_str)
 {
     bool ok = false;
-    int size = size_str.toInt(&ok);
+    int32_t size = size_str.toInt(&ok);
     if (!ok) {
         //ui->comboBoxSize->setCurrentIndex(0);
         return;

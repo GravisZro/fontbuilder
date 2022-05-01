@@ -37,7 +37,7 @@ class NGLExporter : public AbstractExporter
 {
 Q_OBJECT
 public:
-    explicit NGLExporter(QObject *parent = 0);
+    explicit NGLExporter(QObject *parent = nullptr);
 protected:
     virtual bool Export(QByteArray& out);
 signals:

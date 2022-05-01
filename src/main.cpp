@@ -37,7 +37,7 @@
 #include <QCoreApplication>
 #include "fontbuilder.h"
 
-int main(int argc, char *argv[])
+int32_t main(int32_t argc, char *argv[])
 {
     QApplication a(argc, argv);
     QCoreApplication::setOrganizationName("AndryBlack");

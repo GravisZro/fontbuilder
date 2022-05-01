@@ -41,11 +41,11 @@
 struct FontDef {
     QString style;
     QString file;
-    int face;
+    int32_t face;
     bool fixedsize;
-    QVector<QPair<int,int> > fixedsizes;
+    QVector<QPair<int32_t,int32_t> > fixedsizes;
     FontDef() : style(),file(),face(0),fixedsize(false) {}
-    FontDef(const QString& s,const QString& f,int num,bool fixedsize) : style(s),
+    FontDef(const QString& s,const QString& f,int32_t num,bool fixedsize) : style(s),
         file(f),face(num),fixedsize(fixedsize) {}
 };
 
@@ -70,8 +70,8 @@ protected:
     void changeEvent(QEvent *e);
 
     void readFontSizes(const FontDef& def);
-    void selectFile(const QString& file,int face);
-    void selectSize(int size);
+    void selectFile(const QString& file,int32_t face);
+    void selectSize(int32_t size);
 private:
     Ui::FontSelectFrame *ui;
     FontFamilys m_database;
@@ -81,7 +81,7 @@ private slots:
     void on_pushButtonDefault_clicked();
     void on_comboBoxSize_currentIndexChanged(QString );
     void on_comboBoxSize_editTextChanged(QString );
-    void on_comboBoxStyle_currentIndexChanged(int index );
+    void on_comboBoxStyle_currentIndexChanged(int32_t index );
     void on_comboBoxFamily_currentIndexChanged(QString );
     void on_pushButtonChangeDir_clicked();
 

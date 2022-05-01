@@ -42,7 +42,7 @@ class ExporterFactory : public QObject
 {
 Q_OBJECT
 public:
-    explicit ExporterFactory(QObject *parent = 0);
+    explicit ExporterFactory(QObject *parent = nullptr);
     AbstractExporter* build(const QString& name,QObject *parent);
     QStringList names() const;
 private:

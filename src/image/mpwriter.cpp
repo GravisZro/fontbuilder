@@ -61,9 +61,9 @@ bool MPImageWriter::Export(QFile& file)
     for( uint32_t i=0; i<font_glyphs.size(); ++i)
     {
         FontGlyph glyph = font_glyphs[i];
-        for (int y=0; y<glyph.height; y++)
+        for (int32_t y=0; y<glyph.height; y++)
         {
-            for (int x = 0; x < glyph.width; x++)
+            for (int32_t x = 0; x < glyph.width; x++)
             {
                 uint8_t alfaChannel = static_cast<uint8_t>(qAlpha(pixmap.pixel(x+pixmap_coords[i].x, y + pixmap_coords[i].y)));
                 // Scale the alfa channel to to for 1 bit color

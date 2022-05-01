@@ -42,7 +42,7 @@ class FontTestWidget : public QWidget
 {
 Q_OBJECT
 public:
-    explicit FontTestWidget(QWidget *parent = 0);
+    explicit FontTestWidget(QWidget *parent = nullptr);
 
     void setLayoutData(const LayoutData* data) { m_layout_data = data;}
     void setRendererData(const RendererData* data) { m_renderer_data = data;}
@@ -64,7 +64,7 @@ public:
 protected:
     virtual void paintEvent ( QPaintEvent * event );
     void calcBBox();
-    int lineWidth(const uint* text) const;
+    int32_t lineWidth(const uint32_t* text) const;
 signals:
 
 public slots:
@@ -73,12 +73,12 @@ public slots:
 private:
     QString m_text;
     const LayoutData*   m_layout_data;
-    const LayoutChar*   layoutChar(uint c) const;
+    const LayoutChar*   layoutChar(uint32_t c) const;
     const RendererData* m_renderer_data;
     const FontConfig*   m_font_config;
-    int m_left;
-    int m_width;
-    int m_top;
+    int32_t m_left;
+    int32_t m_width;
+    int32_t m_top;
     bool    m_use_kerning;
     Align   m_align;
     QColor  m_bg_color;

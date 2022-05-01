@@ -10,7 +10,7 @@ public:
 
     // GridLayouter interface
 protected:
-    void calculateSize(int maxW, int maxH, size_t count);
+    void calculateSize(int32_t maxW, int32_t maxH, size_t count);
 };
 
 #endif // GRIDLINELAYOUTER_H

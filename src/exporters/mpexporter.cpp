@@ -17,7 +17,7 @@ MPExporter::MPExporter(QObject *parent) :
 bool MPExporter::Export(QByteArray &out)
 {
     QString filename = texFilename();
-    int _pos = filename.indexOf('.');
+    int32_t _pos = filename.indexOf('.');
     filename.truncate(_pos);
 
     const FontConfig* cfg = fontConfig();
@@ -107,7 +107,7 @@ bool MPExporter::Export(QByteArray &out)
     }
 
     //setting up and writing kerning data for each glyph
-    typedef QMap<uint,int>::ConstIterator Kerning;
+    typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
 
     //this loop goes over all characters and writes to stream information about kerning for each glyph
     foreach(const Symbol& c , symbols())

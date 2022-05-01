@@ -10,7 +10,7 @@ SimpleExporter::SimpleExporter(QObject *parent) :
 bool SimpleExporter::Export(QByteArray &out)
 {
     const FontConfig* cfg = fontConfig();
-    int height = metrics().height;
+    int32_t height = metrics().height;
 
     // Font family
     out.append(cfg->family().toUtf8()).append('\n');
@@ -35,8 +35,8 @@ bool SimpleExporter::Export(QByteArray &out)
         out.append('\n');
     }
     QByteArray kernings;
-    int kerningsCount = 0;
-    typedef QMap<uint,int>::ConstIterator Kerning;
+    int32_t kerningsCount = 0;
+    typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
     foreach(const Symbol& c , symbols()) {
         for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
             // first, second, amount

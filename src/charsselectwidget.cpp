@@ -34,13 +34,13 @@
 #include <QPainter>
 #include <QToolTip>
 
-static const int cell_size = 24;
-static const int columns = 16;
+static const int32_t cell_size = 24;
+static const int32_t columns = 16;
 
 CharsSelectWidget::CharsSelectWidget(QWidget *parent) :
     QWidget(parent) , m_codes_begin(0x0000),m_codes_end(0xFFFF)
 {
-    m_codes = 0;
+    m_codes = nullptr;
     m_track_mouse = false;
     m_track_erase = false;
     setMouseTracking(true);
@@ -52,7 +52,7 @@ QSize CharsSelectWidget::sizeHint() const {
 }
 
 
-void CharsSelectWidget::setRange(uint begin,uint end) {
+void CharsSelectWidget::setRange(uint32_t begin,uint32_t end) {
     m_codes_begin = begin;
     m_codes_end = end;
     setMinimumSize(sizeHint());
@@ -66,15 +66,15 @@ void CharsSelectWidget::paintEvent(QPaintEvent *event) {
     painter.fillRect(event->rect(),QBrush(Qt::white));
     Q_ASSERT(m_codes!=0);
     QRect redrawRect = event->rect();
-    int beginRow = redrawRect.top()/cell_size;
-    int endRow = redrawRect.bottom()/cell_size;
-    int beginColumn = redrawRect.left()/cell_size;
-    int endColumn = redrawRect.right()/cell_size;
+    int32_t beginRow = redrawRect.top()/cell_size;
+    int32_t endRow = redrawRect.bottom()/cell_size;
+    int32_t beginColumn = redrawRect.left()/cell_size;
+    int32_t endColumn = redrawRect.right()/cell_size;
 
     painter.setPen(QPen(Qt::gray));
-    for (int row = beginRow; row <= endRow; ++row) {
-        for (int column = beginColumn; (column <= endColumn ) && (column < columns); ++column) {
-            uint key =  m_codes_begin+row*columns + column;
+    for (int32_t row = beginRow; row <= endRow; ++row) {
+        for (int32_t column = beginColumn; (column <= endColumn ) && (column < columns); ++column) {
+            uint32_t key =  m_codes_begin+row*columns + column;
             if ( key <= m_codes_end) {
                 if (m_codes->contains(key))
                     painter.fillRect(column*cell_size, row*cell_size, cell_size, cell_size,QBrush(Qt::lightGray));
@@ -85,11 +85,11 @@ void CharsSelectWidget::paintEvent(QPaintEvent *event) {
 
     QFontMetrics fontMetrics(painter.font());
      painter.setPen(QPen(Qt::black));
-     for (int row = beginRow; row <= endRow; ++row) {
+     for (int32_t row = beginRow; row <= endRow; ++row) {
 
-         for (int column = beginColumn; (column <= endColumn ) && (column < columns); ++column) {
+         for (int32_t column = beginColumn; (column <= endColumn ) && (column < columns); ++column) {
 
-             uint key = m_codes_begin+row*columns + column;
+             uint32_t key = m_codes_begin+row*columns + column;
              if (key<=m_codes_end) {
                  painter.setClipRect(column*cell_size, row*cell_size, cell_size, cell_size);
 
@@ -149,7 +149,7 @@ void CharsSelectWidget::mouseMoveEvent(QMouseEvent *event) {
     if (event->x()>=width()) return;
     if (event->y()<0) return;
     if (event->y()>=height()) return;
-    uint code = m_codes_begin +(event->y()/cell_size)*columns + event->x()/cell_size;
+    uint32_t code = m_codes_begin +(event->y()/cell_size)*columns + event->x()/cell_size;
 
     if (m_track_mouse) {
         if (code!=m_select_last_code) {
@@ -158,7 +158,7 @@ void CharsSelectWidget::mouseMoveEvent(QMouseEvent *event) {
                 uint to = qMax(m_select_begin_code,code);*/
                 /*for (uint c = from;c<=to;c++)*/ {
                     if (m_track_erase) {
-                        QSet<uint>::Iterator i=m_codes->find(code);
+                        QSet<uint32_t>::Iterator i=m_codes->find(code);
                         if ( i!=m_codes->end()) {
                             m_codes->erase(i);
                             codesChanged(code,false);

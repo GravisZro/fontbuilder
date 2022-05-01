@@ -50,7 +50,7 @@ bool DivoExporter::Export(QByteArray& out) {
     root.setAttribute("size",fontConfig()->size());
     root.setAttribute("height",metrics().height);
 
-    int offset = metrics().ascender;
+    int32_t offset = metrics().ascender;
 
     foreach (const Symbol& c , symbols()) {
         QDomElement ce = doc.createElement("Char");
@@ -61,7 +61,7 @@ bool DivoExporter::Export(QByteArray& out) {
         ::snprintf(buf,63,"%d %d",c.offsetX,offset-c.offsetY);
         ce.setAttribute("offset",buf);
         ce.setAttribute("width",c.advance);
-        typedef QMap<uint,int>::ConstIterator Kerning;
+        typedef QMap<uint32_t,int32_t>::ConstIterator Kerning;
         for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
             QDomElement ke = doc.createElement("Kerning");
             ke.setAttribute("id",QString().append(k.key()));

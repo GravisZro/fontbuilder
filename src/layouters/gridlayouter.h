@@ -44,7 +44,7 @@ private:
 protected:
     void PlaceImages(const QVector<LayoutChar> &chars);
 
-    virtual void calculateSize(int maxW, int maxH, size_t count);
+    virtual void calculateSize(int32_t maxW, int32_t maxH, size_t count);
 };
 
 #endif // GRIDLAYOUTER_H

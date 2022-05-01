@@ -56,14 +56,14 @@ bool MyGUIExporter::Export(QByteArray& out) {
     float iscale = 1.0f / scale();
     float scale = iscale;
 
-    int ascender = metrics().ascender * scale;
-    int descender = metrics().descender * scale;
+    int32_t ascender = metrics().ascender * scale;
+    int32_t descender = metrics().descender * scale;
 
     TT_OS2* os2 = (TT_OS2*)FT_Get_Sfnt_Table(face(), ft_sfnt_os2);
 
     if (os2)
     {
-        int v =  os2->usWinAscent * face()->size->metrics.y_ppem * scale / face()->units_per_EM;
+        int32_t v =  os2->usWinAscent * face()->size->metrics.y_ppem * scale / face()->units_per_EM;
         if (ascender < v)
            ascender = v;
         v = os2->usWinDescent * face()->size->metrics.y_ppem * scale / face()->units_per_EM;
@@ -103,7 +103,7 @@ bool MyGUIExporter::Export(QByteArray& out) {
             ::snprintf(buf,63,"%f %f",c.placeW * scale,c.placeH * scale);
             ce.setAttribute("size",buf);
         }
-//        typedef QMap<uint,int>::ConstIterator Kerning;
+//        typedef QMap<uint,int32_t>::ConstIterator Kerning;
 //        for ( Kerning k = c.kerning.begin();k!=c.kerning.end();k++) {
 //            QDomElement ke = doc.createElement("kerning");
 //            ke.setAttribute("id",QString().append(k.key()));

@@ -37,7 +37,7 @@
 AbstractExporter::AbstractExporter(QObject *parent) :
     QObject(parent)
 {
-    m_face = 0;
+    m_face = nullptr;
     m_extension = "font";
     m_tex_width = 0;
     m_tex_height = 0;

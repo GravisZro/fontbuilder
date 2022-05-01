@@ -46,51 +46,28 @@ TargaImageWriter::TargaImageWriter(QString ext,QObject *parent) :
 }
 
 
-// byte-align structures
-#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
-#	pragma pack( push, packing )
-#	pragma pack( 1 )
-#	define PACK_STRUCT
-#elif defined( __GNUC__ )
-#	define PACK_STRUCT	__attribute__((packed))
-#else
-#	define PACK_STRUCT
-#endif
-
-typedef unsigned char u8;
-typedef char c8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-struct TGA_HEADER
+struct [[gnu::packed]] TGA_HEADER
 {
-        char idlength; //0: Size of Image-ID-Area
-        char colourmaptype; //1: 0=no palette ; 1=palette present
-        char datatypecode; //2: 0 - No IMage Date Included
+        uint8_t idlength; //0: Size of Image-ID-Area
+        uint8_t colourmaptype; //1: 0=no palette ; 1=palette present
+        uint8_t datatypecode; //2: 0 - No IMage Date Included
         //   1 - Uncompressed Paletted Image
         //   2 - Uncompressed True Color
         //   3 - Uncompressed Black-White
         // 8+1 - RLE          Paletted Image
         // 8+2 - RLE          True Color
         // 8+3 - RLE          Black-White
-        short int colourmaporigin; //3:
-        short int colourmaplength; //5: Number of palette entries
-        char colourmapdepth; //7: Bits per entry. Typicaly: 15,16,24,32
-        short int x_origin; //8:
-        short int y_origin; //10: Position coordinates on a display device
-        short int width; //12:
-        short int height; //14: Size of image in pixels
-        char bitsperpixel; //16: Bits per pixel. Typicaly: 8,16,24,32
-        char imagedescriptor; //17: 76-54-3210
+        uint16_t colourmaporigin; //3:
+        uint16_t colourmaplength; //5: Number of palette entries
+        uint8_t colourmapdepth; //7: Bits per entry. Typicaly: 15,16,24,32
+        uint16_t x_origin; //8:
+        uint16_t y_origin; //10: Position coordinates on a display device
+        uint16_t width; //12:
+        uint16_t height; //14: Size of image in pixels
+        uint8_t bitsperpixel; //16: Bits per pixel. Typicaly: 8,16,24,32
+        uint8_t imagedescriptor; //17: 76-54-3210
         // NA-Orign-Alpha channel bits
-}PACK_STRUCT;
-
-// Default alignment
-#if defined(_MSC_VER) ||  defined(__BORLANDC__) || defined (__BCPLUSPLUS__)
-#	pragma pack( pop, packing )
-#endif
-
-#undef PACK_STRUCT
+};
 
 
 bool TargaImageWriter::Export(QFile& file) {
@@ -111,7 +88,7 @@ bool TargaImageWriter::Export(QFile& file) {
     header.imagedescriptor = (1 << 5) | (8);
 
     file.write((const char*)&header,18);
-    for (int y=0;y<pixmap.height();y++) {
+    for (int32_t y=0;y<pixmap.height();y++) {
         /// @todo need endian control
         file.write((const char*)pixmap.scanLine(y),pixmap.width()*4);
     }
@@ -121,11 +98,11 @@ bool TargaImageWriter::Export(QFile& file) {
     return true;
 }
 
-template <int bpp>
-        inline uchar* copy_element(const uchar* src,uchar* dst);
+template <int32_t bpp>
+inline uint8_t* copy_element (const uint8_t* src,uint8_t* dst);
 
 template <>
-        inline uchar* copy_element<3>(const uchar* src,uchar* dst) {
+inline uint8_t* copy_element<3> [[gnu::always_inline]] (const uint8_t* src,uint8_t* dst) {
     *dst++=*src++;
     *dst++=*src++;
     *dst++=*src++;
@@ -133,7 +110,7 @@ template <>
 }
 
 template <>
-        inline uchar* copy_element<4>(const uchar* src,uchar* dst) {
+inline uint8_t* copy_element<4> [[gnu::always_inline]] (const uint8_t* src,uint8_t* dst) {
     *dst++=*src++;
     *dst++=*src++;
     *dst++=*src++;
@@ -141,9 +118,9 @@ template <>
     return dst;
 }
 
-template <int bpp>
-        void encode_rle(uchar* data,QFile& file,int size) {
-    uchar c;
+template <int32_t bpp>
+        void encode_rle(uint8_t* data,QFile& file,int32_t size) {
+    uint8_t c;
     while (size>0) {
         if (file.read(reinterpret_cast<char*>(&c),1)!=1) return;
         if (c < 128) {
@@ -154,10 +131,10 @@ template <int bpp>
         } else {
             c-=127;
             file.read(reinterpret_cast<char*>(data), bpp);
-            uchar* out = data + bpp;
-            for(uint counter = 1; counter < c; counter++)
+            uint8_t* out = data + bpp;
+            for(uint32_t counter = 1; counter < c; counter++)
             {
-                out = copy_element<bpp>(data,out);
+                out = copy_element<bpp> (data,out);
             }
             data = out;
             size-= c;
@@ -176,17 +153,17 @@ QImage* TargaImageWriter::reload(QFile& file) {
     /// support only True Color data
     if ( (header.datatypecode&7) != 2)
         return 0;
-    int bpp = header.bitsperpixel;
+    int32_t bpp = header.bitsperpixel;
     /// support only 24 and 32 bpp
     if (bpp!=24 && bpp!=32)
         return 0;
-    int width = header.width;
-    int height = header.height;
+    int32_t width = header.width;
+    int32_t height = header.height;
     /// @todo endian !
     QImage* img = 0;
     img = new QImage(width,height,QImage::Format_ARGB32);
     img->fill(0);
-    uchar* data = reinterpret_cast<uchar*>(img->bits());
+    uint8_t* data = reinterpret_cast<uint8_t*>(img->bits());
     if (bpp==32) {
         if (!rle) {
             qDebug() << "Load TGA 32bpp";
@@ -196,7 +173,7 @@ QImage* TargaImageWriter::reload(QFile& file) {
             encode_rle<4>(data,file,width*height);
         }
     } else if (bpp==24) {
-        uchar* src = new uchar [ width * height * 3];
+        uint8_t* src = new uint8_t [ width * height * 3];
         if (!rle) {
             qDebug() << "Load TGA 24bpp";
             file.read(reinterpret_cast<char*>(src),width*height*3);
@@ -204,9 +181,9 @@ QImage* TargaImageWriter::reload(QFile& file) {
             qDebug() << "Load TGA 24bpp, rle";
             encode_rle<3>(src,file,width*height);
         }
-        const uchar* s = src;
-        uchar* d = data;
-        for (int i=0;i<width*height;i++) {
+        const uint8_t* s = src;
+        uint8_t* d = data;
+        for (int32_t i=0;i<width*height;i++) {
             *d++ = *s++;
             *d++ = *s++;
             *d++ = *s++;
@@ -215,11 +192,11 @@ QImage* TargaImageWriter::reload(QFile& file) {
         delete [] src;
     }
     /// swap top-bottom
-    qDebug() << "header.imagedescriptor : " << int(header.imagedescriptor);
-    const int line_len = width*4;
+    qDebug() << "header.imagedescriptor : " << int32_t(header.imagedescriptor);
+    const int32_t line_len = width*4;
     if ((header.imagedescriptor & (1<<5))==0) {
-        uchar line[width * 4];
-        for (int i=0;i<height/2;i++) {
+        uint8_t line[width * 4];
+        for (int32_t i=0;i<height/2;i++) {
             ::memcpy(line,data+line_len*i,line_len);
             ::memcpy(data+line_len*i,data+line_len*(height-1-i),line_len);
             ::memcpy(data+line_len*(height-1-i),line,line_len);

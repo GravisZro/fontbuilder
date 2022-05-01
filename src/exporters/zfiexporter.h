@@ -11,12 +11,12 @@ typedef struct
 
 typedef struct
 {
-  unsigned short Page;
-  unsigned char Width;
-  unsigned char Height;
-  int ShiftX;
-  int ShiftY;
-  int ShiftP;
+  uint16_t Page;
+  uint8_t Width;
+  uint8_t Height;
+  int32_t ShiftX;
+  int32_t ShiftY;
+  int32_t ShiftP;
   zglTPoint2D TexCoords[4];
 } zglTCharDesc;
 
@@ -24,7 +24,7 @@ class ZFIExporter : public AbstractExporter
 {
 Q_OBJECT
 public:
-    explicit ZFIExporter(QObject *parent = 0);
+    explicit ZFIExporter(QObject *parent = nullptr);
 protected:
     virtual bool Export(QByteArray& out);
 signals:

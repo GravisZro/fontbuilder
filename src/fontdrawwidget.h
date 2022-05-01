@@ -42,7 +42,7 @@ class FontDrawWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit FontDrawWidget(QWidget *parent = 0);
+    explicit FontDrawWidget(QWidget *parent = nullptr);
 
     void setImage(const QImage& image);
     void setScale(float s);

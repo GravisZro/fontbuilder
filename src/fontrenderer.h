@@ -51,10 +51,10 @@ public:
     ~FontRenderer();
 
     const QVector<LayoutChar>& rendered() const { return m_chars;}
-    void placeImage(QPainter& p,uint sybol,int x,int y);
+    void placeImage(QPainter& p,uint32_t sybol,int32_t x,int32_t y);
     const RendererData& data() const { return m_rendered;}
     void LockAll();
-    void SetImage(uint symb,const QImage& img);
+    void SetImage(uint32_t symb,const QImage& img);
     FT_Face face() const { return m_ft_face; }
     void render(float scale);
     float scale() const { return m_scale; }
@@ -67,8 +67,8 @@ private:
     RendererData m_rendered;
     QVector<LayoutChar> m_chars;
     void clear_bitmaps();
-    bool append_bitmap(uint symbol);
-    void append_kerning(uint symbol,const uint* other,int amount);
+    bool append_bitmap(uint32_t symbol);
+    void append_kerning(uint32_t symbol,const uint32_t* other,int32_t amount);
     float   m_scale;
 signals:
     void imagesChanged();

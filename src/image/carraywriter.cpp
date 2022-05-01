@@ -65,9 +65,9 @@ bool CArrayImageWriter::Export(QFile& file) {
 
     out << QString("static const uint8_t __attribute__((section(\".ExtFlash\"))) font_data_%1[%2] = {\n").arg(fno.baseName()).arg(pixmap.height() * pixmap.width()).toUtf8();
 
-    for (int y=0; y<pixmap.height(); y++)
+    for (int32_t y=0; y<pixmap.height(); y++)
     {
-        for (int x = 0; x < pixmap.width() ; x++)
+        for (int32_t x = 0; x < pixmap.width() ; x++)
         {
             uint8_t alfaChannel = qAlpha(pixmap.pixel(x, y));//(pixmap.scanLine(y)[x] / 17) << 4) | (pixmap.scanLine(y)[x+3] / 17);
             // Scale the alfa channel to to for 1 bit color

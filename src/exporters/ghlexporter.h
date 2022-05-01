@@ -37,7 +37,7 @@ class GHLExporter : public AbstractExporter
 {
 Q_OBJECT
 public:
-    explicit GHLExporter(QObject *parent = 0);
+    explicit GHLExporter(QObject *parent = nullptr);
 protected:
     virtual bool Export(QByteArray& out);
 signals:

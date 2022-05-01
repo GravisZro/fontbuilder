@@ -10,7 +10,7 @@ class SparrowExporter : public AbstractExporter
 {
     Q_OBJECT
 public:
-    explicit SparrowExporter(QObject *parent = 0);
+    explicit SparrowExporter(QObject *parent = nullptr);
 
     virtual bool Export(QByteArray& out);
 signals:

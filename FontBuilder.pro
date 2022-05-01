@@ -32,6 +32,8 @@
 # -------------------------------------------------
 TARGET = FontBuilder
 TEMPLATE = app
+CONFIG += c++17
+CONFIG += strict_c++
 SOURCES += src/main.cpp \
     src/fontbuilder.cpp \
     src/colorbutton.cpp \

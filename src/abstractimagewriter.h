@@ -67,8 +67,8 @@ signals:
 private:
     QString m_error_string;
     QString m_extension;
-    int m_tex_width;
-    int m_tex_height;
+    int32_t m_tex_width;
+    int32_t m_tex_height;
     const RendererData* m_rendered;
     const LayoutData* m_layout;
     const LayoutConfig* m_layout_config;
@@ -80,8 +80,8 @@ protected:
     void setExtension(const QString& extension) { m_extension = extension;}
     void setReloadSupport(bool support) { m_reload_support = support;}
     void setErrorMessage(const QString& str) { m_error_string=str; }
-    int texWidth() const { return m_tex_width;}
-    int texHeight() const { return m_tex_height;}
+    int32_t texWidth() const { return m_tex_width;}
+    int32_t texHeight() const { return m_tex_height;}
     const RendererData* rendered() const { return m_rendered;}
     const LayoutData* layout() const { return m_layout;}
     const LayoutConfig* layoutConfig() const { return m_layout_config;}

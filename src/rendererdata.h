@@ -38,26 +38,26 @@
 
 
 struct RenderedChar {
-    uint symbol;
-    int offsetX;
-    int offsetY;
-    int advance;
+    uint32_t symbol;
+    int32_t offsetX;
+    int32_t offsetY;
+    int32_t advance;
     QImage img;
-    QMap<uint,int> kerning;
+    QMap<uint32_t,int32_t> kerning;
     bool    locked;
     RenderedChar() : symbol(0),locked(false) {}
-    RenderedChar(uint symbol,int x,int y,int a,const QImage& img) :
+    RenderedChar(uint32_t symbol,int32_t x,int32_t y,int32_t a,const QImage& img) :
             symbol(symbol),offsetX(x),offsetY(y),advance(a),img(img) ,locked(false){}
 };
 
 struct RenderedMetrics {
-    int ascender;
-    int descender;
-    int height;
+    int32_t ascender;
+    int32_t descender;
+    int32_t height;
 };
 
 struct RendererData {
-    QMap<uint,RenderedChar> chars;
+    QMap<uint32_t,RenderedChar> chars;
     RenderedMetrics metrics;
 };
 

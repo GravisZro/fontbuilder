@@ -43,7 +43,7 @@ class LayouterFactory : public QObject
 {
 Q_OBJECT
 public:
-    explicit LayouterFactory(QObject *parent = 0);
+    explicit LayouterFactory(QObject *parent = nullptr);
     AbstractLayouter* build(const QString& name,QObject *parent);
     QStringList names() const;
 private:

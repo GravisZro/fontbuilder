@@ -7,7 +7,7 @@ class MPImageWriter : public AbstractImageWriter
 {
 Q_OBJECT
 public:
-    MPImageWriter(QString ext,QObject *parent = 0);
+    MPImageWriter(QString ext,QObject *parent = nullptr);
 
     virtual bool Export(QFile& file);
     virtual QImage* reload(QFile& file);
