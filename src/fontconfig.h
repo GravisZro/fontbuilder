@@ -74,13 +74,13 @@ public:
     void setStyle(const QString& style);
     Q_PROPERTY( QString style READ style WRITE setStyle )
 
-    int32_t faceIndex() const { return m_face_index;}
-    void setFaceIndex(int32_t indx);
-    Q_PROPERTY( int32_t faceIndex READ faceIndex WRITE setFaceIndex )
+    int faceIndex() const { return m_face_index;}
+    void setFaceIndex(int indx);
+    Q_PROPERTY( int faceIndex READ faceIndex WRITE setFaceIndex )
 
-    int32_t size() const { return m_size;}
-    void setSize(int32_t size);
-    Q_PROPERTY( int32_t size READ size WRITE setSize )
+    int size() const { return m_size;}
+    void setSize(int size);
+    Q_PROPERTY( int size READ size WRITE setSize )
 
     const QString& characters() const { return m_characters; }
     void setCharacters(const QString& characters);
@@ -88,10 +88,10 @@ public:
 
     const QString& defaultCharacters() const;
 
-    int32_t hinting() const { return m_hinting;}
-    void setHinting(int32_t b);
+    int hinting() const { return m_hinting;}
+    void setHinting(int b);
     void resetHinting() { m_hinting = HintingDefault;}
-    Q_PROPERTY( int32_t hinting READ hinting WRITE setHinting RESET resetHinting )
+    Q_PROPERTY( int hinting READ hinting WRITE setHinting RESET resetHinting )
 
     bool renderMissing() const { return m_render_missing;}
     void setRenderMissing(bool b);
@@ -101,18 +101,18 @@ public:
     void setAntialiased(bool b);
     Q_PROPERTY( bool antialiased READ antialiased WRITE setAntialiased )
 
-    int32_t antialiasing() const { return m_aamethod;}
-    void setAntiAliasing(int32_t b);
+    int antialiasing() const { return m_aamethod;}
+    void setAntiAliasing(int b);
     void resetAntiAliasing() {m_aamethod = AAliasingNormal;}
-    Q_PROPERTY( int32_t antialiasing READ antialiasing WRITE setAntiAliasing RESET resetAntiAliasing)
+    Q_PROPERTY( int antialiasing READ antialiasing WRITE setAntiAliasing RESET resetAntiAliasing)
 
-    int32_t bold() const { return m_bold;}
-    void setBold(int32_t b);
-    Q_PROPERTY( int32_t bold READ bold WRITE setBold )
+    int bold() const { return m_bold;}
+    void setBold(int b);
+    Q_PROPERTY( int bold READ bold WRITE setBold )
 
-    int32_t italic() const { return m_italic;}
-    void setItalic(int32_t b);
-    Q_PROPERTY( int32_t italic READ italic WRITE setItalic )
+    int italic() const { return m_italic;}
+    void setItalic(int b);
+    Q_PROPERTY( int italic READ italic WRITE setItalic )
 
     float width() const { return m_width;}
     void setWidth(float b);
@@ -122,17 +122,17 @@ public:
     void setHeight(float b);
     Q_PROPERTY( float height READ height WRITE setHeight )
 
-    int32_t lineSpacing() const { return m_line_spacing;}
-    void setLineSpacing(int32_t s);
-    Q_PROPERTY( int32_t lineSpacing READ lineSpacing WRITE setLineSpacing )
+    int lineSpacing() const { return m_line_spacing;}
+    void setLineSpacing(int s);
+    Q_PROPERTY( int lineSpacing READ lineSpacing WRITE setLineSpacing )
 
-    int32_t charSpacing() const { return m_char_spacing;}
-    void setCharSpacing(int32_t s);
-    Q_PROPERTY( int32_t charSpacing READ charSpacing WRITE setCharSpacing )
+    int charSpacing() const { return m_char_spacing;}
+    void setCharSpacing(int s);
+    Q_PROPERTY( int charSpacing READ charSpacing WRITE setCharSpacing )
 
-    int32_t DPI() const { return m_dpi;}
-    void setDPI(int32_t dpi);
-    Q_PROPERTY( int32_t DPI READ DPI WRITE setDPI )
+    int DPI() const { return m_dpi;}
+    void setDPI(int dpi);
+    Q_PROPERTY( int DPI READ DPI WRITE setDPI )
 
     static QString defaultFontsPath();
     void emmitChange();

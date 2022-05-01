@@ -94,7 +94,7 @@ private slots:
     void onFontNameChanged();
     void onExternalImageChanged(const QString& img);
     void onSpacingChanged();
-    void on_comboBox_currentIndexChanged(int32_t index);
+    void on_comboBox_currentIndexChanged(int index);
     void on_action_Open_triggered();
     void on_pushButtonImportJson_clicked();
 };

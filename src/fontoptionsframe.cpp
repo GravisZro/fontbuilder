@@ -95,13 +95,13 @@ void FontOptionsFrame::on_checkBoxSmoothing_toggled(bool checked)
 
 
 
-void FontOptionsFrame::on_horizontalSliderBold_valueChanged(int32_t value)
+void FontOptionsFrame::on_horizontalSliderBold_valueChanged(int value)
 {
      if (m_config) m_config->setBold(value);
      ui->labelBold->setText(QString().number(value));
 }
 
-void FontOptionsFrame::on_horizontalSliderItalic_valueChanged(int32_t value)
+void FontOptionsFrame::on_horizontalSliderItalic_valueChanged(int value)
 {
     if (m_config) m_config->setItalic(value);
     ui->labelItalic->setText(QString().number(value));
@@ -117,12 +117,12 @@ void FontOptionsFrame::on_doubleSpinBoxHeight_valueChanged(double value)
     if (m_config) m_config->setHeight(value);
 }
 
-void FontOptionsFrame::on_spinBoxCharSpacing_valueChanged(int32_t value)
+void FontOptionsFrame::on_spinBoxCharSpacing_valueChanged(int value)
 {
     if (m_config) m_config->setCharSpacing(value);
 }
 
-void FontOptionsFrame::on_spinBoxLineSpacing_valueChanged(int32_t value)
+void FontOptionsFrame::on_spinBoxLineSpacing_valueChanged(int value)
 {
     if (m_config) m_config->setLineSpacing(value);
 }
@@ -137,12 +137,12 @@ void FontOptionsFrame::on_comboBoxDPI_currentIndexChanged(QString val)
     }
 }
 
-void FontOptionsFrame::on_comboBox_Hinting_currentIndexChanged(int32_t index)
+void FontOptionsFrame::on_comboBox_Hinting_currentIndexChanged(int index)
 {
     if (index>=0) if (m_config) m_config->setHinting(static_cast<FontConfig::HintingMethod>(index));
 }
 
-void FontOptionsFrame::on_comboBoxAA_currentIndexChanged(int32_t index)
+void FontOptionsFrame::on_comboBoxAA_currentIndexChanged(int index)
 {
     if (index>0) if (m_config) m_config->setAntiAliasing(static_cast<FontConfig::AAMethod>(index));
 }

@@ -284,7 +284,7 @@ void FontSelectFrame::on_comboBoxFamily_currentIndexChanged(QString family)
     ui->comboBoxStyle->setEnabled(item_no>1);
 }
 
-void FontSelectFrame::on_comboBoxStyle_currentIndexChanged(int32_t index )
+void FontSelectFrame::on_comboBoxStyle_currentIndexChanged(int index )
 {
     if (index<0)
         return;

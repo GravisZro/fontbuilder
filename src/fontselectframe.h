@@ -81,7 +81,7 @@ private slots:
     void on_pushButtonDefault_clicked();
     void on_comboBoxSize_currentIndexChanged(QString );
     void on_comboBoxSize_editTextChanged(QString );
-    void on_comboBoxStyle_currentIndexChanged(int32_t index );
+    void on_comboBoxStyle_currentIndexChanged(int index );
     void on_comboBoxFamily_currentIndexChanged(QString );
     void on_pushButtonChangeDir_clicked();
 

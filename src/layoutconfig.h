@@ -47,9 +47,9 @@ public:
     void setPotImage(bool b);
     Q_PROPERTY( bool potImage READ potImage WRITE setPotImage );
 
-    int32_t sizeIncrement() const { return m_size_increment;}
-    void setSizeIncrement(int32_t v);
-    Q_PROPERTY( int32_t sizeIncrement READ sizeIncrement WRITE setSizeIncrement);
+    int sizeIncrement() const { return m_size_increment;}
+    void setSizeIncrement(int v);
+    Q_PROPERTY( int sizeIncrement READ sizeIncrement WRITE setSizeIncrement);
 
     void setOffsetLeft(int32_t v);
     void setOffsetTop(int32_t v);
@@ -61,10 +61,10 @@ public:
     int32_t offsetRight() const { return m_offset_right;}
     int32_t offsetBottom() const { return m_offset_bottom;}
 
-    Q_PROPERTY( int32_t offsetLeft READ offsetLeft WRITE setOffsetLeft );
-    Q_PROPERTY( int32_t offsetTop READ offsetTop WRITE setOffsetTop );
-    Q_PROPERTY( int32_t offsetRight READ offsetRight WRITE setOffsetRight );
-    Q_PROPERTY( int32_t offsetBottom READ offsetBottom WRITE setOffsetBottom );
+    Q_PROPERTY( int offsetLeft READ offsetLeft WRITE setOffsetLeft );
+    Q_PROPERTY( int offsetTop READ offsetTop WRITE setOffsetTop );
+    Q_PROPERTY( int offsetRight READ offsetRight WRITE setOffsetRight );
+    Q_PROPERTY( int offsetBottom READ offsetBottom WRITE setOffsetBottom );
 
 
     const QString& layouter() const { return m_layouter;}
