@@ -31,11 +31,8 @@
 #ifndef FONTTESTFRAME_H
 #define FONTTESTFRAME_H
 
-#include <QFrame>
-
-namespace Ui {
-    class FontTestFrame;
-}
+#include <QtWidgets>
+#include "fonttestwidget.h"
 
 class LayoutData;
 struct RendererData;
@@ -47,23 +44,21 @@ public:
     FontTestFrame(QWidget *parent = nullptr);
     ~FontTestFrame();
 
-    void setLayoutData(const LayoutData* data);
-    void setRendererData(const RendererData* data);
-    void setFontConfig(const FontConfig* config);
+    [[gnu::always_inline]] void setLayoutData (const LayoutData* data)
+      { m_font_test->setLayoutData(data); }
+
+    [[gnu::always_inline]] void setRendererData (const RendererData* data)
+      { m_font_test->setRendererData(data); }
+
+    [[gnu::always_inline]] void setFontConfig (const FontConfig* config)
+      { m_font_test->setFontConfig(config); }
 public slots:
-    void refresh();
+    void refresh (void) { if(m_font_test) { m_font_test->refresh(); } }
 protected:
     void changeEvent(QEvent *e);
 
 private:
-    Ui::FontTestFrame *ui;
-
-private slots:
-    void on_radioButton_3_toggled(bool checked);
-    void on_radioButton_2_toggled(bool checked);
-    void on_radioButton_toggled(bool checked);
-    void on_useKerningCheckBox_toggled(bool checked);
-    void on_plainTextEdit_textChanged();
+    FontTestWidget* m_font_test;
 };
 
 #endif // FONTTESTFRAME_H
