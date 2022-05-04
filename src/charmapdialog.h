@@ -37,9 +37,8 @@
 #include <QListWidgetItem>
 #include <QCheckBox>
 
-namespace Ui {
-    class CharMapDialog;
-}
+#include <QtWidgets>
+#include "charsselectwidget.h"
 
 class CharMapDialog : public QDialog {
     Q_OBJECT
@@ -55,7 +54,14 @@ protected:
 
 
 private:
-    Ui::CharMapDialog *ui;
+    enum
+    {
+      ListBegin = Qt::UserRole,
+      ListEnd,
+    };
+    //Ui::CharMapDialog *ui;
+    QListWidget* m_list;
+    CharsSelectWidget* m_char_select;
     QSet<uint32_t>  m_codes;
 
 private slots:
