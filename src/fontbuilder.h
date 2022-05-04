@@ -33,11 +33,20 @@
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QtWidgets>
 
+#include "fontselectframe.h"
+#include "fontoptionsframe.h"
+#include "charactersframe.h"
+#include "layoutconfigframe.h"
+#include "outputframe.h"
+#include "fontdrawwidget.h"
+#include "fonttestframe.h"
+/*
 namespace Ui {
     class FontBuilder;
 }
-
+*/
 class FontRenderer;
 class FontConfig;
 class LayoutConfig;
@@ -62,11 +71,16 @@ protected:
     void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
     void saveConfig(QSettings& config,const QString& name,const QObject* obj);
-    void readConfig(QSettings& config,const QString& name,QObject* obj);
+    void readConfig(QSettings& config,const QString& name, QObject* obj);
 
 private:
 
-    Ui::FontBuilder *ui;
+    QCheckBox* m_draw_grid_checkbox;
+    FontTestFrame* m_font_test_frame;
+    FontDrawWidget* m_font_preview_widget;
+    QLabel* m_image_size_label;
+
+//    Ui::FontBuilder *ui;
     FontRenderer*   m_font_renderer;
     FontConfig*     m_font_config;
     LayoutConfig*   m_layout_config;

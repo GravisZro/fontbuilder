@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Copyright (c) 2010-2010 Andrey AndryBlack Kunitsyn
  * email:support.andryblack@gmail.com
  *
@@ -28,23 +28,17 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include <QDebug>
-#include <QPainter>
-#include <QPixmap>
-#include <QImage>
+
+#include "fontbuilder.h"
+
 #include <QSettings>
-#include <QMetaProperty>
-#include <QDir>
-#include <QMessageBox>
-#include <QFileDialog>
-#include <QFile>
+
 #include <QJsonParseError>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 
-#include "fontbuilder.h"
-#include "ui_fontbuilder.h"
+//#include "ui_fontbuilder.h"
 #include "fontconfig.h"
 #include "fontrenderer.h"
 #include "layoutconfig.h"
@@ -58,33 +52,264 @@
 
 FontBuilder::FontBuilder(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::FontBuilder),
+    m_draw_grid_checkbox(nullptr),
+    m_font_test_frame(nullptr),
+    m_font_preview_widget(nullptr),
+    m_image_size_label(nullptr),
     m_image_writer(nullptr)
 {
-    ui->setupUi(this);
+  setWindowTitle("FontBuilder");
+  resize(612, 560);
+
+  QComboBox* layout_engine_combobox = nullptr;
+  CharactersFrame* characters_frame = nullptr;
+  FontOptionsFrame* font_options_frame = nullptr;
+  LayoutConfigFrame* layout_config_frame = nullptr;
+  OutputFrame* output_frame = nullptr;
+  FontSelectFrame* font_select_frame = nullptr;
+
+
+  QSizePolicy sp(QSizePolicy::Minimum, QSizePolicy::Minimum);
+  sp.setHorizontalStretch(0);
+  sp.setVerticalStretch(0);
+
+  {
+    auto hb = new QHBoxLayout;
+    hb->setSpacing(6);
+    hb->setContentsMargins(11, 11, 11, 11);
+
+    {
+      auto tw0 = new QTabWidget(centralWidget());
+      {
+        auto font_tab = new QWidget;
+        {
+          auto gb0 = new QGroupBox("Font", font_tab);
+          {
+            sp.setHeightForWidth(gb0->sizePolicy().hasHeightForWidth());
+            gb0->setSizePolicy(sp);
+          }
+
+          {
+            auto hb = new QHBoxLayout(gb0);
+            hb->setSpacing(6);
+            hb->setContentsMargins(11, 11, 11, 11);
+
+            {
+              font_select_frame = new FontSelectFrame(gb0); // external
+              sp.setHeightForWidth(font_select_frame->sizePolicy().hasHeightForWidth());
+              font_select_frame->setSizePolicy(sp);
+              hb->addWidget(font_select_frame);
+            }
+          }
+
+          auto gb1 = new QGroupBox("Options", font_tab);
+          {
+            auto vb = new QVBoxLayout(gb1);
+            vb->setSpacing(6);
+            vb->setContentsMargins(11, 11, 11, 11);
+            {
+              font_options_frame = new FontOptionsFrame(gb1); // external
+              sp.setHeightForWidth(font_options_frame->sizePolicy().hasHeightForWidth());
+              font_options_frame->setSizePolicy(sp);
+              vb->addWidget(font_options_frame);
+            }
+          }
+
+          {
+            auto vb = new QVBoxLayout(font_tab);
+            vb->setSpacing(6);
+            vb->setContentsMargins(11, 11, 11, 11);
+            vb->addWidget(gb0);
+            vb->addWidget(gb1);
+            vb->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
+          }
+        }
+        tw0->addTab(font_tab, "Font");
+      }
+
+      {
+        auto characters_tab = new QWidget;
+        auto vb = new QVBoxLayout(characters_tab);
+        vb->setSpacing(6);
+        vb->setContentsMargins(11, 11, 11, 11);
+        {
+          characters_frame = new CharactersFrame(characters_tab);
+          vb->addWidget(characters_frame);
+        }
+        tw0->addTab(characters_tab, "Characters");
+      }
+
+      {
+        auto layout_tab = new QWidget;
+        {
+          layout_engine_combobox = new QComboBox(layout_tab); // external
+          layout_config_frame = new LayoutConfigFrame(layout_tab); // external
+
+          {
+            auto vb = new QVBoxLayout(layout_tab);
+            vb->setSpacing(6);
+            vb->setContentsMargins(11, 11, 11, 11);
+
+            vb->addWidget(new QLabel("Layout engine"));
+            vb->addWidget(layout_engine_combobox);
+            vb->addWidget(layout_config_frame);
+
+            vb->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding));
+          }
+
+          connect(layout_engine_combobox, &QComboBox::currentTextChanged, this, &FontBuilder::on_comboBoxLayouter_currentIndexChanged);
+        }
+        tw0->addTab(layout_tab, "Layout");
+      }
+
+      {
+        auto output_tab = new QWidget;
+        auto vb = new QVBoxLayout(output_tab);
+
+        output_frame = new OutputFrame(output_tab); // external
+        vb->addWidget(output_frame);
+
+        {
+          auto import_json = new QPushButton("Generate fonts from .json file", output_tab);
+          vb->addWidget(import_json);
+          connect(import_json, &QPushButton::clicked, this, &FontBuilder::on_pushButtonImportJson_clicked);
+        }
+
+        {
+          auto write_font = new QPushButton("Write font", output_tab);
+          vb->addWidget(write_font);
+          connect(write_font, &QPushButton::clicked, this, &FontBuilder::on_pushButtonWriteFont_clicked);
+        }
+
+        tw0->addTab(output_tab, "Output");
+      }
+
+      tw0->setCurrentIndex(1);
+      hb->addWidget(tw0);
+    }
+
+    {
+      auto tw1 = new QTabWidget(centralWidget());
+      {
+        auto preview_tab = new QWidget;
+        {
+          auto gl = new QGridLayout(preview_tab);
+          gl->setSpacing(6);
+          gl->setContentsMargins(11, 11, 11, 11);
+
+          {
+            auto scrollArea = new QScrollArea(preview_tab);
+            scrollArea->setWidgetResizable(true);
+            scrollArea->setWidget(new QWidget);
+            scrollArea->widget()->setGeometry(QRect(0, 0, 360, 425));
+            {
+              auto gl1 = new QGridLayout(scrollArea->widget());
+              gl1->setSpacing(6);
+              gl1->setContentsMargins(11, 11, 11, 11);
+              gl1->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding), 4, 0, 1, 4);
+              gl1->addItem(new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding), 0, 0, 1, 4);
+              gl1->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum), 2, 3, 1, 1);
+              gl1->addItem(new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum), 2, 0, 1, 1);
+
+              {
+                m_font_preview_widget = new FontDrawWidget(scrollArea->widget());
+                gl1->addWidget(m_font_preview_widget, 2, 1, 1, 2);
+              }
+            }
+            gl->addWidget(scrollArea, 3, 0, 1, 4);
+          }
+
+          {
+            m_draw_grid_checkbox = new QCheckBox("Draw Grid");
+            connect(m_draw_grid_checkbox, &QCheckBox::toggled, this, &FontBuilder::on_checkBoxDrawGrid_toggled);
+            gl->addWidget(m_draw_grid_checkbox, 1, 0, 1, 1);
+          }
+
+          {
+            m_image_size_label = new QLabel("0x0");
+            gl->addWidget(m_image_size_label, 1, 1, 1, 1);
+          }
+
+          gl->addWidget(new QLabel("Scale:"), 1, 2, 1, 1);
+
+          {
+            auto layout_combobox = new QComboBox(preview_tab);
+            layout_combobox->addItem("50%");
+            layout_combobox->addItem("100%");
+            layout_combobox->addItem("200%");
+            layout_combobox->addItem("400%");
+            layout_combobox->addItem("800%");
+            layout_combobox->setLayoutDirection(Qt::LeftToRight);
+            layout_combobox->setFrame(true);
+            layout_combobox->setCurrentIndex(1);
+            gl->addWidget(layout_combobox, 1, 3, 1, 1);
+          }
+
+          gl->setColumnStretch(0, 1);
+          gl->setColumnStretch(1, 1);
+        }
+        tw1->addTab(preview_tab, "Preview");
+
+        {
+          auto test_font_tab = new QWidget();
+          {
+            auto gl = new QGridLayout(test_font_tab);
+            gl->setSpacing(6);
+            gl->setContentsMargins(11, 11, 11, 11);
+
+            {
+              m_font_test_frame = new FontTestFrame(test_font_tab); // external
+              gl->addWidget(m_font_test_frame, 0, 0, 1, 1);
+            }
+          }
+          tw1->addTab(test_font_tab, "Test Font");
+        }
+        tw1->setCurrentIndex(1);
+      }
+      hb->addWidget(tw1);
+    }
+    hb->setStretch(1, 1);
+    setCentralWidget(new QWidget);
+    centralWidget()->setLayout(hb);
+  }
+
+  setMenuBar(new QMenuBar);
+
+  {
+    auto file = new QMenu("&File", menuBar());
+    menuBar()->addMenu(file);
+
+    {
+      auto open = file->addAction("&Open");
+      connect(open, &QAction::triggered, this, &FontBuilder::on_action_Open_triggered);
+    }
+  }
+
+  setStatusBar(new QStatusBar);
+
 
 
 
     m_font_config = new FontConfig(this);
     bool font_config_block = m_font_config->blockSignals(true);
-    connect(m_font_config,SIGNAL(nameChanged()),this,SLOT(onFontNameChanged()));
-    connect(m_font_config,SIGNAL(sizeChanged()),this,SLOT(onFontNameChanged()));
+    connect(m_font_config, &FontConfig::nameChanged, this, &FontBuilder::onFontNameChanged);
+    connect(m_font_config, &FontConfig::sizeChanged, this, &FontBuilder::onFontNameChanged);
 
     m_font_renderer = new FontRenderer(this,m_font_config);
 
-    connect(m_font_renderer,SIGNAL(imagesChanged()),this,SLOT(onRenderedChanged()));
+    connect(m_font_renderer, &FontRenderer::imagesChanged, this, &FontBuilder::onRenderedChanged);
 
     m_layout_config = new LayoutConfig(this);
     m_layout_data = new LayoutData(this);
 
-    connect(m_layout_data,SIGNAL(layoutChanged()),this,SLOT(onLayoutChanged()));
+    connect(m_layout_data, &LayoutData::layoutChanged, this, &FontBuilder::onLayoutChanged);
 
     m_layouter = nullptr;
     m_layouter_factory = new LayouterFactory(this);
 
-    bool b = ui->comboBoxLayouter->blockSignals(true);
-    ui->comboBoxLayouter->clear();
-    ui->comboBoxLayouter->addItems(m_layouter_factory->names());
+    bool b = layout_engine_combobox->blockSignals(true);
+    layout_engine_combobox->clear();
+    layout_engine_combobox->addItems(m_layouter_factory->names());
 
     m_output_config = new OutputConfig(this);
 
@@ -94,53 +319,51 @@ FontBuilder::FontBuilder(QWidget *parent) :
     m_font_config->normalize();
     readConfig(settings,"layoutconfig",m_layout_config);
     readConfig(settings,"outputconfig",m_output_config);
-    ui->checkBoxDrawGrid->setChecked(settings.value("draw_grid").toBool());
-    ui->widgetFontPreview->setDrawGrid(ui->checkBoxDrawGrid->isChecked());
-    connect(ui->checkBoxDrawGrid,SIGNAL(toggled(bool)),this,SLOT(on_checkBoxDrawGrid_toggled(bool)));
+    m_draw_grid_checkbox->setChecked(settings.value("draw_grid").toBool());
+    m_font_preview_widget->setDrawGrid(m_draw_grid_checkbox->isChecked());
 
-    ui->frameCharacters->setConfig(m_font_config);
-    ui->frameFontOptions->setConfig(m_font_config);
+    characters_frame->setConfig(m_font_config);
+    font_options_frame->setConfig(m_font_config);
     if (!m_layout_config->layouter().isEmpty()) {
-        for (int32_t i=0;i<ui->comboBoxLayouter->count();i++)
-            if (ui->comboBoxLayouter->itemText(i)==m_layout_config->layouter())
-                ui->comboBoxLayouter->setCurrentIndex(i);
+        for (int32_t i=0;i<layout_engine_combobox->count();i++)
+            if (layout_engine_combobox->itemText(i)==m_layout_config->layouter())
+                layout_engine_combobox->setCurrentIndex(i);
     }
-    ui->frameLayoutConfig->setConfig(m_layout_config);
+    layout_config_frame->setConfig(m_layout_config);
 
 
     m_exporter_factory = new ExporterFactory(this);
-    ui->frameOutput->setExporters(m_exporter_factory->names());
+    output_frame->setExporters(m_exporter_factory->names());
 
     m_image_writer_factory = new ImageWriterFactory(this);
-    ui->frameOutput->setImageWriters(m_image_writer_factory->names());
+    output_frame->setImageWriters(m_image_writer_factory->names());
 
-    ui->comboBoxLayouter->blockSignals(b);
-    this->on_comboBoxLayouter_currentIndexChanged(
-            ui->comboBoxLayouter->currentText());
+    layout_engine_combobox->blockSignals(b);
+    //layout_engine_combobox->setCurrentText(layout_engine_combobox->currentText());
 
-    ui->frameOutput->setConfig(m_output_config);
-    ui->frameFontSelect->setConfig(m_font_config);
+    output_frame->setConfig(m_output_config);
+    font_select_frame->setConfig(m_font_config);
 
-    ui->fontTestFrame->setLayoutData(m_layout_data);
-    ui->fontTestFrame->setRendererData(&m_font_renderer->data());
-    ui->fontTestFrame->setFontConfig(m_font_config);
+    m_font_test_frame->setLayoutData(m_layout_data);
+    m_font_test_frame->setRendererData(&m_font_renderer->data());
+    m_font_test_frame->setFontConfig(m_font_config);
 
-    ui->widgetFontPreview->setLayoutData(m_layout_data);
-    ui->widgetFontPreview->setRendererData(&m_font_renderer->data());
-    ui->widgetFontPreview->setLayoutConfig(m_layout_config);
+    m_font_preview_widget->setLayoutData(m_layout_data);
+    m_font_preview_widget->setRendererData(&m_font_renderer->data());
+    m_font_preview_widget->setLayoutConfig(m_layout_config);
 
     m_font_config->blockSignals(font_config_block);
     m_font_config->emmitChange();
 
-    connect(m_font_config,SIGNAL(spacingChanged()),this,SLOT(onSpacingChanged()));
-    ui->fontTestFrame->refresh();
+    connect(m_font_config, &FontConfig::spacingChanged, this, &FontBuilder::onSpacingChanged);
+    m_font_test_frame->refresh();
 
     m_font_loader = new FontLoader(this);
+
 }
 
 FontBuilder::~FontBuilder()
 {
-    delete ui;
 }
 
 
@@ -151,7 +374,7 @@ void FontBuilder::closeEvent(QCloseEvent *event)
      saveConfig(settings,"fontconfig",m_font_config);
      saveConfig(settings,"layoutconfig",m_layout_config);
      saveConfig(settings,"outputconfig",m_output_config);
-     settings.setValue("draw_grid",ui->checkBoxDrawGrid->isChecked());
+     settings.setValue("draw_grid", m_draw_grid_checkbox->isChecked());
      QMainWindow::closeEvent(event);
  }
 
@@ -190,7 +413,7 @@ void FontBuilder::changeEvent(QEvent *e)
     QMainWindow::changeEvent(e);
     switch (e->type()) {
     case QEvent::LanguageChange:
-        ui->retranslateUi(this);
+//        ui->retranslateUi(this);
         break;
     default:
         break;
@@ -212,26 +435,26 @@ void FontBuilder::on_comboBoxLayouter_currentIndexChanged(QString name)
     if (m_layouter) {
         m_layouter->setConfig(m_layout_config);
         m_layouter->setData(m_layout_data);
-        connect(m_font_renderer,SIGNAL(imagesChanged(QVector<LayoutChar>)),
-                m_layouter,SLOT(on_ReplaceImages(QVector<LayoutChar>)));
+        connect(m_font_renderer, &FontRenderer::imagesChangedWithData,
+                m_layouter, &AbstractLayouter::on_ReplaceImages);
         m_layouter->on_ReplaceImages(m_font_renderer->rendered());
         m_layout_config->setLayouter(name);
     }
 }
 
 void FontBuilder::onRenderedChanged() {
-    ui->fontTestFrame->refresh();
+    m_font_test_frame->refresh();
     if (m_image_writer)
         m_image_writer->forget();
 }
 
 
 void FontBuilder::setLayoutImage(const QImage& image) {
-    ui->widgetFontPreview->setImage(image);
-    ui->label_ImageSize->setText(tr("Image size: ")+
-            QString().number(m_layout_data->width()) + "x" +
-            QString().number(m_layout_data->height())
-            );
+    m_font_preview_widget->setImage(image);
+    m_image_size_label->setText(QString("Image size: %1x%2")
+                              .arg(m_layout_data->width())
+                              .arg(m_layout_data->height())
+                              );
 }
 
 void FontBuilder::onLayoutChanged() {
@@ -249,21 +472,22 @@ void FontBuilder::onLayoutChanged() {
     qDebug() << "set layout image from rendered";
     m_layout_data->setImage(image);
     setLayoutImage(image);
-    ui->fontTestFrame->refresh();
+    m_font_test_frame->refresh();
     if (m_image_writer)
         m_image_writer->forget();
 }
 
 void FontBuilder::on_checkBoxDrawGrid_toggled(bool dg) {
-    ui->widgetFontPreview->setDrawGrid(dg);
+    m_font_preview_widget->setDrawGrid(dg);
 }
 
 void FontBuilder::onFontNameChanged() {
-    QString name = m_font_config->family()+ "_" +
-                   m_font_config->style()+ "_" +
-                   QString().number(m_font_config->size());
+    QString name = QString("%1_%2_%3")
+                   .arg(m_font_config->family())
+                   .arg(m_font_config->style())
+                   .arg(m_font_config->size())
+                   .toLower().replace(" ","_");
 
-    name = name.toLower().replace(" ","_");
     m_output_config->setImageName(name);
     m_output_config->setDescriptionName(name);
     if (m_image_writer)
@@ -360,7 +584,7 @@ void FontBuilder::doExport(bool x2) {
 
             m_image_writer = imgExporter;
             m_image_writer->watch(filename);
-            connect(m_image_writer,SIGNAL(imageChanged(QString)),this,SLOT(onExternalImageChanged(QString)));
+            connect(m_image_writer, &AbstractImageWriter::imageChanged, this, &FontBuilder::onExternalImageChanged);
 
             delete descExporter;
 
@@ -400,7 +624,7 @@ void FontBuilder::doExport(bool x2) {
         file.close();
         m_image_writer = exporter;
         m_image_writer->watch(filename);
-        connect(m_image_writer,SIGNAL(imageChanged(QString)),this,SLOT(onExternalImageChanged(QString)));
+        connect(m_image_writer, &AbstractImageWriter::imageChanged, this, &FontBuilder::onExternalImageChanged);
     }
     if (m_output_config->writeDescription()) {
         AbstractExporter* exporter = m_exporter_factory->build(m_output_config->descriptionFormat(),this);
@@ -467,19 +691,19 @@ void FontBuilder::onExternalImageChanged(const QString& fn) {
         setLayoutImage(*image);
         m_layout_data->setImage(*image);
         qDebug() << "set layout image from exernal";
-        ui->fontTestFrame->refresh();
+        m_font_test_frame->refresh();
         delete image;
     }
 }
 
 void FontBuilder::onSpacingChanged() {
-    ui->fontTestFrame->refresh();
+    m_font_test_frame->refresh();
 }
 
 void FontBuilder::on_comboBox_currentIndexChanged(int32_t index)
 {
     static const float scales[] = { 0.5,1.0,2.0,4.0,8.0 };
-    ui->widgetFontPreview->setScale(scales[index]);
+    m_font_preview_widget->setScale(scales[index]);
 }
 
 void FontBuilder::on_action_Open_triggered()
