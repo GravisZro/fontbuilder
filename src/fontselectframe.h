@@ -62,7 +62,7 @@ namespace Ui {
 class FontSelectFrame : public QFrame {
     Q_OBJECT
 public:
-    FontSelectFrame(QWidget *parent);
+    FontSelectFrame(QWidget *parent = nullptr);
     ~FontSelectFrame();
 
     void setConfig(FontConfig* config);

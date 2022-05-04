@@ -169,8 +169,8 @@ void FontRenderer::rasterize() {
                 append_kerning(ucs4chars[i],&ucs4chars.front(),ucs4chars.size()-1);
         }
     }
-    imagesChanged(m_chars);
-    imagesChanged();
+    emit imagesChangedWithData(m_chars);
+    emit imagesChanged();
 }
 
 

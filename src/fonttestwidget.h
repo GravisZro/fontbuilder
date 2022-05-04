@@ -44,14 +44,14 @@ Q_OBJECT
 public:
     explicit FontTestWidget(QWidget *parent = nullptr);
 
-    void setLayoutData(const LayoutData* data) { m_layout_data = data;}
-    void setRendererData(const RendererData* data) { m_renderer_data = data;}
-    void setFontConfig(const FontConfig* config) { m_font_config = config;}
+    [[gnu::always_inline]] void setLayoutData(const LayoutData* data) { m_layout_data = data;}
+    [[gnu::always_inline]] void setRendererData(const RendererData* data) { m_renderer_data = data;}
+    [[gnu::always_inline]] void setFontConfig(const FontConfig* config) { m_font_config = config;}
 
     void setText(const QString& text);
 
-    bool useKerning() const { return m_use_kerning;}
-    void setUseKerning(bool use) { m_use_kerning=use;}
+    [[gnu::always_inline]] bool useKerning(void) const { return m_use_kerning;}
+    [[gnu::always_inline]] void setUseKerning (bool use) { m_use_kerning = use; refresh(); }
 
     enum Align {
         ALIGN_LEFT,
@@ -59,7 +59,7 @@ public:
         ALIGN_RIGHT,
     };
 
-    void setAlign(Align a) { m_align = a;}
+    void setAlign(Align a) { m_align = a; refresh(); }
 
 protected:
     virtual void paintEvent ( QPaintEvent * event );

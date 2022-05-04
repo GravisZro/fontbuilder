@@ -102,7 +102,7 @@ template <int32_t bpp>
 inline uint8_t* copy_element (const uint8_t* src,uint8_t* dst);
 
 template <>
-inline uint8_t* copy_element<3> [[gnu::always_inline]] (const uint8_t* src,uint8_t* dst) {
+[[gnu::always_inline]] inline uint8_t* copy_element<3> (const uint8_t* src,uint8_t* dst) {
     *dst++=*src++;
     *dst++=*src++;
     *dst++=*src++;
@@ -110,7 +110,7 @@ inline uint8_t* copy_element<3> [[gnu::always_inline]] (const uint8_t* src,uint8
 }
 
 template <>
-inline uint8_t* copy_element<4> [[gnu::always_inline]] (const uint8_t* src,uint8_t* dst) {
+[[gnu::always_inline]] inline uint8_t* copy_element<4> (const uint8_t* src,uint8_t* dst) {
     *dst++=*src++;
     *dst++=*src++;
     *dst++=*src++;

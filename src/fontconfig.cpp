@@ -73,21 +73,21 @@ void FontConfig::setFilename(const QString& filename) {
         m_filename = filename;
         m_face_index = 0;
         m_size = 0;
-        fileChanged();
+        emit fileChanged();
     }
 }
 
 void FontConfig::setFamily(const QString& family) {
     if (m_family!=family) {
         m_family = family;
-        nameChanged();
+        emit nameChanged();
     }
 }
 
 void FontConfig::setStyle(const QString& style) {
     if (m_style!=style) {
         m_style = style;
-        nameChanged();
+        emit nameChanged();
     }
 }
 
@@ -95,7 +95,7 @@ void FontConfig::setFaceIndex(int32_t indx) {
     if (m_face_index!=indx) {
         m_face_index = indx;
         m_size = 0;
-        faceIndexChanged();
+        emit faceIndexChanged();
     }
 }
 
@@ -103,7 +103,7 @@ void FontConfig::setFaceIndex(int32_t indx) {
 void FontConfig::setSize(int32_t size) {
     if (m_size!=size) {
         m_size = size;
-        sizeChanged();
+        emit sizeChanged();
     }
 }
 
@@ -111,7 +111,7 @@ void FontConfig::setSize(int32_t size) {
 void FontConfig::setCharacters(const QString& characters) {
     if (m_characters!=characters) {
         m_characters=characters;
-        charactersChanged();
+        emit charactersChanged();
     }
 }
 
@@ -119,97 +119,93 @@ void FontConfig::setCharacters(const QString& characters) {
 void FontConfig::setHinting(int32_t h) {
     if (m_hinting!=h) {
         m_hinting = h;
-        renderingOptionsChanged();
+        emit renderingOptionsChanged();
     }
 }
 
 void FontConfig::setAntialiased(bool b) {
     if (m_antialiased!=b) {
         m_antialiased = b;
-        renderingOptionsChanged();
+        emit renderingOptionsChanged();
     }
 }
 
 void FontConfig::setAntiAliasing(int32_t b) {
     if (m_aamethod!=b) {
         m_aamethod = b;
-        renderingOptionsChanged();
+        emit renderingOptionsChanged();
     }
 }
 
 void FontConfig::setRenderMissing(bool b) {
     if (m_render_missing!=b) {
         m_render_missing = b;
-        renderingOptionsChanged();
+        emit renderingOptionsChanged();
     }
 }
 
 void FontConfig::setItalic(int32_t b) {
     if (m_italic!=b) {
         m_italic = b;
-        renderingOptionsChanged();
+        emit renderingOptionsChanged();
     }
 }
 
 void FontConfig::setBold(int32_t b) {
     if (m_bold!=b) {
         m_bold = b;
-        renderingOptionsChanged();
+        emit renderingOptionsChanged();
     }
 }
 
 void FontConfig::setWidth(float b) {
     if (m_width!=b) {
         m_width = b;
-        sizeChanged();
+        emit sizeChanged();
     }
 }
 
 void FontConfig::setHeight(float b) {
     if (m_height!=b) {
         m_height = b;
-        sizeChanged();
+        emit sizeChanged();
     }
 }
 
 void FontConfig::emmitChange() {
-    fileChanged();
-    nameChanged();
-    sizeChanged();
+    emit fileChanged();
+    emit nameChanged();
+    emit sizeChanged();
 }
 
 void FontConfig::setLineSpacing(int32_t s) {
     if (m_line_spacing!=s) {
         m_line_spacing = s;
-        spacingChanged();
+        emit spacingChanged();
     }
 }
 
 void FontConfig::setCharSpacing(int32_t s) {
     if (m_char_spacing!=s) {
         m_char_spacing = s;
-        spacingChanged();
+        emit spacingChanged();
     }
 }
 
 void FontConfig::setDPI(int32_t dpi) {
     if (m_dpi!=dpi) {
         m_dpi = dpi;
-        sizeChanged();
+        emit sizeChanged();
     }
 }
 
 QString FontConfig::defaultFontsPath()
 {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, 0))
     QStringList locations = QStandardPaths::standardLocations(QStandardPaths::FontsLocation);
     if (locations.isEmpty()) {
         return "/usr/X11/share/fonts/TTF";
     }
     return locations.front();
-#else
-    return QDesktopServices::storageLocation(QDesktopServices::FontsLocation);
-#endif
 }
 
 void FontConfig::normalize() {

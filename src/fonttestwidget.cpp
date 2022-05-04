@@ -38,10 +38,13 @@
 
 
 FontTestWidget::FontTestWidget(QWidget *parent) :
-    QWidget(parent) , m_layout_data(0),m_renderer_data(0),m_font_config(0)
+    QWidget(parent),
+    m_layout_data(nullptr),
+    m_renderer_data(nullptr),
+    m_font_config(nullptr),
+    m_use_kerning(false),
+    m_align(ALIGN_CENTER)
 {
-    setUseKerning(false);
-    m_align = ALIGN_CENTER;
 }
 
 

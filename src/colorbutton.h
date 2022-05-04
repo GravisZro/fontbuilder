@@ -49,7 +49,6 @@ protected:
     void mouseReleaseEvent(QMouseEvent *ev);
 signals:
     void colorChanged(QColor);
-    void colorChanged();
 public slots:
 
 };
