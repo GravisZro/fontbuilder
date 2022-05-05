@@ -31,7 +31,7 @@
 #ifndef CARRAYWRITER_H
 #define CARRAYWRITER_H
 
-#include "../abstractimagewriter.h"
+#include <abstractimagewriter.h>
 
 class CArrayImageWriter : public AbstractImageWriter
 {

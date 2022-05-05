@@ -4,7 +4,7 @@
 #ifndef SPARROWEXPORTER_H
 #define SPARROWEXPORTER_H
 
-#include "../abstractexporter.h"
+#include <abstractexporter.h>
 
 class SparrowExporter : public AbstractExporter
 {

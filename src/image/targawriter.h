@@ -31,7 +31,7 @@
 #ifndef TARGAWRITER_H
 #define TARGAWRITER_H
 
-#include "../abstractimagewriter.h"
+#include <abstractimagewriter.h>
 
 class TargaImageWriter : public AbstractImageWriter
 {

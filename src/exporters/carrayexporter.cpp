@@ -1,5 +1,5 @@
 #include "carrayexporter.h"
-#include "../fontconfig.h"
+#include <fontconfig.h>
 
 CArrayExporter::CArrayExporter(QObject *parent) :
     AbstractExporter(parent)

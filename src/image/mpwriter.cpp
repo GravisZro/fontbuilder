@@ -5,8 +5,8 @@
 #include <QImage>
 #include <QPainter>
 #include <QFileInfo>
-#include "../layoutconfig.h"
-#include "../mpcommon.h"
+#include <layoutconfig.h>
+#include <mpcommon.h>
 
 #include <QDebug>
 #include <iostream>

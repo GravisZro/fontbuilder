@@ -29,8 +29,8 @@
  */
 
 #include "luaexporter.h"
-#include "../fontconfig.h"
-#include "../layoutdata.h"
+#include <fontconfig.h>
+#include <layoutdata.h>
 
 #include <QString>
 LuaExporter::LuaExporter(bool write_function,QObject *parent) :

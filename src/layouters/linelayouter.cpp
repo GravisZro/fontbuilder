@@ -29,8 +29,8 @@
  */
 
 #include "linelayouter.h"
-#include "../rendererdata.h"
-#include "../layoutdata.h"
+#include <rendererdata.h>
+#include <layoutdata.h>
 
 LineLayouter::LineLayouter(QObject *parent) :
     AbstractLayouter(parent)

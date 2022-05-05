@@ -1,5 +1,5 @@
 #include "simpleexporter.h"
-#include "../fontconfig.h"
+#include <fontconfig.h>
 
 SimpleExporter::SimpleExporter(QObject *parent) :
     AbstractExporter(parent)

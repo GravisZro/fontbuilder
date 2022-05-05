@@ -34,7 +34,7 @@
 #include "layoutdata.h"
 #include <QImage>
 #include <QPainter>
-#include "../layoutconfig.h"
+#include <layoutconfig.h>
 
 #include <QDebug>
 

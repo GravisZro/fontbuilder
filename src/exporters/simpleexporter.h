@@ -1,7 +1,7 @@
 #ifndef SIMPLEEXPORTER_H
 #define SIMPLEEXPORTER_H
 
-#include "../abstractexporter.h"
+#include <abstractexporter.h>
 
 class SimpleExporter : public AbstractExporter
 {

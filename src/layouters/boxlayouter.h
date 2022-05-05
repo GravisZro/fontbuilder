@@ -31,7 +31,7 @@
 #ifndef BOXLAYOUTER_H
 #define BOXLAYOUTER_H
 
-#include "../abstractlayouter.h"
+#include <abstractlayouter.h>
 
 class BoxLayouter : public AbstractLayouter
 {

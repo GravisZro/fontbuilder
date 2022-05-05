@@ -29,7 +29,7 @@
  */
 
 #include "boxlayouter.h"
-#include "../layoutdata.h"
+#include <layoutdata.h>
 
 #include <cmath>
 

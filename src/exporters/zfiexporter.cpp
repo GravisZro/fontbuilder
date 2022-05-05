@@ -1,6 +1,6 @@
 #include "zfiexporter.h"
-#include "../fontconfig.h"
-#include "../layoutdata.h"
+#include <fontconfig.h>
+#include <layoutdata.h>
 
 ZFIExporter::ZFIExporter(QObject *parent) :
     AbstractExporter(parent)

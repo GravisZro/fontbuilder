@@ -29,8 +29,8 @@
  */
 
 #include "nglexporter.h"
-#include "../fontconfig.h"
-#include "../layoutdata.h"
+#include <fontconfig.h>
+#include <layoutdata.h>
 #include <QDomDocument>
 
 NGLExporter::NGLExporter(QObject *parent) :

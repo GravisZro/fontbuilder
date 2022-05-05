@@ -1,7 +1,7 @@
 #include <iostream>
 #include "mpexporter.h"
-#include "../fontconfig.h"
-#include "../mpcommon.h"
+#include <fontconfig.h>
+#include <mpcommon.h>
 
 typedef uint32_t ucode32;
 

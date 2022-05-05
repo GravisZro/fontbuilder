@@ -31,7 +31,7 @@
 #ifndef NGLEXPORTER_H
 #define NGLEXPORTER_H
 
-#include "../abstractexporter.h"
+#include <abstractexporter.h>
 
 class NGLExporter : public AbstractExporter
 {

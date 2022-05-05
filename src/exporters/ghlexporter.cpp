@@ -29,8 +29,8 @@
  */
 
 #include "ghlexporter.h"
-#include "../fontconfig.h"
-#include "../layoutdata.h"
+#include <fontconfig.h>
+#include <layoutdata.h>
 #include <QDomDocument>
 
 GHLExporter::GHLExporter(QObject *parent) :

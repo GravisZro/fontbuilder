@@ -32,7 +32,7 @@
 #ifndef BUILTINIMAGEWRITER_H
 #define BUILTINIMAGEWRITER_H
 
-#include "../abstractimagewriter.h"
+#include <abstractimagewriter.h>
 
 class BuiltinImageWriter : public AbstractImageWriter
 {

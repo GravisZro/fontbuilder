@@ -31,7 +31,7 @@
 #ifndef GRIDLAYOUTER_H
 #define GRIDLAYOUTER_H
 
-#include "../abstractlayouter.h"
+#include <abstractlayouter.h>
 
 class GridLayouter : public AbstractLayouter
 {

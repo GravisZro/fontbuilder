@@ -1,7 +1,7 @@
 #ifndef BMFONTEXPORTER_H
 #define BMFONTEXPORTER_H
 
-#include "../abstractexporter.h"
+#include <abstractexporter.h>
 
 class BMFontExporter : public AbstractExporter
 {

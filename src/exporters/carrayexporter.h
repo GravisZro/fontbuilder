@@ -1,7 +1,7 @@
 #ifndef CARRAYEXPORTER_H
 #define CARRAYEXPORTER_H
 
-#include "../abstractexporter.h"
+#include <abstractexporter.h>
 
 class CArrayExporter : public AbstractExporter
 {

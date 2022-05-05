@@ -1,7 +1,7 @@
 #ifndef MPWRITER_H
 #define MPWRITER_H
 
-#include "../abstractimagewriter.h"
+#include <abstractimagewriter.h>
 
 class MPImageWriter : public AbstractImageWriter
 {

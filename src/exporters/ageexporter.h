@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../abstractexporter.h"
+#include <abstractexporter.h>
 
 class AGEExporter : public AbstractExporter
 {

@@ -1,5 +1,5 @@
 #include "sparrowexporter.h"
-#include "../fontconfig.h"
+#include <fontconfig.h>
 #include <QtXml>
 
 SparrowExporter::SparrowExporter(QObject *parent) :

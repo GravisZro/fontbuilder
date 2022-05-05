@@ -1,7 +1,7 @@
 #ifndef MPEXPORTER_H
 #define MPEXPORTER_H
 
-#include "../abstractexporter.h"
+#include <abstractexporter.h>
 
 class MPExporter : public AbstractExporter
 {

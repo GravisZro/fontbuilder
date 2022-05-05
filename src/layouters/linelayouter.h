@@ -31,7 +31,7 @@
 #ifndef LINELAYOUTER_H
 #define LINELAYOUTER_H
 
-#include "../abstractlayouter.h"
+#include <abstractlayouter.h>
 
 class LineLayouter : public AbstractLayouter
 {

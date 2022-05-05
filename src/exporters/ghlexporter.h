@@ -31,7 +31,7 @@
 #ifndef GHLEXPORTER_H
 #define GHLEXPORTER_H
 
-#include "../abstractexporter.h"
+#include <abstractexporter.h>
 
 class GHLExporter : public AbstractExporter
 {

@@ -32,7 +32,8 @@
 #include "builtinimagewriter.h"
 #include "layoutdata.h"
 #include <QPainter>
-#include "../layoutconfig.h"
+
+#include <layoutconfig.h>
 
 BuiltinImageWriter::BuiltinImageWriter(QString format,QString ext,QObject *parent) :
     AbstractImageWriter(parent)
