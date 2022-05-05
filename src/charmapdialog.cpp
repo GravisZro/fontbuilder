@@ -351,25 +351,21 @@ void CharMapDialog::changeEvent(QEvent *e)
     }
 }
 
-void CharMapDialog::setChars(const QString& string) {
-    m_codes.clear();
-    QVector<uint32_t> ucs4codes = string.toUcs4();
-    ucs4codes.push_back(0);
-    const uint32_t* codes = ucs4codes.data();
-    while (*codes) {
-        m_codes.insert(*codes);
-        onCharsChanged(*codes,true);
-        codes++;
-    }
-
+void CharMapDialog::setChars(const QString& string)
+{
+  m_char_select->clearCharacterCodes();
+  QVector<uint32_t> ucs4codes = string.toUcs4();
+  foreach(auto c, ucs4codes)
+  {
+    m_char_select->insertCharacterCode(c);
+    onCharsChanged(c, true);
+  }
 }
 
-QString CharMapDialog::getCharacters() const {
-    QVector<uint32_t> ucs4codes;
-    foreach( uint32_t code , m_codes) {
-        ucs4codes.push_back(code);
-    }
-    return QString::fromUcs4(&ucs4codes.front(), ucs4codes.size());
+QString CharMapDialog::getCharacters() const
+{
+  QList<uint32_t> ucs4codes = m_char_select->getCharacterCodes().values();
+  return QString::fromUcs4(&ucs4codes.front(), ucs4codes.size());
 }
 
 void CharMapDialog::onCharsChanged(uint32_t code,bool add)
@@ -385,7 +381,7 @@ void CharMapDialog::onCharsChanged(uint32_t code,bool add)
                 item->setCheckState(Qt::Checked);
             } else {
                 bool have = false;
-                foreach (uint32_t c, m_codes ) {
+                foreach (uint32_t c, m_char_select->getCharacterCodes() ) {
                     if (c>=begin && c<=end) {
                         have = true;
                         break;
@@ -407,19 +403,14 @@ void CharMapDialog::on_listWidget_currentItemChanged(QListWidgetItem* current, Q
 
 void CharMapDialog::on_listWidget_itemChanged(QListWidgetItem* item)
 {
-    bool checked = item->checkState() == Qt::Checked;
-    uint32_t begin = item->data(ListBegin).toInt();
+  if (item->checkState() == Qt::Checked)
+  {
     uint32_t end = item->data(ListEnd).toInt();
-    if (checked) {
-        for (uint32_t i=begin;i<=end;i++) {
-            m_codes.insert(i);
-        }
-    } else {
-        for (uint32_t i=begin;i<=end;i++) {
-            QSet<uint32_t>::Iterator it = m_codes.find(i);
-            if (it!=m_codes.end())
-                m_codes.erase(it);
-        }
-    }
-    m_char_select->update();
+    for (uint32_t i = item->data(ListBegin).toInt(); i <= end; i++)
+      m_char_select->insertCharacterCode(i);
+  }
+  else
+    m_char_select->setRange(item->data(ListBegin).toInt(),
+                            item->data(ListEnd).toInt());
+  m_char_select->update();
 }

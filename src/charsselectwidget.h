@@ -40,8 +40,13 @@ Q_OBJECT
 public:
     explicit CharsSelectWidget(QWidget *parent = nullptr);
 
-    void setRange(uint32_t begin,uint32_t end);
-    void setCodes(QSet<uint32_t>* codes) { m_codes=codes;}
+    void setRange(uint32_t begin, uint32_t end);
+
+    QSet<uint32_t> getCharacterCodes(void) { return m_character_codes; }
+    void clearCharacterCodes(void) { m_character_codes.clear(); }
+    void insertCharacterCode(uint32_t c) { m_character_codes.insert(c); }
+    bool removeCharacterCode(uint32_t c) { return m_character_codes.remove(c); }
+
 protected:
     virtual void paintEvent(QPaintEvent *);
     virtual void mousePressEvent(QMouseEvent *);
@@ -53,11 +58,11 @@ signals:
 public slots:
 
 private:
+    QSet<uint32_t> m_character_codes;
     uint32_t    m_codes_begin;
     uint32_t    m_codes_end;
     uint32_t    m_select_begin_code;
     uint32_t    m_select_last_code;
-    QSet<uint32_t>* m_codes;
 
     bool m_track_mouse;
     bool m_track_erase;

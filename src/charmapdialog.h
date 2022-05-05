@@ -62,7 +62,7 @@ private:
     //Ui::CharMapDialog *ui;
     QListWidget* m_list;
     CharsSelectWidget* m_char_select;
-    QSet<uint32_t>  m_codes;
+//    QSet<uint32_t> m_codes;
 
 private slots:
     void on_listWidget_itemChanged(QListWidgetItem* item);
