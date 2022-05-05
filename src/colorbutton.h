@@ -31,26 +31,27 @@
 #ifndef COLORBUTTON_H
 #define COLORBUTTON_H
 
-#include <QWidget>
-#include <QColor>
-#include <QLabel>
+#include <QtWidgets>
 
-class ColorButton : public QLabel
+class ColorButton : public QAbstractButton
 {
 Q_OBJECT
 public:
     explicit ColorButton(QWidget *parent = nullptr);
-    Q_PROPERTY( QColor color READ color WRITE setColor );
+
+    Q_PROPERTY( QColor color READ color WRITE setColor CONSTANT);
     QColor color() const { return m_color;}
     void setColor(const QColor& c) { m_color = c;}
-protected:
-    QColor  m_color;
-    void paintEvent(QPaintEvent *);
-    void mouseReleaseEvent(QMouseEvent *ev);
+
 signals:
     void colorChanged(QColor);
-public slots:
 
+protected:
+    void paintEvent(QPaintEvent*);
+    void onClicked(bool);
+
+protected:
+    QColor m_color;
 };
 
 #endif // COLORBUTTON_H

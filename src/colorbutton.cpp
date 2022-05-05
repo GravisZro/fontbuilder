@@ -29,30 +29,28 @@
  */
 
 #include "colorbutton.h"
-#include <QPainter>
-#include <QColorDialog>
-ColorButton::ColorButton(QWidget *parent) :
-    QLabel(parent)
+
+ColorButton::ColorButton(QWidget *parent)
+  : QAbstractButton(parent)
 {
+  connect(this, &QAbstractButton::clicked, this, &ColorButton::onClicked);
+}
+
+void ColorButton::paintEvent(QPaintEvent*)
+{
+  QPainter painter(this);
+  painter.fillRect(rect(),m_color);
+  painter.drawRect(rect());
 }
 
 
-void ColorButton::paintEvent(QPaintEvent *) {
-    QPainter painter(this);
-    painter.fillRect(rect(),m_color);
-    painter.drawRect(rect());
-}
-
-
-void ColorButton::mouseReleaseEvent(QMouseEvent *ev) {
-    Q_UNUSED(ev);
-    QColorDialog cd(color(),parentWidget());
-    if (cd.exec()==QDialog::Accepted) {
-        setColor(cd.selectedColor());
-        repaint();
-        emit colorChanged(color());
-    }
-    //if (cd->)
-    //setColor(QColorDialog::getColor(color(),this->parentWidget()));
-    //repaint();
+void ColorButton::onClicked(bool)
+{
+  QColorDialog cd(color(), parentWidget());
+  if (cd.exec() == QDialog::Accepted)
+  {
+    setColor(cd.selectedColor());
+    repaint();
+    emit colorChanged(color());
+  }
 }
