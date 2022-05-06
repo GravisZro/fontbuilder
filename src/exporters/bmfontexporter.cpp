@@ -39,12 +39,12 @@ bool BMFontExporter::Export(QByteArray &out)
     foreach(const Symbol& c , symbols()) {
         res += QString("char id=%1 x=%2 y=%3 width=%4 height=%5 xoffset=%6 yoffset=%7 xadvance=%8 page=%9\n")
                  .arg(c.id)
-                 .arg(c.placeX)
-                 .arg(c.placeY)
-                 .arg(c.placeW)
-                 .arg(c.placeH)
-                 .arg(c.offsetX)
-                 .arg(metrics().ascender - c.offsetY)
+                 .arg(c.place.x())
+                 .arg(c.place.y())
+                 .arg(c.place.width())
+                 .arg(c.place.height())
+                 .arg(c.offset.x())
+                 .arg(metrics().ascender - c.offset.y())
                  .arg(c.advance)
                  .arg(0);
     }

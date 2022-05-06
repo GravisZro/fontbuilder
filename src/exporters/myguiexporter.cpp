@@ -94,13 +94,13 @@ bool MyGUIExporter::Export(QByteArray& out) {
         QDomElement ce = doc.createElement("Code");
         ce.setAttribute("index",QString("%1").arg(c.id));
         char buf[64];
-        ::snprintf(buf,63,"%d %d %d %d",c.placeX,c.placeY,c.placeW,c.placeH);
+        ::snprintf(buf,63,"%d %d %d %d",c.place.x(),c.place.y(),c.place.width(),c.place.height());
         ce.setAttribute("coord",buf);
-        ::snprintf(buf,63,"%f %f",c.offsetX * scale,ascender-c.offsetY * scale);
+        ::snprintf(buf,63,"%f %f",c.offset.x() * scale,ascender-c.offset.y() * scale);
         ce.setAttribute("bearing",buf);
-        ce.setAttribute("advance",c.advance* scale-c.offsetX* scale);
+        ce.setAttribute("advance",c.advance* scale-c.offset.x()* scale);
         if (scale!=1.0f) {
-            ::snprintf(buf,63,"%f %f",c.placeW * scale,c.placeH * scale);
+            ::snprintf(buf,63,"%f %f",c.place.width() * scale,c.place.height() * scale);
             ce.setAttribute("size",buf);
         }
 //        typedef QMap<uint,int32_t>::ConstIterator Kerning;

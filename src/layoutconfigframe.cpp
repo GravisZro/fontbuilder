@@ -21,10 +21,10 @@ void LayoutConfigFrame::setConfig(LayoutConfig* config) {
         ui->checkBoxOnePixelOffset->setChecked(config->onePixelOffset());
         ui->checkBoxPOT->setChecked(config->potImage());
         ui->spinBoxSizeIncrement->setValue(config->sizeIncrement());
-        ui->spinBoxLeftOffset->setValue(config->offsetLeft());
-        ui->spinBoxTopOffset->setValue(config->offsetTop());
-        ui->spinBoxRightOffset->setValue(config->offsetRight());
-        ui->spinBoxBottomOffset->setValue(config->offsetBottom());
+        ui->spinBoxLeftOffset->setValue(config->offset().left());
+        ui->spinBoxTopOffset->setValue(config->offset().top());
+        ui->spinBoxRightOffset->setValue(config->offset().x() + config->offset().width());
+        ui->spinBoxBottomOffset->setValue(config->offset().y() + config->offset().height());
     }
 }
 
@@ -57,22 +57,34 @@ void LayoutConfigFrame::on_spinBoxSizeIncrement_valueChanged(int value)
 
 void LayoutConfigFrame::on_spinBoxTopOffset_valueChanged(int value)
 {
-    if (m_config) m_config->setOffsetTop(value);
+  Q_ASSERT(m_config);
+  QRect offset = m_config->offset();
+  offset.setTop(value);
+  m_config->setOffset(offset);
 }
 
 void LayoutConfigFrame::on_spinBoxLeftOffset_valueChanged(int value)
 {
-    if (m_config) m_config->setOffsetLeft(value);
+  Q_ASSERT(m_config);
+  QRect offset = m_config->offset();
+  offset.setLeft(value);
+  m_config->setOffset(offset);
 }
 
 void LayoutConfigFrame::on_spinBoxBottomOffset_valueChanged(int value)
 {
-    if (m_config) m_config->setOffsetBottom(value);
+  Q_ASSERT(m_config);
+  QRect offset = m_config->offset();
+  offset.setBottom(value);
+  m_config->setOffset(offset);
 }
 
 void LayoutConfigFrame::on_spinBoxRightOffset_valueChanged(int value)
 {
-    if (m_config) m_config->setOffsetRight(value);
+  Q_ASSERT(m_config);
+  QRect offset = m_config->offset();
+  offset.setRight(value);
+  m_config->setOffset(offset);
 }
 
 

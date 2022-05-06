@@ -43,17 +43,18 @@ struct Line {
     int32_t max_y;
     int32_t y;
     Line() : min_y(0),max_y(0),y(0) {}
-    explicit Line(const LayoutChar& c) : y(0) {
-        min_y = c.y;
-        max_y = c.y + c.h;
+    explicit Line(const LayoutChar& c) : y(0)
+    {
+        min_y = c.bounding.y();
+        max_y = c.bounding.y() + c.bounding.height();
         //chars.push_back(&c);
     }
     int32_t h() const { return max_y - min_y;}
     void append(const LayoutChar& c) {
-        if (c.y < min_y)
-            min_y = c.y;
-        if ((c.y+c.h)>max_y)
-            max_y = c.y + c.h;
+        if (c.bounding.y() < min_y)
+            min_y = c.bounding.y();
+        if (c.bounding.y() + c.bounding.height() > max_y)
+            max_y = c.bounding.y() + c.bounding.height();
         chars.push_back(&c);
     }
 
@@ -63,12 +64,13 @@ struct Line {
 void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
     int32_t h = 0;
     int32_t w = 0;
-    if (chars.isEmpty()) return;
+    if (chars.isEmpty())
+      return;
 
     /// speed up
     int32_t area = 0;
     foreach (const LayoutChar& c, chars)
-        area+=c.w*c.h;
+        area += c.bounding.width() * c.bounding.height();
     int32_t dim = ::sqrt(area);
 
     resize(dim,dim);
@@ -86,7 +88,7 @@ void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
         iteration = false;
         foreach (const LayoutChar& c, chars) {
 
-            if ((x+c.w)>w) {
+            if ((x + c.bounding.width()) > w) {
                 x = 0;
                 int32_t y = lines.back().y;
                 int32_t h = lines.back().h();
@@ -94,14 +96,14 @@ void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
                 lines.back().y = y + h;
             }
 
-           if ( (lines.back().y+c.h)>h ) {
+           if ( (lines.back().y + c.bounding.height())>h ) {
                 if (w>h) {
-                    resize(width(),lines.back().y+c.h);
-                    h=height();
+                    resize(width(),lines.back().y + c.bounding.height());
+                    h = height();
                 }
                 else {
-                    resize(width()+c.w,height());
-                    w=width();
+                    resize(width() + c.bounding.width(), height());
+                    w = width();
                 }
                 iteration = true;
                 break;
@@ -111,23 +113,20 @@ void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
 
             /// place
            lines.back().append(c);
-           x+=c.w;
-
+           x += c.bounding.width();
         }
     }
 
 
-    w = width();
-    h = height();
     int32_t x = 0;
     foreach (const Line& line, lines) {
         x = 0;
         foreach (const LayoutChar* c , line.chars ) {
             LayoutChar l = *c;
-            l.x = x;
-            l.y = line.y + (c->y-line.min_y);
+            l.bounding.setX(x);
+            l.bounding.setY(line.y + l.bounding.y() - line.min_y);
             place(l);
-            x+=c->w;
+            x += c->bounding.width();
         }
 
     }

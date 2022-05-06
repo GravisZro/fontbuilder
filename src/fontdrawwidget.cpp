@@ -74,7 +74,8 @@ void FontDrawWidget::paintEvent(QPaintEvent *) {
             painter.setPen(QColor(255,0,0,255));
         else
             painter.setPen(QColor(0,0,255,255));
-        painter.drawRect((c.x)*m_scale,(c.y)*m_scale,(c.w)*m_scale-1,(c.h)*m_scale-1);
+        painter.drawRect(QRect { c.bounding.topLeft() * m_scale,
+                                 c.bounding.bottomRight() * m_scale });
     }
 }
 

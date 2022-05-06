@@ -39,15 +39,18 @@
 
 struct RenderedChar {
     uint32_t symbol;
-    int32_t offsetX;
-    int32_t offsetY;
+    QPoint offset;
     int32_t advance;
     QImage img;
     std::map<uint32_t,int32_t> kerning;
-    bool    locked;
-    RenderedChar() : symbol(0),locked(false) {}
-    RenderedChar(uint32_t symbol,int32_t x,int32_t y,int32_t a,const QImage& img) :
-            symbol(symbol),offsetX(x),offsetY(y),advance(a),img(img) ,locked(false){}
+    bool locked;
+    RenderedChar() : symbol(0), locked(false) {}
+    RenderedChar(uint32_t symbol, int32_t x, int32_t y, int32_t a, const QImage& i)
+      : symbol(symbol),
+        offset(x, y),
+        advance(a),
+        img(i),
+        locked(false){}
 };
 
 struct RenderedMetrics {

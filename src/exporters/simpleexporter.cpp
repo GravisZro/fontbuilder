@@ -22,12 +22,12 @@ bool SimpleExporter::Export(QByteArray &out)
     foreach(const Symbol& c , symbols()) {
       res += QString("%1 %2 %3 %4 %5 %6 %7 %8\n")
              .arg(c.id)
-             .arg(c.placeX)
-             .arg(c.placeY)
-             .arg(c.placeW)
-             .arg(c.placeH)
-             .arg(c.offsetX)
-             .arg(metrics().height - c.offsetY)
+             .arg(c.place.x())
+             .arg(c.place.y())
+             .arg(c.place.width())
+             .arg(c.place.height())
+             .arg(c.offset.x())
+             .arg(metrics().height - c.offset.y())
              .arg(c.advance);   out.append('\n');
     }
 

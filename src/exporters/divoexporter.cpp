@@ -56,9 +56,9 @@ bool DivoExporter::Export(QByteArray& out) {
         QDomElement ce = doc.createElement("Char");
         ce.setAttribute("code",QString().append(c.id));
         char buf[64];
-        ::snprintf(buf,63,"%d %d %d %d",c.placeX,c.placeY,c.placeW,c.placeH);
+        ::snprintf(buf,63,"%d %d %d %d",c.place.x(),c.place.y(),c.place.width(),c.place.height());
         ce.setAttribute("rect",buf);
-        ::snprintf(buf,63,"%d %d",c.offsetX,offset-c.offsetY);
+        ::snprintf(buf,63,"%d %d",c.offset.x(),offset-c.offset.y());
         ce.setAttribute("offset",buf);
         ce.setAttribute("width",c.advance);
 

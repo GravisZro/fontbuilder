@@ -20,10 +20,10 @@ bool ZFIExporter::Export(QByteArray& out) {
 
   foreach ( const Symbol& c, symbols() )
   {
-    if ( c.placeH > MaxHeight )
-      MaxHeight = c.placeH;
-    if ( c.placeH - c.offsetY > MaxShiftY )
-      MaxShiftY = c.placeH - c.offsetY;
+    if ( c.place.height() > MaxHeight )
+      MaxHeight = c.place.height();
+    if ( c.place.height() - c.offset.y() > MaxShiftY )
+      MaxShiftY = c.place.height() - c.offset.y();
 
     Chars++;
   }
@@ -42,20 +42,20 @@ bool ZFIExporter::Export(QByteArray& out) {
     out.append( (char*)&id, 4 );
 
     CharDesc.Page = 0;
-    CharDesc.Width = c.placeW;
-    CharDesc.Height = c.placeH;
-    CharDesc.ShiftX = c.offsetX;
-    CharDesc.ShiftY = c.placeH - c.offsetY;
+    CharDesc.Width = c.place.width();
+    CharDesc.Height = c.place.height();
+    CharDesc.ShiftX = c.offset.x();
+    CharDesc.ShiftY = c.place.height() - c.offset.y();
     CharDesc.ShiftP = c.advance;
 
-    CharDesc.TexCoords[ 0 ].X = (float)u * c.placeX;
-    CharDesc.TexCoords[ 0 ].Y = 1 - (float)v * c.placeY;
-    CharDesc.TexCoords[ 1 ].X = (float)u * ( c.placeX + c.placeW );
-    CharDesc.TexCoords[ 1 ].Y = 1 - (float)v * c.placeY;
-    CharDesc.TexCoords[ 2 ].X = (float)u * ( c.placeX + c.placeW );
-    CharDesc.TexCoords[ 2 ].Y = 1 - (float)v * ( c.placeY + c.placeH );
-    CharDesc.TexCoords[ 3 ].X = (float)u * c.placeX;
-    CharDesc.TexCoords[ 3 ].Y = 1 - (float)v * ( c.placeY + c.placeH );
+    CharDesc.TexCoords[ 0 ].X = (float)u * c.place.x();
+    CharDesc.TexCoords[ 0 ].Y = 1 - (float)v * c.place.y();
+    CharDesc.TexCoords[ 1 ].X = (float)u * ( c.place.x() + c.place.width() );
+    CharDesc.TexCoords[ 1 ].Y = 1 - (float)v * c.place.y();
+    CharDesc.TexCoords[ 2 ].X = (float)u * ( c.place.x() + c.place.width() );
+    CharDesc.TexCoords[ 2 ].Y = 1 - (float)v * ( c.place.y() + c.place.height() );
+    CharDesc.TexCoords[ 3 ].X = (float)u * c.place.x();
+    CharDesc.TexCoords[ 3 ].Y = 1 - (float)v * ( c.place.y() + c.place.height() );
 
     out.append( (char*)&CharDesc.Page, 4 );
     out.append( (char*)&CharDesc.Width, 1 );

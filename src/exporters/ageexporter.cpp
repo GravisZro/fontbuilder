@@ -41,7 +41,7 @@ bool AGEExporter::Export(QByteArray& out)
 
     foreach(const Symbol& c, list)
     {
-        maxHeight = std::max<float>(maxHeight, c.placeH);
+        maxHeight = std::max<float>(maxHeight, c.place.height());
     }
 
     AGEHeader header;
@@ -53,12 +53,12 @@ bool AGEExporter::Export(QByteArray& out)
     foreach(const Symbol& c, list)
     {
         append(out, (unsigned)c.id);
-        append(out, (float)c.placeX);
-        append(out, (float)c.placeY);
-        append(out, (float)(c.placeX + c.placeW));
-        append(out, (float)(c.placeY + c.placeH));
-        append(out, (float)c.offsetX);
-        append(out, (float)(maxHeight - c.offsetY));
+        append(out, (float)c.place.x());
+        append(out, (float)c.place.y());
+        append(out, (float)(c.place.x() + c.place.width()));
+        append(out, (float)(c.place.y() + c.place.height()));
+        append(out, (float)c.offset.x());
+        append(out, (float)(maxHeight - c.offset.y()));
         append(out, (float)c.advance);
     }
 

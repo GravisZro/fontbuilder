@@ -84,12 +84,12 @@ bool LuaExporter::Export(QByteArray& out) {
       res += QString("%%1\t{ char=%1, width=%2, x=%3, y=%4, w=%5, h=%6, ox=%7, oy=%8 },\n")
              .arg(charCode(c.id))
              .arg(c.advance)
-             .arg(c.placeX)
-             .arg(c.placeY)
-             .arg(c.placeW)
-             .arg(c.placeH)
-             .arg(c.offsetX)
-             .arg(c.offsetY);
+             .arg(c.place.x())
+             .arg(c.place.y())
+             .arg(c.place.width())
+             .arg(c.place.height())
+             .arg(c.offset.x())
+             .arg(c.offset.y());
     }
     res += "}%2\n";
 

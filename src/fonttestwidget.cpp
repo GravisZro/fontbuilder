@@ -56,30 +56,30 @@ const LayoutChar*   FontTestWidget::layoutChar(uint32_t c) const {
     return 0;
 }
 
-int32_t FontTestWidget::lineWidth(const uint32_t * chars) const {
+int32_t FontTestWidget::lineWidth(QVector<uint32_t>::ConstIterator start) const
+{
     int32_t x = 0;
-    while (*chars) {
-        uint32_t c = *chars++;
-        if (c=='\n') {
-            break;
-        } else
-        if (m_renderer_data->chars.contains(c)) {
-            const RenderedChar& rendered = m_renderer_data->chars[c];
-            x+=rendered.advance + m_font_config->charSpacing();
-            if (useKerning() && (*chars!=0)) {
-                if (auto r = rendered.kerning.find(*chars); r != rendered.kerning.end()) {
-                    x += r->second;
-                }
-            }
-        }
-
+    for(auto pos = start; pos < m_text.end() && *pos != '\n'; ++pos)
+    {
+      if (m_renderer_data->chars.contains(*pos))
+      {
+        const RenderedChar& rendered = m_renderer_data->chars[*pos];
+        x += rendered.advance + m_font_config->charSpacing();
+        if (useKerning())
+          if (auto r = rendered.kerning.find(*pos); r != rendered.kerning.end())
+            x += r->second;
+      }
     }
     return x;
 }
 
-void FontTestWidget::paintEvent ( QPaintEvent * event ) {
-    if (!m_renderer_data || !m_layout_data || !m_font_config) return;
-    Q_UNUSED(event);
+void FontTestWidget::paintEvent ( QPaintEvent * event )
+{
+  Q_UNUSED(event);
+  Q_ASSERT(m_renderer_data);
+  Q_ASSERT(m_layout_data);
+  Q_ASSERT(m_font_config);
+
     calcBBox();
     QPainter painter(this);
     painter.fillRect(rect(),QBrush(m_bg_color));
@@ -88,104 +88,103 @@ void FontTestWidget::paintEvent ( QPaintEvent * event ) {
     int32_t x = m_left;
 
     int32_t y = m_top;
-    QVector<uint32_t> ucs4chars = m_text.toUcs4();
-    ucs4chars.push_back(0);
-    const uint32_t* chars = ucs4chars.data();
 
-    if (m_align!=ALIGN_LEFT) {
-        int32_t width = lineWidth(chars);
-        if (m_align==ALIGN_RIGHT) {
-            x = m_left+m_width-width;
+    if (m_align != ALIGN_LEFT) {
+        int32_t width = lineWidth(m_text.begin());
+        if (m_align == ALIGN_RIGHT) {
+            x = m_left + m_width-width;
         } else {
-            x = m_left+(m_width-width)/2;
+            x = m_left + (m_width - width) / 2;
         }
     }
-    while (*chars) {
-        uint32_t c = *chars++;
-        if (c=='\n') {
+
+    for(auto pos = m_text.begin(); pos < m_text.end(); ++pos)
+    {
+        if (*pos=='\n') {
             x = m_left;
-            if (m_align!=ALIGN_LEFT) {
-                int32_t width = lineWidth(chars);
-                if (m_align==ALIGN_RIGHT) {
-                    x = m_left+m_width-width;
+            if (m_align != ALIGN_LEFT) {
+                int32_t width = lineWidth(pos + 1);
+                if (m_align == ALIGN_RIGHT) {
+                    x = m_left + m_width - width;
                 } else {
-                    x = m_left+(m_width-width)/2;
+                    x = m_left + (m_width - width) / 2;
                 }
             }
             y += m_renderer_data->metrics.height+m_font_config->lineSpacing();
-        } else
-        if (m_renderer_data->chars.contains(c)) {
-            const RenderedChar& rendered = m_renderer_data->chars[c];
-            const LayoutChar* layout = layoutChar(c);
-            if (layout) {
-                painter.drawImage(x+rendered.offsetX,y-rendered.offsetY,
-                                  m_layout_data->image(),
-                                  layout->x,layout->y,
-                                  layout->w,layout->h);
-            }
-            x+=rendered.advance + m_font_config->charSpacing();
-            if (useKerning() && (*chars!=0)) {
-              if (auto r = rendered.kerning.find(*chars); r != rendered.kerning.end()) {
-                  x += r->second;
-              }
-            }
         }
+        else if (m_renderer_data->chars.contains(*pos))
+        {
+            const RenderedChar& rendered = m_renderer_data->chars[*pos];
+            const LayoutChar* layout = layoutChar(*pos);
+            if (layout)
+            {
+                painter.drawImage(x + rendered.offset.x(), y - rendered.offset.y(),
+                                  m_layout_data->image(),
+                                  layout->bounding.x(),
+                                  layout->bounding.y(),
+                                  layout->bounding.width(),
+                                  layout->bounding.height());
+            }
 
+            x += rendered.advance + m_font_config->charSpacing();
+            if (useKerning())
+              if (auto r = rendered.kerning.find(*pos); r != rendered.kerning.end())
+                  x += r->second;
+        }
     }
 }
 
-void FontTestWidget::calcBBox() {
-    if (!m_renderer_data || !m_layout_data || !m_font_config) return;
+void FontTestWidget::calcBBox(void)
+{
+
     int32_t left = 0;
     int32_t right = 1;
     int32_t top = 0;
     int32_t bottom = 1;
-    QVector<uint32_t> ucs4chars = m_text.toUcs4();
-    ucs4chars.push_back(0);
-    const uint32_t* chars = ucs4chars.data();
+
     int32_t x = left;
     int32_t y = top;
     int32_t max_x = x;
     bool first = true;
     bool last = false;
-    while (*chars) {
-        uint32_t c = *chars++;
-        if (c=='\n') {
+
+    for(auto pos = m_text.begin(); pos < m_text.end(); ++pos)
+    while (*pos)
+    {
+        if (*pos == '\n')
+        {
             x=0;
             y += m_renderer_data->metrics.height+m_font_config->lineSpacing();
             first = true;
-        } else
-        if (m_renderer_data->chars.contains(c)) {
-            const RenderedChar& rendered = m_renderer_data->chars[c];
-            const LayoutChar* layout = layoutChar(c);
+        }
+        else if (m_renderer_data->chars.contains(*pos))
+        {
+            const RenderedChar& rendered = m_renderer_data->chars[*pos];
+            const LayoutChar* layout = layoutChar(*pos);
             if (!layout) continue;
-            last = (*chars=='\n')||(*chars==0);
-            if ( first ) {
-                if ( (rendered.offsetX) < left)
-                    left = rendered.offsetX;
-            }
-            if (last) {
-                if ( (rendered.offsetX+layout->w-rendered.advance - m_font_config->charSpacing()) > right)
-                    right = rendered.offsetX+layout->w-rendered.advance - m_font_config->charSpacing();
-            }
-            {
-                if ( (y-rendered.offsetY) < top)
-                    top = y-rendered.offsetY;
-                if ( (y-rendered.offsetY+layout->h) > bottom)
-                    bottom = y-rendered.offsetY+layout->h;
-            }
-            x+=rendered.advance + m_font_config->charSpacing();
+            last = (pos + 1 == m_text.end()) || (*(pos + 1) == '\n');
+
+            if (first && (rendered.offset.x()) < left)
+              left = rendered.offset.x();
+
+            if (last &&  (rendered.offset.x() + layout->bounding.width() - rendered.advance - m_font_config->charSpacing()) > right)
+              right = rendered.offset.x() + layout->bounding.width() - rendered.advance - m_font_config->charSpacing();
+
+            if ( (y - rendered.offset.y()) < top)
+                top = y - rendered.offset.y();
+            if ( (y - rendered.offset.y() + layout->bounding.height()) > bottom)
+                bottom = y - rendered.offset.y() + layout->bounding.height();
+
+            x += rendered.advance + m_font_config->charSpacing();
             first = false;
-            if (useKerning() && (*chars!=0)) {
-              if (auto r = rendered.kerning.find(*chars); r != rendered.kerning.end()) {
+
+            if (useKerning() && pos + 1 != m_text.end())
+              if (auto r = rendered.kerning.find(*(pos + 1)); r != rendered.kerning.end())
                   x += r->second;
-              }
-            }
-            if (x>max_x)
+
+            if (x > max_x)
                 max_x = x;
         }
-
-
     }
 
     m_left = -left+1;
@@ -196,12 +195,7 @@ void FontTestWidget::calcBBox() {
 }
 
 void FontTestWidget::setText(const QString& text) {
-    m_text = text;
-    refresh();
-}
-
-void FontTestWidget::refresh() {
-
+    m_text = text.toUcs4();
     repaint();
 }
 

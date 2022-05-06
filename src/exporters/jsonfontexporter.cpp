@@ -34,12 +34,12 @@ bool JSONFontExporter::Export(QByteArray &out)
     {
         QJsonObject jsonSymbol;
         jsonSymbol.insert("id", int32_t(c.id));
-        jsonSymbol.insert("x", c.placeX);
-        jsonSymbol.insert("y", c.placeY);
-        jsonSymbol.insert("width", c.placeW);
-        jsonSymbol.insert("height", c.placeH);
-        jsonSymbol.insert("xoffset", c.offsetX);
-        jsonSymbol.insert("yoffset", metrics().ascender - c.offsetY);
+        jsonSymbol.insert("x", c.place.x());
+        jsonSymbol.insert("y", c.place.y());
+        jsonSymbol.insert("width", c.place.width());
+        jsonSymbol.insert("height", c.place.height());
+        jsonSymbol.insert("xoffset", c.offset.x());
+        jsonSymbol.insert("yoffset", metrics().ascender - c.offset.y());
         jsonSymbol.insert("xadvance", c.advance);
 
         jsonSymbols.append( jsonSymbol );

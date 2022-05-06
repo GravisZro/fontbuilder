@@ -88,13 +88,13 @@ bool MPExporter::Export(QByteArray &out)
         //offset in glyph data field
         glyph.glyph_offset = font_img.image_data_offset+offset;
         //width of the character image in the texture
-        glyph.width = static_cast<uint16_t>(c.placeW);
+        glyph.width = static_cast<uint16_t>(c.place.width());
         //height of the character image in the texture
-        glyph.height = static_cast<uint16_t>(c.placeH);
+        glyph.height = static_cast<uint16_t>(c.place.height());
         //how much the current position should be offset when copying the image from the texture to the screen
-        glyph.xoffset = static_cast<int16_t>(c.offsetX);
+        glyph.xoffset = static_cast<int16_t>(c.offset.x());
         //how much the current position should be offset when copying the image from the texture to the screen
-        glyph.yofset = static_cast<int16_t>(c.offsetY);
+        glyph.yofset = static_cast<int16_t>(c.offset.y());
         //how much the current position should be advanced after drawing the character
         glyph.xadvance = static_cast<uint16_t>(c.advance);
         offset += glyph.width * glyph.height;
@@ -127,8 +127,8 @@ bool MPExporter::Export(QByteArray &out)
     foreach(const Symbol& c , symbols()) {
         pixmap_coords_t coord;
 
-        coord.x = static_cast<uint32_t>(c.placeX);
-        coord.y = static_cast<uint32_t>(c.placeY);
+        coord.x = static_cast<uint32_t>(c.place.x());
+        coord.y = static_cast<uint32_t>(c.place.y());
         char* coord_ptr = reinterpret_cast<char*>(&coord);
         out.append(QByteArray::fromRawData( coord_ptr, sizeof(pixmap_coords_t)));
     }

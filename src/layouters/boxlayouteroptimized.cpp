@@ -7,17 +7,17 @@ BoxLayouterOptimized::BoxLayouterOptimized(QObject *parent)
 
 bool BoxLayouterOptimized::SortCharsByHeight(const LayoutChar &a, const LayoutChar &b)
 {
-    if (a.h + a.y > b.h + b.y)
+    if (a.bounding.height() + a.bounding.y() > b.bounding.height() + b.bounding.y())
         return false;
-    else if (a.h + a.y == b.h + b.y)
+    else if (a.bounding.height() + a.bounding.y() == b.bounding.height() + b.bounding.y())
     {
-        if (a.w > b.w)
+        if (a.bounding.width() > b.bounding.width())
             return false;
-        else if (a.w == b.w)
+        else if (a.bounding.width() == b.bounding.width())
         {
-            if (a.y > b.y)
+            if (a.bounding.y() > b.bounding.y())
                 return false;
-            else if (a.y == b.y)
+            else if (a.bounding.y() == b.bounding.y())
             {
                 if (a.symbol > b.symbol)
                     return false;

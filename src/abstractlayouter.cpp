@@ -71,22 +71,26 @@ void AbstractLayouter::on_ReplaceImages(const QVector<LayoutChar>& chars) {
 }
 
 
-void AbstractLayouter::on_LayoutDataChanged() {
-    if (m_data!=0 && m_config!=0 ) {
-        QVector<LayoutChar> chars = m_chars;
-        {
-            for( int32_t i=0;i<m_chars.size();i++) {
-                if (m_config->onePixelOffset()) {
-                    chars[i].w++;
-                    chars[i].h++;
-                }
-                chars[i].w+=m_config->offsetLeft()+m_config->offsetRight();
-                chars[i].h+=m_config->offsetTop()+m_config->offsetBottom();
-            }
-        }
-        OptimizeLayout(chars);
-        DoPlace(chars);
+void AbstractLayouter::on_LayoutDataChanged()
+{
+  Q_ASSERT(m_data != nullptr);
+  Q_ASSERT(m_config != nullptr);
+  QVector<LayoutChar> chars = m_chars;
+  for(LayoutChar& c : chars)
+  {
+    QSize sz = c.bounding.size();
+    if (m_config->onePixelOffset())
+    {
+      sz.rwidth()++;
+      sz.rheight()++;
     }
+    sz.rwidth () += m_config->offset().left() + m_config->offset().right();
+    sz.rheight() += m_config->offset().top()  + m_config->offset().bottom();
+    c.bounding.setSize(sz);
+  }
+
+  OptimizeLayout(chars);
+  DoPlace(chars);
 }
 
 static uint32_t nextpot(uint32_t val) {
@@ -149,16 +153,13 @@ int32_t AbstractLayouter::height() const {
 }
 void AbstractLayouter::place(const LayoutChar& c) {
     LayoutChar out = c;
-    if ((out.x + out.w)>m_compact_w)
-        m_compact_w = out.x + out.w;
-    if ((out.y + out.h)>m_compact_h)
-        m_compact_h = out.y + out.h;
+    if (out.bounding.x() + out.bounding.width() > m_compact_w)
+        m_compact_w = out.bounding.x() + out.bounding.width();
+    if (out.bounding.y() + out.bounding.height() > m_compact_h)
+        m_compact_h = out.bounding.y() + out.bounding.height();
     if (m_config) {
         if (m_config->onePixelOffset()) {
-            out.x++;
-            out.y++;
-            out.w--;
-            out.h--;
+          out.bounding.adjust(1, 1, -1, -1);
         }
     }
     if (m_data)

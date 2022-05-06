@@ -86,9 +86,8 @@ QImage AbstractImageWriter::buildImage() {
     foreach (const LayoutChar& c,layout()->placed())
             if (rendered()->chars.contains(c.symbol)) {
                 const RenderedChar& rend = rendered()->chars[c.symbol];
-                int32_t x = c.x + layoutConfig()->offsetLeft();
-                int32_t y = c.y + layoutConfig()->offsetTop();
-                placeImage(pixmap,x,y,rend.img);
+                QPoint pos = c.bounding.topLeft() + layoutConfig()->offset().topLeft();
+                placeImage(pixmap, pos.x(), pos.y(), rend.img);
             }
     return pixmap;
 }

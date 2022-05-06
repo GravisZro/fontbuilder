@@ -71,9 +71,9 @@ bool GHLExporter::Export(QByteArray& out) {
         QDomElement ce = doc.createElement("char");
         ce.setAttribute("id",QString().append(c.id));
         char buf[64];
-        ::snprintf(buf,63,"%d %d %d %d",c.placeX,c.placeY,c.placeW,c.placeH);
+        ::snprintf(buf,63,"%d %d %d %d",c.place.x(),c.place.y(),c.place.width(),c.place.height());
         ce.setAttribute("rect",buf);
-        ::snprintf(buf,63,"%d %d",c.offsetX,c.offsetY);
+        ::snprintf(buf,63,"%d %d",c.offset.x(),c.offset.y());
         ce.setAttribute("offset",buf);
         ce.setAttribute("advance",c.advance);
 

@@ -31,23 +31,23 @@
 #ifndef LAYOUTCHAR_H
 #define LAYOUTCHAR_H
 
-#include <Qt>
+#include <cstdint>
+#include <QRect>
 
 struct LayoutChar {
     uint32_t symbol;
-    int32_t x;
-    int32_t y;
-    int32_t w;
-    int32_t h;
-    LayoutChar(uint32_t s,int32_t x,int32_t y,int32_t w,int32_t h) :
-            symbol(s),x(x),y(y),w(w),h(h)
-    {
-    }
-    LayoutChar(uint32_t s,int32_t w,int32_t h) :
-            symbol(s),x(0),y(0),w(w),h(h)
-    {
-    }
-    LayoutChar() : symbol(0),x(0),y(0),w(0),h(0) {}
+    QRect bounding;
+    LayoutChar(uint32_t s,
+               int32_t x, int32_t y,
+               int32_t w, int32_t h) :
+            symbol(s),
+            bounding(x, y, w, h)
+    { }
+
+    LayoutChar(uint32_t s,int32_t w,int32_t h)
+      : LayoutChar(s, 0, 0, w, h) {}
+
+    LayoutChar(void) : LayoutChar(0, 0, 0, 0, 0) {}
 };
 
 #endif // LAYOUTCHAR_H

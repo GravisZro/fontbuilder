@@ -463,10 +463,8 @@ void FontBuilder::onLayoutChanged() {
     {
         QPainter painter(&image);
         foreach (const LayoutChar& c,m_layout_data->placed()) {
-            m_font_renderer->placeImage(painter,c.symbol,
-                                        c.x + m_layout_config->offsetLeft(),
-                                        c.y + m_layout_config->offsetTop()
-                                        );
+          QPoint pos = c.bounding.topLeft() + m_layout_config->offset().topLeft();
+          m_font_renderer->placeImage(painter,c.symbol, pos.x(), pos.y());
         }
     }
     qDebug() << "set layout image from rendered";
@@ -804,10 +802,9 @@ void FontBuilder::on_pushButtonImportJson_clicked()
                 }
             }
             if(m_layout_config) {
-                m_layout_config->setOffsetTop(padding_top);
-                m_layout_config->setOffsetLeft(padding_left);
-                m_layout_config->setOffsetBottom(padding_bottom);
-                m_layout_config->setOffsetRight(padding_right);
+
+              m_layout_config->setOffset(QRect { QPoint{ padding_top, padding_left},
+                                                 QPoint{ padding_bottom, padding_right} });
             }
             doExport(false);
             if (m_output_config->generateX2()) {

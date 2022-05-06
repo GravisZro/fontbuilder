@@ -52,13 +52,12 @@ void AbstractExporter::setData(const LayoutData* data,const RendererData& render
     foreach ( const LayoutChar& lc, data->placed()) {
         Symbol symb;
         symb.id = lc.symbol;
-        symb.placeX = lc.x;
-        symb.placeY = lc.y;
-        symb.placeW = lc.w;
-        symb.placeH = lc.h;
+        symb.place = lc.bounding;
         const RenderedChar& rc = rendered.chars[symb.id];
-        symb.offsetX = rc.offsetX-layoutConfig()->offsetLeft();
-        symb.offsetY = rc.offsetY+layoutConfig()->offsetTop();
+        symb.offset = rc.offset;
+        symb.offset.rx() -= layoutConfig()->offset().left();
+        symb.offset.ry() += layoutConfig()->offset().top();
+
         symb.advance = rc.advance + fontConfig()->charSpacing();
         symb.kerning = rc.kerning;
         m_symbols.push_back(symb);

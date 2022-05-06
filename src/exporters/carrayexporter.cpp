@@ -137,12 +137,12 @@ bool CArrayExporter::Export(QByteArray &out)
     foreach(const Symbol& c , symbols()) {
         res += QString("\t\t{ .id=%1,\t.x=%2,\t.y=%3,\t.width=%4,\t.height=%5,\t.xoffset=%6,\t.yoffset=%7,\t.xadvance=%8,\t.page=%9 }, /* %2 */ \\\n")
                  .arg(c.id)
-                 .arg(c.placeX)
-                 .arg(c.placeY)
-                 .arg(c.placeW)
-                 .arg(c.placeH)
-                 .arg(c.offsetX)
-                 .arg(metrics().ascender - c.offsetY)
+                 .arg(c.place.x())
+                 .arg(c.place.y())
+                 .arg(c.place.width())
+                 .arg(c.place.height())
+                 .arg(c.offset.x())
+                 .arg(metrics().ascender - c.offset.y())
                  .arg(c.advance)
                  .arg(0);
         charsnum++;

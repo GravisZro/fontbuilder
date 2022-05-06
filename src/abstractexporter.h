@@ -75,12 +75,8 @@ private:
 protected:
     struct Symbol {
         uint32_t id;
-        int32_t placeX;
-        int32_t placeY;
-        int32_t placeW;
-        int32_t placeH;
-        int32_t offsetX;
-        int32_t offsetY;
+        QRect place;
+        QPoint offset;
         int32_t advance;
         std::map<uint32_t,int32_t> kerning;
     };

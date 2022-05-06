@@ -34,12 +34,12 @@ bool SparrowExporter::Export(QByteArray& out) {
     foreach(const Symbol& c , symbols()) {
         QDomElement ch = doc.createElement("char");
         ch.setAttribute("id", QString::number(c.id));
-        ch.setAttribute("x", QString::number(c.placeX));
-        ch.setAttribute("y", QString::number(c.placeY));
-        ch.setAttribute("width", QString::number(c.placeW));
-        ch.setAttribute("height", QString::number(c.placeH));
-        ch.setAttribute("xoffset", QString::number(c.offsetX));
-        ch.setAttribute("yoffset", QString::number(height - c.offsetY));
+        ch.setAttribute("x", QString::number(c.place.x()));
+        ch.setAttribute("y", QString::number(c.place.y()));
+        ch.setAttribute("width", QString::number(c.place.width()));
+        ch.setAttribute("height", QString::number(c.place.height()));
+        ch.setAttribute("xoffset", QString::number(c.offset.x()));
+        ch.setAttribute("yoffset", QString::number(height - c.offset.y()));
         ch.setAttribute("xadvance", QString::number(c.advance));
         ch.setAttribute("page", "0");
         ch.setAttribute("chnl", "0");

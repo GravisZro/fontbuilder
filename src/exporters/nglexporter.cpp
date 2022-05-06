@@ -70,12 +70,12 @@ bool NGLExporter::Export(QByteArray& out) {
     foreach (const Symbol& c , symbols()) {
         QDomElement ce = doc.createElement("char");
         ce.setAttribute("id",QString().append(c.id));
-        ce.setAttribute("rect_x",c.placeX);
-        ce.setAttribute("rect_y",c.placeY);
-        ce.setAttribute("rect_w",c.placeW);
-        ce.setAttribute("rect_h",c.placeH);
-        ce.setAttribute("offset_x",c.offsetX);
-        ce.setAttribute("offset_y",c.offsetY);
+        ce.setAttribute("rect_x",c.place.x());
+        ce.setAttribute("rect_y",c.place.y());
+        ce.setAttribute("rect_w",c.place.width());
+        ce.setAttribute("rect_h",c.place.height());
+        ce.setAttribute("offset_x",c.offset.x());
+        ce.setAttribute("offset_y",c.offset.y());
         ce.setAttribute("advance",c.advance);
 
         for (const auto& k : c.kerning) {

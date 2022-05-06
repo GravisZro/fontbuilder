@@ -14,9 +14,9 @@ void GridLayouter::PlaceImages(const QVector<LayoutChar> &chars)
 
     foreach (const LayoutChar& c, chars)
     {
-        minY = std::min(minY, c.y);
-        maxW = std::max(maxW, c.x + c.w);
-        maxH = std::max(maxH, c.h);
+        minY = std::min(minY, c.bounding.y());
+        maxW = std::max(maxW, c.bounding.x() + c.bounding.width());
+        maxH = std::max(maxH, c.bounding.height());
     }
     maxH -= minY;
 
@@ -36,8 +36,8 @@ void GridLayouter::PlaceImages(const QVector<LayoutChar> &chars)
     foreach (const LayoutChar& c, chars)
     {
         LayoutChar l = c;
-        l.x += col * maxW;
-        l.y += row * maxH - minY;
+        l.bounding.setX(l.bounding.x() + (col * maxW));
+        l.bounding.setY(l.bounding.y() + (row * maxH - minY));
         place(l);
 
         if (++col >= charsPerRow)

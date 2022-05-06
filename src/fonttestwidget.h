@@ -38,20 +38,30 @@ struct RendererData;
 struct LayoutChar;
 class FontConfig;
 
+Q_DECLARE_METATYPE(char16_t);
+Q_DECLARE_METATYPE(char32_t);
+
+static_assert(sizeof(uint) == sizeof(char32_t), "oh snap");
+
 class FontTestWidget : public QWidget
 {
 Q_OBJECT
 public:
     explicit FontTestWidget(QWidget *parent = nullptr);
 
-    [[gnu::always_inline]] void setLayoutData(const LayoutData* data) { m_layout_data = data;}
-    [[gnu::always_inline]] void setRendererData(const RendererData* data) { m_renderer_data = data;}
-    [[gnu::always_inline]] void setFontConfig(const FontConfig* config) { m_font_config = config;}
+  //  [[gnu::always_inline]]
+  void setLayoutData(const LayoutData* data) { m_layout_data = data;}
+    //[[gnu::always_inline]]
+  void setRendererData(const RendererData* data) { m_renderer_data = data;}
+    //[[gnu::always_inline]]
+  void setFontConfig(const FontConfig* config) { m_font_config = config;}
 
     void setText(const QString& text);
 
-    [[gnu::always_inline]] bool useKerning(void) const { return m_use_kerning;}
-    [[gnu::always_inline]] void setUseKerning (bool use) { m_use_kerning = use; refresh(); }
+    //[[gnu::always_inline]]
+    bool useKerning(void) const { return m_use_kerning;}
+    //[[gnu::always_inline]]
+    void setUseKerning (bool use) { m_use_kerning = use; update(); }
 
     enum Align {
         ALIGN_LEFT,
@@ -59,21 +69,22 @@ public:
         ALIGN_RIGHT,
     };
 
-    void setAlign(Align a) { m_align = a; refresh(); }
+    void setAlign(Align a) { m_align = a; update(); }
 
 protected:
     virtual void paintEvent ( QPaintEvent * event );
-    void calcBBox();
-    int32_t lineWidth(const uint32_t* text) const;
+    void calculateBoundingBox();
+    int32_t lineWidth(QVector<uint32_t>::ConstIterator start) const;
 signals:
 
 public slots:
-    void refresh();
     void setBGColor(QColor c);
 private:
-    QString m_text;
+    void calcBBox(void);
+    const LayoutChar* layoutChar(uint32_t c) const;
+private:
+    QVector<uint32_t> m_text;
     const LayoutData*   m_layout_data;
-    const LayoutChar*   layoutChar(uint32_t c) const;
     const RendererData* m_renderer_data;
     const FontConfig*   m_font_config;
     int32_t m_left;
