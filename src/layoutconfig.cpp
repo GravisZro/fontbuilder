@@ -31,63 +31,46 @@
 #include "layoutconfig.h"
 
 LayoutConfig::LayoutConfig(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_one_pixel_offset(true),
+    m_pot_image(true),
+    m_size_increment(1),
+    m_offset(0, 0, 0, 0)
 {
-    m_one_pixel_offset = true;
-    m_pot_image = true;
-    m_size_increment = 1;
-    m_offset_left = 0;
-    m_offset_top = 0;
-    m_offset_right = 0;
-    m_offset_bottom = 0;
 }
 
 
-void LayoutConfig::setOnePixelOffset(bool b) {
-    if (m_one_pixel_offset!=b) {
-        m_one_pixel_offset = b;
-        layoutConfigChanged();
-    }
+void LayoutConfig::setOnePixelOffset(bool b)
+{
+  if (m_one_pixel_offset != b)
+  {
+    m_one_pixel_offset = b;
+    emit layoutConfigChanged();
+  }
 }
 
-void LayoutConfig::setPotImage(bool b) {
-    if (m_pot_image!=b) {
-        m_pot_image = b;
-        layoutConfigChanged();
-    }
+void LayoutConfig::setPotImage(bool b)
+{
+  if (m_pot_image != b)
+  {
+    m_pot_image = b;
+    emit layoutConfigChanged();
+  }
 }
 
 void LayoutConfig::setSizeIncrement(int32_t v) {
-    if (m_size_increment!=v) {
-        m_size_increment = v;
-        layoutConfigChanged();
-    }
+  if (m_size_increment != v)
+  {
+    m_size_increment = v;
+    emit layoutConfigChanged();
+  }
 }
 
-void LayoutConfig::setOffsetLeft(int32_t v) {
-    if (m_offset_left!=v) {
-        m_offset_left = v;
-        layoutConfigChanged();
-    }
-}
-
-void LayoutConfig::setOffsetRight(int32_t v) {
-    if (m_offset_right!=v) {
-        m_offset_right= v;
-        layoutConfigChanged();
-    }
-}
-
-void LayoutConfig::setOffsetTop(int32_t v) {
-    if (m_offset_top!=v) {
-        m_offset_top= v;
-        layoutConfigChanged();
-    }
-}
-
-void LayoutConfig::setOffsetBottom(int32_t v) {
-    if (m_offset_bottom!=v) {
-        m_offset_bottom= v;
-        layoutConfigChanged();
-    }
+void LayoutConfig::setOffset(QRect o)
+{
+  if(m_offset != o)
+  {
+    m_offset = o;
+    emit layoutConfigChanged();
+  }
 }
