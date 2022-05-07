@@ -351,21 +351,20 @@ void CharMapDialog::changeEvent(QEvent *e)
     }
 }
 
-void CharMapDialog::setChars(const QString& string)
+void CharMapDialog::setChars(const std::u32string& string)
 {
   m_char_select->clearCharacterCodes();
-  QVector<uint32_t> ucs4codes = string.toUcs4();
-  foreach(auto c, ucs4codes)
+  foreach(auto c, string)
   {
     m_char_select->insertCharacterCode(c);
     onCharsChanged(c, true);
   }
 }
 
-QString CharMapDialog::getCharacters() const
+std::u32string CharMapDialog::getCharacters(void) const
 {
-  QList<uint32_t> ucs4codes = m_char_select->getCharacterCodes().values();
-  return QString::fromUcs4(&ucs4codes.front(), ucs4codes.size());
+  auto values = m_char_select->getCharacterCodes().values();
+  return std::u32string(values.begin(), values.end());
 }
 
 void CharMapDialog::onCharsChanged(uint32_t code,bool add)

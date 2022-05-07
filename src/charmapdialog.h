@@ -38,6 +38,8 @@
 #include <QCheckBox>
 
 #include <QtWidgets>
+#include <string>
+
 #include "charsselectwidget.h"
 
 class CharMapDialog : public QDialog {
@@ -46,8 +48,8 @@ public:
     CharMapDialog(QWidget *parent = nullptr);
     ~CharMapDialog();
 
-    void setChars(const QString& string);
-    QString getCharacters() const;
+    void setChars(const std::u32string& string);
+    std::u32string getCharacters() const;
 protected:
     void changeEvent(QEvent *e);
 

@@ -68,7 +68,7 @@ private:
     std::vector<LayoutChar> m_chars;
     void clear_bitmaps();
     bool append_bitmap(uint32_t symbol);
-    void append_kerning(uint32_t symbol,const uint32_t* other,int32_t amount);
+    void append_kerning(uint32_t symbol, const std::u32string& other);
     float   m_scale;
 signals:
     void imagesChanged();

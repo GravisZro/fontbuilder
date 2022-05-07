@@ -33,6 +33,7 @@
 
 #include <QObject>
 #include <QColor>
+#include <string>
 
 class FontConfig : public QObject
 {
@@ -82,11 +83,11 @@ public:
     void setSize(int size);
     Q_PROPERTY( int size READ size WRITE setSize )
 
-    const QString& characters() const { return m_characters; }
-    void setCharacters(const QString& characters);
-    Q_PROPERTY( QString characters READ characters WRITE setCharacters )
+    const std::u32string& characters() const { return m_characters; }
+    void setCharacters(const std::u32string& characters);
+    Q_PROPERTY( std::u32string characters READ characters WRITE setCharacters )
 
-    const QString& defaultCharacters() const;
+    const std::u32string& defaultCharacters(void) const;
 
     int hinting() const { return m_hinting;}
     void setHinting(int b);
@@ -143,7 +144,7 @@ private:
     QString m_style;
     int32_t m_face_index;
     int32_t m_size;
-    QString m_characters;
+    std::u32string m_characters;
     int32_t    m_hinting;
     bool    m_render_missing;
     bool    m_antialiased;

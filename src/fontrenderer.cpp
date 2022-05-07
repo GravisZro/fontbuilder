@@ -107,8 +107,7 @@ void FontRenderer::rasterize() {
 
     bool use_kerning = FT_HAS_KERNING( m_ft_face );
 
-    QVector<uint> ucs4chars = m_config->characters().toUcs4();
-    ucs4chars.push_back(0);
+    auto ucs4chars = m_config->characters();
     int error = 0;
 	for (int i=0;i+1<ucs4chars.size();i++) {
         int glyph_index = FT_Get_Char_Index( m_ft_face, ucs4chars[i] );
@@ -166,7 +165,7 @@ void FontRenderer::rasterize() {
            continue;
         if (append_bitmap(ucs4chars[i])) {
             if (use_kerning)
-                append_kerning(ucs4chars[i],&ucs4chars.front(),ucs4chars.size()-1);
+                append_kerning(ucs4chars[i],ucs4chars);
         }
     }
     emit imagesChangedWithData(m_chars);
@@ -257,10 +256,11 @@ bool FontRenderer::append_bitmap(uint symbol) {
     return true;
 }
 
-void FontRenderer::append_kerning(uint symbol,const uint* other,int amount) {
+void FontRenderer::append_kerning(uint symbol, const std::u32string& other)
+{
      FT_Vector  kerning;
      FT_UInt left =  FT_Get_Char_Index( m_ft_face, symbol );
-    for (int i=0;i<amount;i++) {
+    for (int i=0;i<other.size();i++) {
         if (other[i]!=symbol) {
             FT_UInt right =  FT_Get_Char_Index( m_ft_face, other[i] );
             int error = FT_Get_Kerning( m_ft_face,          /* handle to face object */

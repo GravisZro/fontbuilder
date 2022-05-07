@@ -34,6 +34,7 @@
 #include <QDebug>
 #include "fontconfig.h"
 #include "charmapdialog.h"
+#include "unicodeutils.h"
 
 CharactersFrame::CharactersFrame(QWidget *parent) :
     QFrame(parent),
@@ -69,9 +70,8 @@ void CharactersFrame::on_pushButtonImport_clicked()
         QFile f(file);
         if (f.open(QFile::ReadOnly | QFile::Text)) {
             QByteArray data = f.readAll();
-            QString text = QString::fromUtf8(data.constData(),data.size());
-            text = removeDuplicates(sortChars(text));
-            ui->plainTextEdit->setPlainText(text);
+            auto text = QString::fromUtf8(data.constData(),data.size());
+            ui->plainTextEdit->setPlainText(convert(removeDuplicates(sortChars(convert(text)))));
         }
     }
 }
@@ -92,47 +92,46 @@ void CharactersFrame::on_pushButtonExport_clicked()
 }
 
 
-QString CharactersFrame::getCharacters() const {
-    return ui->plainTextEdit->document()->toPlainText();
+std::u32string CharactersFrame::getCharacters() const
+{
+  return convert(ui->plainTextEdit->document()->toPlainText());
 }
 
 void CharactersFrame::on_plainTextEdit_textChanged()
 {
-    if (m_config) {
-        m_config->setCharacters(removeDuplicates(sortChars(getCharacters())));
-    }
+  m_config->setCharacters(removeDuplicates(sortChars(getCharacters())));
 }
 
-void CharactersFrame::setConfig(FontConfig* config) {
+void CharactersFrame::setConfig(FontConfig* config)
+{
     m_config = config;
-    ui->plainTextEdit->setPlainText(config->characters());
+    ui->plainTextEdit->setPlainText(convert(config->characters()));
 }
 
-QString CharactersFrame::removeDuplicates(const QString& text) const {
-    std::vector<uint32_t> ucs4chars = [&text] { auto tmp = text.toUcs4(); return std::vector<uint32_t>(tmp.begin(), tmp.end()); }();
-
+std::u32string CharactersFrame::removeDuplicates(std::u32string text) const
+{
     // Remove duplicates with C++ algorithm
-    std::vector<uint32_t>::const_iterator newEnd;
-    newEnd = std::unique(ucs4chars.begin(), ucs4chars.end());
+    std::u32string::const_iterator newEnd;
+    newEnd = std::unique(text.begin(), text.end());
 
     // Drop NUL character(s) at the beginning
-    std::vector<uint32_t>::const_iterator newStart = ucs4chars.begin();
+    std::u32string::const_iterator newStart = text.begin();
     while (newStart != newEnd && *newStart == 0)
         ++newStart;
 
-    return QString::fromUcs4(&*newStart, newEnd - newStart);
+    return std::u32string(newStart, newEnd);
 }
 
-QString CharactersFrame::sortChars(const QString& text) const {
-    QVector<uint32_t> ucs4chars = text.toUcs4();
-    std::sort(ucs4chars.begin(), ucs4chars.end());
-    return QString::fromUcs4(&ucs4chars.front(), ucs4chars.size());
+std::u32string CharactersFrame::sortChars(std::u32string text) const
+{
+  std::sort(text.begin(), text.end());
+  return text;
 }
 
 
 void CharactersFrame::on_pushButtonDefault_clicked()
 {
-    ui->plainTextEdit->setPlainText(m_config->defaultCharacters());
+    ui->plainTextEdit->setPlainText(convert(m_config->defaultCharacters()));
 }
 
 void CharactersFrame::on_pushButton_SelectFromCharsMap_clicked()
@@ -145,7 +144,7 @@ void CharactersFrame::on_pushButton_SelectFromCharsMap_clicked()
     if (dialog.result()==QDialog::Accepted) {
         m_config->setCharacters(removeDuplicates(sortChars(dialog.getCharacters())));
         bool block = ui->plainTextEdit->blockSignals(true);
-        ui->plainTextEdit->setPlainText(m_config->characters());
+        ui->plainTextEdit->setPlainText(convert(m_config->characters()));
         ui->plainTextEdit->blockSignals(block);
     }
 }
@@ -153,6 +152,6 @@ void CharactersFrame::on_pushButton_SelectFromCharsMap_clicked()
 void CharactersFrame::on_pushButtonRefresh_clicked()
 {
     bool block = ui->plainTextEdit->blockSignals(true);
-    ui->plainTextEdit->setPlainText(m_config->characters());
+    ui->plainTextEdit->setPlainText(convert(m_config->characters()));
     ui->plainTextEdit->blockSignals(block);
 }
