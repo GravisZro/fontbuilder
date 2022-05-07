@@ -164,7 +164,7 @@ void CharsSelectWidget::mouseMoveEvent(QMouseEvent *event) {
                 uint to = qMax(m_select_begin_code,code);*/
                 /*for (uint c = from;c<=to;c++)*/ {
                     if (m_track_erase) {
-                        QSet<uint32_t>::Iterator i = m_character_codes.find(code);
+                        auto i = m_character_codes.find(code);
                         if ( i!=m_character_codes.end()) {
                             m_character_codes.erase(i);
                             emit codesChanged(code,false);

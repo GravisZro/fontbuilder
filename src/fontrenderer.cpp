@@ -109,7 +109,8 @@ void FontRenderer::rasterize() {
 
     auto ucs4chars = m_config->characters();
     int error = 0;
-	for (int i=0;i+1<ucs4chars.size();i++) {
+  for (size_t i = 0; i < ucs4chars.size(); i++)
+  {
         int glyph_index = FT_Get_Char_Index( m_ft_face, ucs4chars[i] );
         if (glyph_index==0 && !m_config->renderMissing())
             continue;
@@ -174,11 +175,11 @@ void FontRenderer::rasterize() {
 
 
 void FontRenderer::clear_bitmaps() {
-    QMap<uint,RenderedChar>::iterator it = m_rendered.chars.begin();
+    auto it = m_rendered.chars.begin();
     while (it!=m_rendered.chars.end()) {
         if (!it->locked) {
-            uint symb = it.key();
-            std::vector<LayoutChar>::iterator ci = m_chars.begin();
+            char32_t symb = it.key();
+            auto ci = m_chars.begin();
             while (ci!=m_chars.end()) {
                 if (ci->symbol==symb)
                     ci = m_chars.erase(ci);
@@ -191,7 +192,7 @@ void FontRenderer::clear_bitmaps() {
     }
 }
 
-bool FontRenderer::append_bitmap(uint symbol) {
+bool FontRenderer::append_bitmap(char32_t symbol) {
     if (m_rendered.chars[symbol].locked) return false;
     const FT_GlyphSlot  slot = m_ft_face->glyph;
     const FT_Bitmap* bm = &(slot->bitmap);
@@ -256,11 +257,11 @@ bool FontRenderer::append_bitmap(uint symbol) {
     return true;
 }
 
-void FontRenderer::append_kerning(uint symbol, const std::u32string& other)
+void FontRenderer::append_kerning(char32_t symbol, const std::u32string& other)
 {
      FT_Vector  kerning;
      FT_UInt left =  FT_Get_Char_Index( m_ft_face, symbol );
-    for (int i=0;i<other.size();i++) {
+    for (size_t i=0;i<other.size();i++) {
         if (other[i]!=symbol) {
             FT_UInt right =  FT_Get_Char_Index( m_ft_face, other[i] );
             int error = FT_Get_Kerning( m_ft_face,          /* handle to face object */
@@ -347,21 +348,21 @@ void FontRenderer::render(float scale) {
 
 
 
-void FontRenderer::placeImage(QPainter& p,uint symbol,int x,int y) {
+void FontRenderer::placeImage(QPainter& p, char32_t symbol, int x, int y) {
     p.drawImage(x,y,m_rendered.chars[symbol].img);
 }
 
 
 void FontRenderer::LockAll() {
-     QMap<uint,RenderedChar>::iterator it = m_rendered.chars.begin();
+     auto it = m_rendered.chars.begin();
      while (it!=m_rendered.chars.end()) {
          it->locked = true;
          it++;
      }
 }
 
-void FontRenderer::SetImage(uint symb,const QImage& img) {
-    m_rendered.chars[symb].img = img;
-    m_rendered.chars[symb].locked = true;
+void FontRenderer::SetImage(char32_t symbol, const QImage& img) {
+    m_rendered.chars[symbol].img = img;
+    m_rendered.chars[symbol].locked = true;
 }
 

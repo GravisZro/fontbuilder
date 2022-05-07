@@ -111,11 +111,10 @@ void CharactersFrame::setConfig(FontConfig* config)
 std::u32string CharactersFrame::removeDuplicates(std::u32string text) const
 {
     // Remove duplicates with C++ algorithm
-    std::u32string::const_iterator newEnd;
-    newEnd = std::unique(text.begin(), text.end());
+    auto newEnd = std::unique(text.begin(), text.end());
 
     // Drop NUL character(s) at the beginning
-    std::u32string::const_iterator newStart = text.begin();
+    auto newStart = text.begin();
     while (newStart != newEnd && *newStart == 0)
         ++newStart;
 

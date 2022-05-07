@@ -35,14 +35,14 @@
 #include <QImage>
 
 struct RenderedChar {
-    uint32_t symbol;
+    char32_t symbol;
     QPoint offset;
     int32_t advance;
     QImage img;
-    std::map<uint32_t,int32_t> kerning;
+    std::map<char32_t, int32_t> kerning;
     bool locked;
     RenderedChar() : symbol(0), locked(false) {}
-    RenderedChar(uint32_t symbol, int32_t x, int32_t y, int32_t a, const QImage& i)
+    RenderedChar(char32_t symbol, int32_t x, int32_t y, int32_t a, const QImage& i)
       : symbol(symbol),
         offset(x, y),
         advance(a),
@@ -57,7 +57,7 @@ struct RenderedMetrics {
 };
 
 struct RendererData {
-    QMap<uint32_t,RenderedChar> chars;
+    QMap<char32_t, RenderedChar> chars;
     RenderedMetrics metrics;
 };
 

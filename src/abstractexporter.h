@@ -74,11 +74,11 @@ private:
     float   m_scale;
 protected:
     struct Symbol {
-        uint32_t id;
+        char32_t id;
         QRect place;
         QPoint offset;
         int32_t advance;
-        std::map<uint32_t,int32_t> kerning;
+        std::map<char32_t, int32_t> kerning;
     };
 
     const FontConfig* fontConfig() const { return m_font_config;}

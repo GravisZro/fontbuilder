@@ -50,11 +50,11 @@ public:
     explicit FontRenderer(QObject *parent , const FontConfig* config);
     ~FontRenderer();
 
-    const std::vector<LayoutChar>& rendered() const { return m_chars;}
-    void placeImage(QPainter& p,uint32_t sybol,int32_t x,int32_t y);
+    const std::vector<LayoutChar>& rendered(void) const { return m_chars;}
+    void placeImage(QPainter& p, char32_t symbol, int32_t x,int32_t y);
     const RendererData& data() const { return m_rendered;}
     void LockAll();
-    void SetImage(uint32_t symb,const QImage& img);
+    void SetImage(char32_t symbol, const QImage& img);
     FT_Face face() const { return m_ft_face; }
     void render(float scale);
     float scale() const { return m_scale; }
@@ -66,9 +66,9 @@ private:
     void rasterize();
     RendererData m_rendered;
     std::vector<LayoutChar> m_chars;
-    void clear_bitmaps();
-    bool append_bitmap(uint32_t symbol);
-    void append_kerning(uint32_t symbol, const std::u32string& other);
+    void clear_bitmaps(void);
+    bool append_bitmap(char32_t symbol);
+    void append_kerning(char32_t symbol, const std::u32string& other);
     float   m_scale;
 signals:
     void imagesChanged();

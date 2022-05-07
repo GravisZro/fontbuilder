@@ -32,6 +32,7 @@
 #include "layoutdata.h"
 #include "rendererdata.h"
 #include "fontconfig.h"
+#include "unicodeutils.h"
 
 #include <QPaintEvent>
 #include <QPainter>
@@ -48,7 +49,7 @@ FontTestWidget::FontTestWidget(QWidget *parent) :
 }
 
 
-const LayoutChar*   FontTestWidget::layoutChar(uint32_t symbol) const {
+const LayoutChar*   FontTestWidget::layoutChar(char32_t symbol) const {
     for (const auto& c : m_layout_data->placed()) {
         if (symbol == c.symbol)
             return &c;
@@ -56,7 +57,7 @@ const LayoutChar*   FontTestWidget::layoutChar(uint32_t symbol) const {
     return 0;
 }
 
-int32_t FontTestWidget::lineWidth(std::vector<uint32_t>::const_iterator start) const
+int32_t FontTestWidget::lineWidth(std::u32string::const_iterator start) const
 {
     int32_t x = 0;
     for(auto pos = start; pos < m_text.end() && *pos != '\n'; ++pos)
@@ -194,9 +195,9 @@ void FontTestWidget::calcBBox(void)
     setMinimumSize(max_x+right-left+2,bottom-top+2);
 }
 
-void FontTestWidget::setText(const QString& text) {
-  auto tmp = text.toUcs4();
-    m_text = std::vector<uint32_t>(tmp.begin(), tmp.end());
+void FontTestWidget::setText(const QString& text)
+{
+    m_text = convert(text);
     repaint();
 }
 
