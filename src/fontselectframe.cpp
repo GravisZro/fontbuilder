@@ -187,7 +187,7 @@ void FontSelectFrame::setFontsDirectory(QString dir_name) {
                     if (fixedsizes) {
                         for (int32_t i=0;i<face->num_fixed_sizes;i++) {
                             m_database[family].back().fixedsizes.push_back(
-                                    QPair<int32_t,int32_t>(
+                                    std::pair<int32_t,int32_t>(
                                             face->available_sizes[i].width,
                                             face->available_sizes[i].height));
                         }
@@ -314,8 +314,7 @@ void FontSelectFrame::readFontSizes(const FontDef& def) {
     bool block = ui->comboBoxSize->blockSignals(true);
     ui->comboBoxSize->clear();
     if (def.fixedsize) {
-        typedef QPair<int32_t,int32_t> Pair;
-        foreach (Pair size , def.fixedsizes) {
+        foreach (auto size , def.fixedsizes) {
             ui->comboBoxSize->addItem(
                     QString().number(size.first)+"x"+
                     QString().number(size.second));

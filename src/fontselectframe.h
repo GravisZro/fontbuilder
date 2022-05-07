@@ -35,7 +35,7 @@
 
 #include <QMap>
 #include <QByteArray>
-#include <QPair>
+#include <utility>
 #include <vector>
 
 struct FontDef {
@@ -43,7 +43,7 @@ struct FontDef {
     QString file;
     int32_t face;
     bool fixedsize;
-    std::vector<QPair<int32_t,int32_t> > fixedsizes;
+    std::vector<std::pair<int32_t,int32_t> > fixedsizes;
     FontDef() : style(),file(),face(0),fixedsize(false) {}
     FontDef(const QString& s,const QString& f,int32_t num,bool fixedsize) : style(s),
         file(f),face(num),fixedsize(fixedsize) {}
@@ -52,7 +52,7 @@ struct FontDef {
 class FontConfig;
 
 typedef std::vector<FontDef> FontStyles;
-typedef QPair<QString,FontStyles> FontFamilsElement;
+typedef std::pair<QString,FontStyles> FontFamilsElement;
 typedef QMap<QString,FontStyles> FontFamilys;
 
 namespace Ui {
