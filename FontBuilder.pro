@@ -34,6 +34,22 @@ TARGET = FontBuilder
 TEMPLATE = app
 CONFIG += c++17
 CONFIG += strict_c++
+
+CONFIG += link_pkgconfig
+PKGCONFIG += freetype2
+
+QT += xml
+QT += widgets
+
+
+DESTDIR = bin
+OBJECTS_DIR = .obj
+MOC_DIR = .obj
+UI_DIR = .obj
+TARGET = FontBuilder
+
+INCLUDEPATH += src
+
 SOURCES += src/main.cpp \
     src/fontbuilder.cpp \
     src/colorbutton.cpp \
@@ -130,58 +146,21 @@ HEADERS += src/fontbuilder.h \
     src/image/carraywriter.h \
     src/image/mpwriter.h \
     src/exporters/mpexporter.h \
-    src/mpcommon.h
+    src/mpcommon.h \
+    src/unicodeutils.h
 
-FORMS += src/fontbuilder.ui \
+FORMS += \
+#    src/fontbuilder.ui \
     src/fontselectframe.ui \
     src/fontoptionsframe.ui \
     src/charactersframe.ui \
     src/layoutconfigframe.ui \
     src/outputframe.ui \
-    src/fonttestframe.ui \
-    src/charmapdialog.ui
+#    src/fonttestframe.ui \
+#    src/charmapdialog.ui
+
 TRANSLATIONS = fontbuilder_en.ts \
     fontbuilder_ru.ts
 
-QT += xml
-
-greaterThan(QT_MAJOR_VERSION, 4) {
-    QT += widgets
-}
-
-DESTDIR = bin
-OBJECTS_DIR = .obj
-MOC_DIR = .obj
-UI_DIR = .obj
-TARGET = FontBuilder
-
-INCLUDEPATH+=src/
-FREETYPE2CONFIG = $$(FREETYPE2CONFIG)
-isEmpty(FREETYPE2CONFIG) {
-    mac {
-        INCLUDEPATH += ../include
-        INCLUDEPATH += ../include/freetype2
-        LIBS += -L../lib -lfreetype -lz
-    # macports support
-        INCLUDEPATH += /opt/local/include /opt/local/include/freetype2
-        LIBS += -L/opt/local/lib
-    # homebrew support
-        INCLUDEPATH += /usr/local/include /usr/local/include/freetype2
-    }
-    win32 {
-        INCLUDEPATH += ../include
-        INCLUDEPATH += ../include/freetype2
-        LIBS += -L../lib \
-            -lfreetype
-    }
-    linux*|freebsd* {
-        CONFIG += link_pkgconfig
-        PKGCONFIG += freetype2
-    }
-} else {
-    message("configured freetype2 config: $$FREETYPE2CONFIG" )
-    INCLUDEPATH+=$$system("$$FREETYPE2CONFIG --prefix")/include/freetype2
-    LIBS += $$system("$$FREETYPE2CONFIG --libs")
-}
 OTHER_FILES += fontbuilder_ru.ts \
     fontbuilder_en.ts
