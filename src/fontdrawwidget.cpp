@@ -69,7 +69,8 @@ void FontDrawWidget::paintEvent(QPaintEvent *) {
     if (!m_renderer_data) return;
     if (!m_layout_config) return;
 
-    foreach (const LayoutChar& c,m_layout_data->placed()) {
+    for (const auto& c : m_layout_data->placed())
+    {
         if (m_renderer_data->chars[c.symbol].locked)
             painter.setPen(QColor(255,0,0,255));
         else

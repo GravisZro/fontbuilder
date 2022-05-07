@@ -134,16 +134,17 @@ bool CArrayExporter::Export(QByteArray &out)
              .arg(filename.toUpper())
              .arg(filename.toLower());
 
-    foreach(const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
+    {
         res += QString("\t\t{ .id=%1,\t.x=%2,\t.y=%3,\t.width=%4,\t.height=%5,\t.xoffset=%6,\t.yoffset=%7,\t.xadvance=%8,\t.page=%9 }, /* %2 */ \\\n")
-                 .arg(c.id)
-                 .arg(c.place.x())
-                 .arg(c.place.y())
-                 .arg(c.place.width())
-                 .arg(c.place.height())
-                 .arg(c.offset.x())
-                 .arg(metrics().ascender - c.offset.y())
-                 .arg(c.advance)
+                 .arg(sym.id)
+                 .arg(sym.place.x())
+                 .arg(sym.place.y())
+                 .arg(sym.place.width())
+                 .arg(sym.place.height())
+                 .arg(sym.offset.x())
+                 .arg(metrics().ascender - sym.offset.y())
+                 .arg(sym.advance)
                  .arg(0);
         charsnum++;
     }
@@ -167,15 +168,15 @@ bool CArrayExporter::Export(QByteArray &out)
              .arg(filename.toUpper())
              .arg(filename);
 
-    foreach(const Symbol& c , symbols()) {
-            for(auto& k : c.kerning) {
-              res += QString("\t\t{ .first = %1, .second = %2, .amount = %4 }, \\\n")
-                       .arg(c.id)
-                       .arg(k.first)
-                       .arg(k.second);
-              kernnum++;
-            }
-    }
+    for (const Symbol& sym : symbols())
+      for(auto& k : sym.kerning)
+      {
+        res += QString("\t\t{ .first = %1, .second = %2, .amount = %4 }, \\\n")
+               .arg(sym.id)
+               .arg(k.first)
+               .arg(k.second);
+        kernnum++;
+      }
 
     res += "\t};\n";
 /*

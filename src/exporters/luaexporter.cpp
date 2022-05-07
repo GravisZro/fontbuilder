@@ -80,29 +80,27 @@ bool LuaExporter::Export(QByteArray& out) {
            .arg(texHeight());
 
 
-    foreach (const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
       res += QString("%%1\t{ char=%1, width=%2, x=%3, y=%4, w=%5, h=%6, ox=%7, oy=%8 },\n")
-             .arg(charCode(c.id))
-             .arg(c.advance)
-             .arg(c.place.x())
-             .arg(c.place.y())
-             .arg(c.place.width())
-             .arg(c.place.height())
-             .arg(c.offset.x())
-             .arg(c.offset.y());
-    }
+             .arg(charCode(sym.id))
+             .arg(sym.advance)
+             .arg(sym.place.x())
+             .arg(sym.place.y())
+             .arg(sym.place.width())
+             .arg(sym.place.height())
+             .arg(sym.offset.x())
+             .arg(sym.offset.y());
     res += "}%2\n";
 
     res += "%1kernings = {\n";
-    foreach (const Symbol& c , symbols()) {
-      for ( const auto& k : c.kerning)
+    for (const Symbol& sym : symbols())
+      for ( const auto& k : sym.kerning)
         res += QString("%%1\t{ from=%1, to=%2, offset=%3,\n")
-               .arg(charCode(c.id))
+               .arg(charCode(sym.id))
                .arg(charCode(k.first))
                .arg(k.second);
-    }
-    res += "}%2\n";
 
+    res += "}%2\n";
     res += "%4\n";
 
     if (m_write_function)

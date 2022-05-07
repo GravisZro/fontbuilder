@@ -30,33 +30,33 @@ bool JSONFontExporter::Export(QByteArray &out)
     jsonConfig.insert("textureFile", texFilename());
 
     QJsonArray jsonSymbols;
-    foreach(const Symbol& c , symbols())
+    for (const Symbol& sym : symbols())
     {
         QJsonObject jsonSymbol;
-        jsonSymbol.insert("id", int32_t(c.id));
-        jsonSymbol.insert("x", c.place.x());
-        jsonSymbol.insert("y", c.place.y());
-        jsonSymbol.insert("width", c.place.width());
-        jsonSymbol.insert("height", c.place.height());
-        jsonSymbol.insert("xoffset", c.offset.x());
-        jsonSymbol.insert("yoffset", metrics().ascender - c.offset.y());
-        jsonSymbol.insert("xadvance", c.advance);
+        jsonSymbol.insert("id", int32_t(sym.id));
+        jsonSymbol.insert("x", sym.place.x());
+        jsonSymbol.insert("y", sym.place.y());
+        jsonSymbol.insert("width", sym.place.width());
+        jsonSymbol.insert("height", sym.place.height());
+        jsonSymbol.insert("xoffset", sym.offset.x());
+        jsonSymbol.insert("yoffset", metrics().ascender - sym.offset.y());
+        jsonSymbol.insert("xadvance", sym.advance);
 
         jsonSymbols.append( jsonSymbol );
     }
 
     QJsonArray jsonKernels;
-    foreach(const Symbol& c , symbols())
+    for (const Symbol& sym : symbols())
     {
-        if (c.kerning.empty())
+        if (sym.kerning.empty())
         {
             continue;
         }
 
         QJsonObject jsonKernel;
-        for (const auto& k : c.kerning)
+        for (const auto& k : sym.kerning)
         {
-            jsonKernel.insert("first", int32_t(c.id));
+            jsonKernel.insert("first", int32_t(sym.id));
             jsonKernel.insert("second", int32_t(k.first));
             jsonKernel.insert("amount", k.second);
         }

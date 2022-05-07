@@ -67,18 +67,19 @@ bool NGLExporter::Export(QByteArray& out) {
     root.appendChild(tex);
 
     QDomElement chars = doc.createElement("chars");
-    foreach (const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
+    {
         QDomElement ce = doc.createElement("char");
-        ce.setAttribute("id",QString().append(c.id));
-        ce.setAttribute("rect_x",c.place.x());
-        ce.setAttribute("rect_y",c.place.y());
-        ce.setAttribute("rect_w",c.place.width());
-        ce.setAttribute("rect_h",c.place.height());
-        ce.setAttribute("offset_x",c.offset.x());
-        ce.setAttribute("offset_y",c.offset.y());
-        ce.setAttribute("advance",c.advance);
+        ce.setAttribute("id",QString().append(sym.id));
+        ce.setAttribute("rect_x",sym.place.x());
+        ce.setAttribute("rect_y",sym.place.y());
+        ce.setAttribute("rect_w",sym.place.width());
+        ce.setAttribute("rect_h",sym.place.height());
+        ce.setAttribute("offset_x",sym.offset.x());
+        ce.setAttribute("offset_y",sym.offset.y());
+        ce.setAttribute("advance",sym.advance);
 
-        for (const auto& k : c.kerning) {
+        for (const auto& k : sym.kerning) {
             QDomElement ke = doc.createElement("kerning");
             ke.setAttribute("id",QString().append(k.first));
             ke.setAttribute("advance",k.second);

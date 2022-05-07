@@ -39,10 +39,8 @@ bool AGEExporter::Export(QByteArray& out)
     unsigned charsCount = list.size();
     unsigned maxHeight = 0;
 
-    foreach(const Symbol& c, list)
-    {
-        maxHeight = std::max<float>(maxHeight, c.place.height());
-    }
+    for (const Symbol& sym : list)
+      maxHeight = std::max<float>(maxHeight, sym.place.height());
 
     AGEHeader header;
     memcpy(header.header, AGEsig, sizeof(header.header));
@@ -50,16 +48,16 @@ bool AGEExporter::Export(QByteArray& out)
     header.height = maxHeight;
     append(out, header);
 
-    foreach(const Symbol& c, list)
+    for (const Symbol& sym : list)
     {
-        append(out, (unsigned)c.id);
-        append(out, (float)c.place.x());
-        append(out, (float)c.place.y());
-        append(out, (float)(c.place.x() + c.place.width()));
-        append(out, (float)(c.place.y() + c.place.height()));
-        append(out, (float)c.offset.x());
-        append(out, (float)(maxHeight - c.offset.y()));
-        append(out, (float)c.advance);
+        append(out, (unsigned)sym.id);
+        append(out, (float)sym.place.x());
+        append(out, (float)sym.place.y());
+        append(out, (float)(sym.place.x() + sym.place.width()));
+        append(out, (float)(sym.place.y() + sym.place.height()));
+        append(out, (float)sym.offset.x());
+        append(out, (float)(maxHeight - sym.offset.y()));
+        append(out, (float)sym.advance);
     }
 
     return true;

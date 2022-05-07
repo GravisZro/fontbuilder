@@ -19,30 +19,28 @@ bool SimpleExporter::Export(QByteArray &out)
            .arg(texFilename())
            .arg(symbols().size());
 
-    foreach(const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
       res += QString("%1 %2 %3 %4 %5 %6 %7 %8\n")
-             .arg(c.id)
-             .arg(c.place.x())
-             .arg(c.place.y())
-             .arg(c.place.width())
-             .arg(c.place.height())
-             .arg(c.offset.x())
-             .arg(metrics().height - c.offset.y())
-             .arg(c.advance);   out.append('\n');
-    }
+             .arg(sym.id)
+             .arg(sym.place.x())
+             .arg(sym.place.y())
+             .arg(sym.place.width())
+             .arg(sym.place.height())
+             .arg(sym.offset.x())
+             .arg(metrics().height - sym.offset.y())
+             .arg(sym.advance);
 
     res += "%1\n";
     int32_t kerningsCount = 0;
-    foreach (const Symbol& c , symbols()) {
-      for ( const auto& k : c.kerning)
+    for (const Symbol& sym : symbols())
+      for ( const auto& k : sym.kerning)
       {
         res += QString("%1 %2 %3 \n")
-               .arg(c.id)
+               .arg(sym.id)
                .arg(k.first)
                .arg(k.second);
         ++kerningsCount;
       }
-    }
 
     out = res.arg(kerningsCount).toUtf8();
 

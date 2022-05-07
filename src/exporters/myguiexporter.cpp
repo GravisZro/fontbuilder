@@ -90,17 +90,18 @@ bool MyGUIExporter::Export(QByteArray& out) {
     appendProperty(doc,descr,"DefaultHeight",QString("%1").arg(ascender+descender));
 
     QDomElement chars = doc.createElement("Codes");
-    foreach (const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
+    {
         QDomElement ce = doc.createElement("Code");
-        ce.setAttribute("index",QString("%1").arg(c.id));
+        ce.setAttribute("index",QString("%1").arg(sym.id));
         char buf[64];
-        ::snprintf(buf,63,"%d %d %d %d",c.place.x(),c.place.y(),c.place.width(),c.place.height());
+        ::snprintf(buf,63,"%d %d %d %d",sym.place.x(),sym.place.y(),sym.place.width(),sym.place.height());
         ce.setAttribute("coord",buf);
-        ::snprintf(buf,63,"%f %f",c.offset.x() * scale,ascender-c.offset.y() * scale);
+        ::snprintf(buf,63,"%f %f",sym.offset.x() * scale,ascender-sym.offset.y() * scale);
         ce.setAttribute("bearing",buf);
-        ce.setAttribute("advance",c.advance* scale-c.offset.x()* scale);
+        ce.setAttribute("advance",sym.advance* scale-sym.offset.x()* scale);
         if (scale!=1.0f) {
-            ::snprintf(buf,63,"%f %f",c.place.width() * scale,c.place.height() * scale);
+            ::snprintf(buf,63,"%f %f",sym.place.width() * scale,sym.place.height() * scale);
             ce.setAttribute("size",buf);
         }
 //        typedef QMap<uint,int32_t>::ConstIterator Kerning;

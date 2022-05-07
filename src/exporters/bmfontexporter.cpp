@@ -36,27 +36,24 @@ bool BMFontExporter::Export(QByteArray &out)
              .arg(texFilename());
 
 
-    foreach(const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
         res += QString("char id=%1 x=%2 y=%3 width=%4 height=%5 xoffset=%6 yoffset=%7 xadvance=%8 page=%9\n")
-                 .arg(c.id)
-                 .arg(c.place.x())
-                 .arg(c.place.y())
-                 .arg(c.place.width())
-                 .arg(c.place.height())
-                 .arg(c.offset.x())
-                 .arg(metrics().ascender - c.offset.y())
-                 .arg(c.advance)
+                 .arg(sym.id)
+                 .arg(sym.place.x())
+                 .arg(sym.place.y())
+                 .arg(sym.place.width())
+                 .arg(sym.place.height())
+                 .arg(sym.offset.x())
+                 .arg(metrics().ascender - sym.offset.y())
+                 .arg(sym.advance)
                  .arg(0);
-    }
 
-    foreach(const Symbol& c , symbols()) {
-      for(auto& k : c.kerning) {
+    for (const Symbol& sym : symbols())
+      for(auto& k : sym.kerning)
         res += QString("kerning first=%1 second=%2 amount=%3")
-                 .arg(c.id)
+                 .arg(sym.id)
                  .arg(k.first)
                  .arg(k.second);
-      }
-    }
 
     out = res.toUtf8();
 

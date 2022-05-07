@@ -462,7 +462,8 @@ void FontBuilder::onLayoutChanged() {
     image.fill(0);
     {
         QPainter painter(&image);
-        foreach (const LayoutChar& c,m_layout_data->placed()) {
+        for (const LayoutChar& c : m_layout_data->placed())
+        {
           QPoint pos = c.bounding.topLeft() + m_layout_config->offset().topLeft();
           m_font_renderer->placeImage(painter,c.symbol, pos.x(), pos.y());
         }

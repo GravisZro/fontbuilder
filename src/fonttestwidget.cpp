@@ -48,10 +48,10 @@ FontTestWidget::FontTestWidget(QWidget *parent) :
 }
 
 
-const LayoutChar*   FontTestWidget::layoutChar(uint32_t c) const {
-    foreach (const LayoutChar& lc, m_layout_data->placed()) {
-        if (c==lc.symbol)
-            return &lc;
+const LayoutChar*   FontTestWidget::layoutChar(uint32_t symbol) const {
+    for (const auto& c : m_layout_data->placed()) {
+        if (symbol == c.symbol)
+            return &c;
     }
     return 0;
 }

@@ -49,10 +49,11 @@ void AbstractExporter::setData(const LayoutData* data,const RendererData& render
     m_metrics = rendered.metrics;
     m_metrics.height+=fontConfig()->lineSpacing();
     m_symbols.clear();
-    foreach ( const LayoutChar& lc, data->placed()) {
+    for (const auto& character : data->placed())
+    {
         Symbol symb;
-        symb.id = lc.symbol;
-        symb.place = lc.bounding;
+        symb.id = character.symbol;
+        symb.place = character.bounding;
         const RenderedChar& rc = rendered.chars[symb.id];
         symb.offset = rc.offset;
         symb.offset.rx() -= layoutConfig()->offset().left();

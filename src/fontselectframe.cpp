@@ -232,7 +232,8 @@ void FontSelectFrame::selectFile(const QString& file,int32_t face) {
     foreach (const QString& name, m_database.keys()) {
         int32_t id = 0;
         const FontStyles &fs(m_database[name]);
-        foreach (const FontDef &fd, fs) {
+        for (const FontDef &fd : fs)
+        {
             if (fd.file == file &&
                 fd.face == face) {
                 bool b = ui->comboBoxStyle->blockSignals(true);
@@ -277,7 +278,8 @@ void FontSelectFrame::on_comboBoxFamily_currentIndexChanged(QString family)
         m_config->setFamily(family);
     ui->comboBoxStyle->clear();
     int32_t item_no = 0;
-    foreach (const FontDef& def ,m_database[family]) {
+    for (const FontDef& def : m_database[family])
+    {
         ui->comboBoxStyle->addItem(def.style,item_no);
         item_no++;
     }
@@ -314,7 +316,8 @@ void FontSelectFrame::readFontSizes(const FontDef& def) {
     bool block = ui->comboBoxSize->blockSignals(true);
     ui->comboBoxSize->clear();
     if (def.fixedsize) {
-        foreach (auto size , def.fixedsizes) {
+        for (auto size : def.fixedsizes)
+        {
             ui->comboBoxSize->addItem(
                     QString().number(size.first)+"x"+
                     QString().number(size.second));

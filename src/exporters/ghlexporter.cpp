@@ -67,17 +67,18 @@ bool GHLExporter::Export(QByteArray& out) {
     root.appendChild(tex);
 
     QDomElement chars = doc.createElement("chars");
-    foreach (const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
+    {
         QDomElement ce = doc.createElement("char");
-        ce.setAttribute("id",QString().append(c.id));
+        ce.setAttribute("id",QString().append(sym.id));
         char buf[64];
-        ::snprintf(buf,63,"%d %d %d %d",c.place.x(),c.place.y(),c.place.width(),c.place.height());
+        ::snprintf(buf,63,"%d %d %d %d",sym.place.x(),sym.place.y(),sym.place.width(),sym.place.height());
         ce.setAttribute("rect",buf);
-        ::snprintf(buf,63,"%d %d",c.offset.x(),c.offset.y());
+        ::snprintf(buf,63,"%d %d",sym.offset.x(),sym.offset.y());
         ce.setAttribute("offset",buf);
-        ce.setAttribute("advance",c.advance);
+        ce.setAttribute("advance",sym.advance);
 
-        for (const auto& k : c.kerning) {
+        for (const auto& k : sym.kerning) {
             QDomElement ke = doc.createElement("kerning");
             ke.setAttribute("id",QString().append(k.first));
             ke.setAttribute("advance",k.second);

@@ -69,8 +69,8 @@ void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
 
     /// speed up
     int32_t area = 0;
-    foreach (const LayoutChar& c, chars)
-        area += c.bounding.width() * c.bounding.height();
+    for (const auto& character : chars)
+        area += character.bounding.width() * character.bounding.height();
     int32_t dim = ::sqrt(area);
 
     resize(dim,dim);
@@ -86,23 +86,24 @@ void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
         lines.clear();
         lines.push_back(Line(chars.front()));
         iteration = false;
-        foreach (const LayoutChar& c, chars) {
+        for (const auto& character : chars)
+        {
 
-            if ((x + c.bounding.width()) > w) {
+            if ((x + character.bounding.width()) > w) {
                 x = 0;
                 int32_t y = lines.back().y;
                 int32_t h = lines.back().h();
-                lines.push_back(Line(c));
+                lines.push_back(Line(character));
                 lines.back().y = y + h;
             }
 
-           if ( (lines.back().y + c.bounding.height())>h ) {
+           if ( (lines.back().y + character.bounding.height())>h ) {
                 if (w>h) {
-                    resize(width(),lines.back().y + c.bounding.height());
+                    resize(width(),lines.back().y + character.bounding.height());
                     h = height();
                 }
                 else {
-                    resize(width() + c.bounding.width(), height());
+                    resize(width() + character.bounding.width(), height());
                     w = width();
                 }
                 iteration = true;
@@ -112,16 +113,18 @@ void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
 
 
             /// place
-           lines.back().append(c);
-           x += c.bounding.width();
+           lines.back().append(character);
+           x += character.bounding.width();
         }
     }
 
 
     int32_t x = 0;
-    foreach (const Line& line, lines) {
+    for (const Line& line : lines)
+    {
         x = 0;
-        foreach (const LayoutChar* c , line.chars ) {
+        for (const auto* c : line.chars )
+        {
             LayoutChar l = *c;
             l.bounding.setX(x);
             l.bounding.setY(line.y + l.bounding.y() - line.min_y);

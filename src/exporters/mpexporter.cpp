@@ -62,9 +62,9 @@ bool MPExporter::Export(QByteArray &out)
 
     //number of kerning pairs
     font_img.kern_count = 0;
-    foreach(const Symbol& c , symbols()) {
-        font_img.kern_count += static_cast<uint16_t>(c.kerning.size());
-    }
+    for (const Symbol& sym : symbols())
+      font_img.kern_count += static_cast<uint16_t>(sym.kerning.size());
+
     //array of glyphs structures
     font_img.kern_data_offset = font_img.getSize() + font_img.glyph_count * FontGlyph::getSize();
     //offset to the beginning of the image data
@@ -80,23 +80,24 @@ bool MPExporter::Export(QByteArray &out)
 
     uint32_t offset = 0;
     //this loop goes over all characters and writes to stream information about glyph's dimension and offset to pixmap data
-    foreach(const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
+    {
         FontGlyph glyph;
 
         //character id
-        glyph.id = static_cast<ucode32>(c.id);
+        glyph.id = static_cast<ucode32>(sym.id);
         //offset in glyph data field
         glyph.glyph_offset = font_img.image_data_offset+offset;
         //width of the character image in the texture
-        glyph.width = static_cast<uint16_t>(c.place.width());
+        glyph.width = static_cast<uint16_t>(sym.place.width());
         //height of the character image in the texture
-        glyph.height = static_cast<uint16_t>(c.place.height());
+        glyph.height = static_cast<uint16_t>(sym.place.height());
         //how much the current position should be offset when copying the image from the texture to the screen
-        glyph.xoffset = static_cast<int16_t>(c.offset.x());
+        glyph.xoffset = static_cast<int16_t>(sym.offset.x());
         //how much the current position should be offset when copying the image from the texture to the screen
-        glyph.yofset = static_cast<int16_t>(c.offset.y());
+        glyph.yofset = static_cast<int16_t>(sym.offset.y());
         //how much the current position should be advanced after drawing the character
-        glyph.xadvance = static_cast<uint16_t>(c.advance);
+        glyph.xadvance = static_cast<uint16_t>(sym.advance);
         offset += glyph.width * glyph.height;
 
         glyph.save( out );
@@ -105,13 +106,13 @@ bool MPExporter::Export(QByteArray &out)
     }
 
     //this loop goes over all characters and writes to stream information about kerning for each glyph
-    foreach(const Symbol& c , symbols())
+    for (const Symbol& sym : symbols())
     {
         FontKerning kern;
-        for (const auto& k : c.kerning)
+        for (const auto& k : sym.kerning)
         {
             //utf16 id of the first character
-            kern.first = static_cast<ucode32>(c.id);
+            kern.first = static_cast<ucode32>(sym.id);
             //utf16 id of the following character
             kern.second = static_cast<ucode32>(k.first);
             //distance in pixels between beginning of first character and beginning of second character
@@ -124,11 +125,12 @@ bool MPExporter::Export(QByteArray &out)
     }
 
     //writes to file temporary data about location of each glyph in the pixmap
-    foreach(const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
+    {
         pixmap_coords_t coord;
 
-        coord.x = static_cast<uint32_t>(c.place.x());
-        coord.y = static_cast<uint32_t>(c.place.y());
+        coord.x = static_cast<uint32_t>(sym.place.x());
+        coord.y = static_cast<uint32_t>(sym.place.y());
         char* coord_ptr = reinterpret_cast<char*>(&coord);
         out.append(QByteArray::fromRawData( coord_ptr, sizeof(pixmap_coords_t)));
     }

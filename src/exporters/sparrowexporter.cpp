@@ -31,24 +31,25 @@ bool SparrowExporter::Export(QByteArray& out) {
     chars.setAttribute("count", QString::number(symbols().size()));
     QDomElement kernings = doc.createElement("kernings");
     int32_t kernNumber = 0;
-    foreach(const Symbol& c , symbols()) {
+    for (const Symbol& sym : symbols())
+    {
         QDomElement ch = doc.createElement("char");
-        ch.setAttribute("id", QString::number(c.id));
-        ch.setAttribute("x", QString::number(c.place.x()));
-        ch.setAttribute("y", QString::number(c.place.y()));
-        ch.setAttribute("width", QString::number(c.place.width()));
-        ch.setAttribute("height", QString::number(c.place.height()));
-        ch.setAttribute("xoffset", QString::number(c.offset.x()));
-        ch.setAttribute("yoffset", QString::number(height - c.offset.y()));
-        ch.setAttribute("xadvance", QString::number(c.advance));
+        ch.setAttribute("id", QString::number(sym.id));
+        ch.setAttribute("x", QString::number(sym.place.x()));
+        ch.setAttribute("y", QString::number(sym.place.y()));
+        ch.setAttribute("width", QString::number(sym.place.width()));
+        ch.setAttribute("height", QString::number(sym.place.height()));
+        ch.setAttribute("xoffset", QString::number(sym.offset.x()));
+        ch.setAttribute("yoffset", QString::number(height - sym.offset.y()));
+        ch.setAttribute("xadvance", QString::number(sym.advance));
         ch.setAttribute("page", "0");
         ch.setAttribute("chnl", "0");
-        ch.setAttribute("letter", c.id==32 ? "space" : QString().append(c.id));
+        ch.setAttribute("letter", sym.id==32 ? "space" : QString().append(sym.id));
         chars.appendChild(ch);
 
-        for (const auto& k : c.kerning) {
+        for (const auto& k : sym.kerning) {
             QDomElement ke = doc.createElement("kerning");
-            ke.setAttribute("first", QString::number(c.id));
+            ke.setAttribute("first", QString::number(sym.id));
             ke.setAttribute("second",QString().append(k.first));
             ke.setAttribute("amount",k.second);
             kernings.appendChild(ke);

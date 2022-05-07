@@ -44,22 +44,24 @@ void LineLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
       return;
     int32_t min_y = chars.front().bounding.y();
     int32_t max_y = chars.front().bounding.y() + chars.front().bounding.height();
-    foreach (const LayoutChar& c, chars) {
-        w += c.bounding.width();
-        if (c.bounding.y() < min_y)
-            min_y = c.bounding.y();
-        if (c.bounding.y() + c.bounding.height() > max_y)
-            max_y = c.bounding.y() + c.bounding.height();
+    for (const auto& character : chars)
+    {
+        w += character.bounding.width();
+        if (character.bounding.y() < min_y)
+            min_y = character.bounding.y();
+        if (character.bounding.y() + character.bounding.height() > max_y)
+            max_y = character.bounding.y() + character.bounding.height();
     }
     resize(w,max_y-min_y);
     int32_t x = 0;
     //int32_t y = 0;
-    foreach (const LayoutChar& c, chars) {
-        LayoutChar l = c;
+    for (const auto& character : chars)
+    {
+        auto l = character;
         l.bounding.setX(x);
         l.bounding.setY(l.bounding.y() - min_y);
         place(l);
-        x += c.bounding.width();
+        x += character.bounding.width();
     }
 }
 

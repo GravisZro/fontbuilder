@@ -354,10 +354,10 @@ void CharMapDialog::changeEvent(QEvent *e)
 void CharMapDialog::setChars(const std::u32string& string)
 {
   m_char_select->clearCharacterCodes();
-  foreach(auto c, string)
+  for(auto character : string)
   {
-    m_char_select->insertCharacterCode(c);
-    onCharsChanged(c, true);
+    m_char_select->insertCharacterCode(character);
+    onCharsChanged(character, true);
   }
 }
 

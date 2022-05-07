@@ -18,12 +18,12 @@ bool ZFIExporter::Export(QByteArray& out) {
   uint8_t Padding[4] = { 0, 0, 0, 0 };
   zglTCharDesc CharDesc;
 
-  foreach ( const Symbol& c, symbols() )
+  for (const Symbol& sym : symbols())
   {
-    if ( c.place.height() > MaxHeight )
-      MaxHeight = c.place.height();
-    if ( c.place.height() - c.offset.y() > MaxShiftY )
-      MaxShiftY = c.place.height() - c.offset.y();
+    if ( sym.place.height() > MaxHeight )
+      MaxHeight = sym.place.height();
+    if ( sym.place.height() - sym.offset.y() > MaxShiftY )
+      MaxShiftY = sym.place.height() - sym.offset.y();
 
     Chars++;
   }
@@ -35,27 +35,27 @@ bool ZFIExporter::Export(QByteArray& out) {
   out.append( (char*)&MaxShiftY, 4 );
   out.append( (char*)&Padding, 4 );
 
-  foreach ( const Symbol& c, symbols() )
+  for (const Symbol& sym : symbols())
   {
-    int32_t id = c.id;
+    int32_t id = sym.id;
     float u = 1.f / PageWidth, v = 1.f / PageHeight;
     out.append( (char*)&id, 4 );
 
     CharDesc.Page = 0;
-    CharDesc.Width = c.place.width();
-    CharDesc.Height = c.place.height();
-    CharDesc.ShiftX = c.offset.x();
-    CharDesc.ShiftY = c.place.height() - c.offset.y();
-    CharDesc.ShiftP = c.advance;
+    CharDesc.Width = sym.place.width();
+    CharDesc.Height = sym.place.height();
+    CharDesc.ShiftX = sym.offset.x();
+    CharDesc.ShiftY = sym.place.height() - sym.offset.y();
+    CharDesc.ShiftP = sym.advance;
 
-    CharDesc.TexCoords[ 0 ].X = (float)u * c.place.x();
-    CharDesc.TexCoords[ 0 ].Y = 1 - (float)v * c.place.y();
-    CharDesc.TexCoords[ 1 ].X = (float)u * ( c.place.x() + c.place.width() );
-    CharDesc.TexCoords[ 1 ].Y = 1 - (float)v * c.place.y();
-    CharDesc.TexCoords[ 2 ].X = (float)u * ( c.place.x() + c.place.width() );
-    CharDesc.TexCoords[ 2 ].Y = 1 - (float)v * ( c.place.y() + c.place.height() );
-    CharDesc.TexCoords[ 3 ].X = (float)u * c.place.x();
-    CharDesc.TexCoords[ 3 ].Y = 1 - (float)v * ( c.place.y() + c.place.height() );
+    CharDesc.TexCoords[ 0 ].X = (float)u * sym.place.x();
+    CharDesc.TexCoords[ 0 ].Y = 1 - (float)v * sym.place.y();
+    CharDesc.TexCoords[ 1 ].X = (float)u * ( sym.place.x() + sym.place.width() );
+    CharDesc.TexCoords[ 1 ].Y = 1 - (float)v * sym.place.y();
+    CharDesc.TexCoords[ 2 ].X = (float)u * ( sym.place.x() + sym.place.width() );
+    CharDesc.TexCoords[ 2 ].Y = 1 - (float)v * ( sym.place.y() + sym.place.height() );
+    CharDesc.TexCoords[ 3 ].X = (float)u * sym.place.x();
+    CharDesc.TexCoords[ 3 ].Y = 1 - (float)v * ( sym.place.y() + sym.place.height() );
 
     out.append( (char*)&CharDesc.Page, 4 );
     out.append( (char*)&CharDesc.Width, 1 );
