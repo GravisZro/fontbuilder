@@ -31,14 +31,9 @@
 #ifndef ABSTRACTIMAGEWRITER_H
 #define ABSTRACTIMAGEWRITER_H
 
-
-
-
 #include <QObject>
 #include <QFile>
 #include <QImage>
-
-#include <vector>
 
 #include "rendererdata.h"
 
@@ -64,20 +59,14 @@ public:
 
     void forget();
     void watch(const QString& file);
+
 signals:
     void imageChanged(const QString& file);
-private:
-    QString m_error_string;
-    QString m_extension;
-    int32_t m_tex_width;
-    int32_t m_tex_height;
-    const RendererData* m_rendered;
-    const LayoutData* m_layout;
-    const LayoutConfig* m_layout_config;
-    QFileSystemWatcher* m_watcher;
-    bool m_reload_support;
-    QTimer* m_reload_timer;
-    QString m_reload_file;
+
+protected slots:
+    void onFileChanged(const QString& fn);
+    void onReload();
+
 protected:
     void setExtension(const QString& extension) { m_extension = extension;}
     void setReloadSupport(bool support) { m_reload_support = support;}
@@ -90,10 +79,19 @@ protected:
     virtual bool Export(QFile& file) = 0;
     virtual QImage* reload( QFile& file) { Q_UNUSED(file);return 0;}
     QImage buildImage();
-protected slots:
-    void onFileChanged(const QString& fn);
-    void onReload();
+
 private:
+    QString m_error_string;
+    QString m_extension;
+    int32_t m_tex_width;
+    int32_t m_tex_height;
+    const RendererData* m_rendered;
+    const LayoutData* m_layout;
+    const LayoutConfig* m_layout_config;
+    QFileSystemWatcher* m_watcher;
+    bool m_reload_support;
+    QTimer* m_reload_timer;
+    QString m_reload_file;
 };
 
 

@@ -48,23 +48,25 @@ CharsSelectWidget::CharsSelectWidget(QWidget *parent) :
 }
 
 
-QSize CharsSelectWidget::sizeHint() const {
-    return QSize(columns*cell_size, ((m_codes_end-m_codes_begin)/columns+1)*cell_size);
+QSize CharsSelectWidget::sizeHint() const
+{
+    return QSize(columns * cell_size,
+                 ((m_codes_end - m_codes_begin) / columns + 1 ) * cell_size);
 }
 
 
-void CharsSelectWidget::setRange(uint32_t begin,uint32_t end)
+void CharsSelectWidget::setRange(char32_t begin, char32_t end)
 {
-  foreach(uint32_t c, m_character_codes)
+  for(char32_t c : m_character_codes)
     if(c < begin || c > end)
       removeCharacterCode(c);
 
-    m_codes_begin = begin;
-    m_codes_end = end;
-    setMinimumSize(sizeHint());
-    setMaximumSize(sizeHint());
-    adjustSize();
-    update();
+  m_codes_begin = begin;
+  m_codes_end = end;
+  setMinimumSize(sizeHint());
+  setMaximumSize(sizeHint());
+  adjustSize();
+  update();
 }
 
 void CharsSelectWidget::paintEvent(QPaintEvent *event) {
@@ -126,11 +128,11 @@ void CharsSelectWidget::mousePressEvent(QMouseEvent *event)
              m_track_mouse = true;
              if (m_character_codes.contains(m_select_begin_code)) {
                  m_character_codes.erase(m_character_codes.find(m_select_begin_code));
-                 codesChanged(m_select_begin_code,false);
+                 emit codesChanged(m_select_begin_code,false);
                  m_track_erase = true;
              } else {
                  m_character_codes.insert(m_select_begin_code);
-                 codesChanged(m_select_begin_code,true);
+                 emit codesChanged(m_select_begin_code,true);
                  m_track_erase = false;
              }
          } else {

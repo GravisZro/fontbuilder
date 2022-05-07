@@ -39,7 +39,7 @@ Q_OBJECT
 public:
     explicit ColorButton(QWidget *parent = nullptr);
 
-    Q_PROPERTY( QColor color READ color WRITE setColor CONSTANT);
+    Q_PROPERTY( QColor color READ color WRITE setColor );
     QColor color() const { return m_color;}
     void setColor(const QColor& c) { m_color = c;}
 

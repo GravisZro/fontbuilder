@@ -47,7 +47,7 @@ class FontRenderer : public QObject
 {
 Q_OBJECT
 public:
-    explicit FontRenderer(QObject *parent , const FontConfig* config);
+    explicit FontRenderer(const FontConfig* config, QObject *parent);
     ~FontRenderer();
 
     const std::vector<LayoutChar>& rendered(void) const { return m_chars;}
@@ -58,28 +58,32 @@ public:
     FT_Face face() const { return m_ft_face; }
     void render(float scale);
     float scale() const { return m_scale; }
-private:
-    const FontConfig* m_config;
-    FT_Library m_ft_library;
-    FT_Face m_ft_face;
-    QByteArray  m_data;
-    void rasterize();
-    RendererData m_rendered;
-    std::vector<LayoutChar> m_chars;
-    void clear_bitmaps(void);
-    bool append_bitmap(char32_t symbol);
-    void append_kerning(char32_t symbol, const std::u32string& other);
-    float   m_scale;
+
 signals:
     void imagesChanged();
     void imagesChangedWithData(const std::vector<LayoutChar>&);
-public slots:
+
 private slots:
     void on_fontFileChanged();
     void on_fontFaceIndexChanged();
     void on_fontSizeChanged();
     void on_fontCharactersChanged();
     void on_fontOptionsChanged();
+
+private:
+    void clear_bitmaps(void);
+    bool append_bitmap(char32_t symbol);
+    void append_kerning(char32_t symbol, const std::u32string& other);
+    void rasterize();
+
+private:
+    const FontConfig* m_config;
+    FT_Library m_ft_library;
+    FT_Face m_ft_face;
+    QByteArray  m_data;
+    RendererData m_rendered;
+    std::vector<LayoutChar> m_chars;
+    float   m_scale;
 };
 
 #endif // FONTRENDERER_H

@@ -55,13 +55,13 @@ FontConfig::FontConfig(QObject *parent) :
 }
 
 
-const std::u32string& FontConfig::defaultCharacters(void) const {
-    static const std::u32string def = U" !\"#$%&'()*+,-./0123456789:;<=>?@"
-                                      "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
-                                      "abcdefghijklmnopqrstuvwxyz{|}~";
+const std::u32string& FontConfig::defaultCharacters(void) const
+{
+    static const std::u32string def =  U" !\"#$%&'()*+,-./0123456789:;<=>?@"
+                                       "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`"
+                                       "abcdefghijklmnopqrstuvwxyz{|}~";
     return def;
 }
-
 
 void FontConfig::setPath(const QString& path) {
     m_filename = QString();
@@ -108,11 +108,13 @@ void FontConfig::setSize(int32_t size) {
 }
 
 
-void FontConfig::setCharacters(const std::u32string& characters) {
-    if (m_characters != characters) {
-        m_characters = characters;
-        emit charactersChanged();
-    }
+void FontConfig::setCharacters(const std::u32string& characters)
+{
+  if (m_characters != characters)
+  {
+    m_characters = characters;
+    emit charactersChanged();
+  }
 }
 
 

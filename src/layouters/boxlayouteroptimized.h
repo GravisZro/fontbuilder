@@ -9,8 +9,8 @@ public:
     BoxLayouterOptimized(QObject *parent);
 
 private:
-    static bool SortCharsByHeight(const LayoutChar &a, const LayoutChar &b);
-    void OptimizeLayout(std::vector<LayoutChar> &chars);
+    static bool SortCharsByHeight(const RenderedChar &a, const RenderedChar &b);
+    void OptimizeLayout(std::vector<RenderedChar> &chars);
 };
 
 #endif // BOXLAYOUTEROPTIMIZED_H

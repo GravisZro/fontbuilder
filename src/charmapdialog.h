@@ -49,7 +49,7 @@ public:
     ~CharMapDialog();
 
     void setChars(const std::u32string& string);
-    std::u32string getCharacters() const;
+    std::u32string getCharacters(void) const;
 protected:
     void changeEvent(QEvent *e);
 
@@ -69,7 +69,7 @@ private:
 private slots:
     void on_listWidget_itemChanged(QListWidgetItem* item);
     void on_listWidget_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
-    void onCharsChanged(uint32_t code,bool add);
+    void onCharsChanged(char32_t code,bool add);
 };
 
 #endif // CHARMAPDIALOG_H

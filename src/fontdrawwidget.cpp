@@ -32,51 +32,51 @@
 #include <QPainter>
 
 FontDrawWidget::FontDrawWidget(QWidget *parent) :
-    QWidget(parent)
+    QWidget(parent),
+    m_scale(1.0f),
+    m_draw_grid(true),
+    m_layout_data(nullptr),
+    m_renderer_data(nullptr),
+    m_layout_config(nullptr)
 {
-    m_scale = 1.0f;
-    m_draw_grid = true;
-
-    m_layout_data = 0;
-    m_renderer_data = 0;
-    m_layout_config = 0;
-
 }
 
 
 void FontDrawWidget::setImage(const QImage& image) {
 
-    QSize size =image.size();
-    setFixedSize(size*m_scale);
+    QSize size = image.size();
+    setFixedSize(size * m_scale);
     m_image = image;
-    repaint();
+    update();
 }
 
 void FontDrawWidget::setDrawGrid(bool draw) {
     m_draw_grid = draw;
-    repaint();
+    update();
 }
 
 
-void FontDrawWidget::paintEvent(QPaintEvent *) {
-    QPainter painter(this);
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    painter.setRenderHint(QPainter::SmoothPixmapTransform,false);
-    painter.setRenderHint(QPainter::Antialiasing,false);
-    painter.drawImage(rect(),m_image);
-    if (!m_draw_grid) return;
-    if (!m_layout_data) return;
-    if (!m_renderer_data) return;
-    if (!m_layout_config) return;
+void FontDrawWidget::paintEvent(QPaintEvent *)
+{
+  Q_ASSERT(m_layout_data);
+  Q_ASSERT(m_renderer_data);
+  Q_ASSERT(m_layout_config);
 
-    for (const auto& c : m_layout_data->placed())
+  QPainter painter(this);
+  painter.setCompositionMode(QPainter::CompositionMode_Source);
+  painter.setRenderHint(QPainter::SmoothPixmapTransform,false);
+  painter.setRenderHint(QPainter::Antialiasing,false);
+  painter.drawImage(rect(),m_image);
+
+  if (m_draw_grid)
+    for(const auto& character : m_layout_data->placed())
     {
-        if (m_renderer_data->chars[c.symbol].locked)
+        if (m_renderer_data->chars[character.symbol].locked)
             painter.setPen(QColor(255,0,0,255));
         else
             painter.setPen(QColor(0,0,255,255));
-        painter.drawRect(QRect { c.bounding.topLeft() * m_scale,
-                                 c.bounding.bottomRight() * m_scale });
+        painter.drawRect(QRect { character.bounding.topLeft() * m_scale,
+                                 character.bounding.size() * m_scale });
     }
 }
 
@@ -84,5 +84,5 @@ void FontDrawWidget::setScale(float s) {
     m_scale = s;
     QSize size = m_image.size();
     setFixedSize(size*m_scale);
-    repaint();
+    update();
 }

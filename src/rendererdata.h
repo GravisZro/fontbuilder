@@ -33,34 +33,46 @@
 
 #include <QMap>
 #include <QImage>
+#include <map>
 
-struct RenderedChar {
+struct RenderedChar
+{
     char32_t symbol;
-    QPoint offset;
+//    QPoint offset;
     int32_t advance;
-    QImage img;
-    std::map<char32_t, int32_t> kerning;
+    QImage image;
+    std::map<char32_t, int32_t> kerning; // character to spacing map
     bool locked;
-    RenderedChar() : symbol(0), locked(false) {}
+
+    RenderedChar(void) : symbol(0), locked(false) {}
+/*
     RenderedChar(char32_t symbol, int32_t x, int32_t y, int32_t a, const QImage& i)
       : symbol(symbol),
         offset(x, y),
         advance(a),
-        img(i),
-        locked(false){}
+        image(i),
+        locked(false)
+      { }
+*/
+    RenderedChar(char32_t symbol, int32_t a, const QImage& i)
+      : symbol(symbol),
+        advance(a),
+        image(i),
+        locked(false)
+      { }
 };
 
-struct RenderedMetrics {
+struct RenderedMetrics
+{
     int32_t ascender;
     int32_t descender;
     int32_t height;
 };
 
-struct RendererData {
+struct RendererData
+{
     QMap<char32_t, RenderedChar> chars;
     RenderedMetrics metrics;
 };
-
-
 
 #endif // RENDERERDATA_H

@@ -50,6 +50,8 @@
 #include "fontloader.h"
 
 
+// clazy:excludeall=qstring-arg
+
 FontBuilder::FontBuilder(QWidget *parent) :
     QMainWindow(parent),
     m_draw_grid_checkbox(nullptr),
@@ -287,7 +289,7 @@ FontBuilder::FontBuilder(QWidget *parent) :
 
   setStatusBar(new QStatusBar);
 
-
+ // old code
 
 
     m_font_config = new FontConfig(this);
@@ -295,7 +297,7 @@ FontBuilder::FontBuilder(QWidget *parent) :
     connect(m_font_config, &FontConfig::nameChanged, this, &FontBuilder::onFontNameChanged);
     connect(m_font_config, &FontConfig::sizeChanged, this, &FontBuilder::onFontNameChanged);
 
-    m_font_renderer = new FontRenderer(this,m_font_config);
+    m_font_renderer = new FontRenderer(m_font_config, this);
 
     connect(m_font_renderer, &FontRenderer::imagesChanged, this, &FontBuilder::onRenderedChanged);
 
@@ -356,7 +358,7 @@ FontBuilder::FontBuilder(QWidget *parent) :
     m_font_config->emmitChange();
 
     connect(m_font_config, &FontConfig::spacingChanged, this, &FontBuilder::onSpacingChanged);
-    m_font_test_frame->refresh();
+    m_font_test_frame->update();
 
     m_font_loader = new FontLoader(this);
 
@@ -443,7 +445,7 @@ void FontBuilder::on_comboBoxLayouter_currentIndexChanged(QString name)
 }
 
 void FontBuilder::onRenderedChanged() {
-    m_font_test_frame->refresh();
+    m_font_test_frame->update();
     if (m_image_writer)
         m_image_writer->forget();
 }
@@ -452,12 +454,12 @@ void FontBuilder::onRenderedChanged() {
 void FontBuilder::setLayoutImage(const QImage& image) {
     m_font_preview_widget->setImage(image);
     m_image_size_label->setText(QString("Image size: %1x%2")
-                              .arg(m_layout_data->width())
-                              .arg(m_layout_data->height())
-                              );
+                                .arg(m_layout_data->width())
+                                .arg(m_layout_data->height()));
 }
 
-void FontBuilder::onLayoutChanged() {
+void FontBuilder::onLayoutChanged()
+{
     QImage image (m_layout_data->width(),m_layout_data->height(),QImage::Format_ARGB32);
     image.fill(0);
     {
@@ -690,13 +692,13 @@ void FontBuilder::onExternalImageChanged(const QString& fn) {
         setLayoutImage(*image);
         m_layout_data->setImage(*image);
         qDebug() << "set layout image from exernal";
-        m_font_test_frame->refresh();
+        m_font_test_frame->update();
         delete image;
     }
 }
 
 void FontBuilder::onSpacingChanged() {
-    m_font_test_frame->refresh();
+    m_font_test_frame->update();
 }
 
 void FontBuilder::on_comboBox_currentIndexChanged(int32_t index)
@@ -743,7 +745,6 @@ void FontBuilder::on_pushButtonImportJson_clicked()
             qDebug() << "Failed to load file";
         }
         QJsonObject obj = doc.object();
-        std::vector<QPointF> listOfSettings;
 
         QJsonArray settingArray = obj.value("fonts").toArray();
         foreach(const QJsonValue & val, settingArray) {

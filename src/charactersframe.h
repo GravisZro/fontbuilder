@@ -48,13 +48,15 @@ public:
     void setConfig(FontConfig* config);
 protected:
     void changeEvent(QEvent *e);
-    std::u32string getCharacters() const;
+    std::u32string getCharacters(void) const;
+
+private:
+    std::u32string removeDuplicates(std::u32string text) const;
+    std::u32string sortChars(std::u32string text) const;
+
 private:
     Ui::CharactersFrame *ui;
     FontConfig* m_config;
-    std::u32string removeDuplicates(std::u32string text) const;
-    std::u32string sortChars(std::u32string text) const;
-signals:
 
 private slots:
     void on_pushButtonRefresh_clicked();

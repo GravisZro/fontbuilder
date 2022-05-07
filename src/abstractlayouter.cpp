@@ -42,27 +42,34 @@ AbstractLayouter::AbstractLayouter(QObject *parent) :
 
 void AbstractLayouter::setConfig(const LayoutConfig* config) {
     m_config = config;
-    connect(m_config,SIGNAL(layoutConfigChanged()),this,SLOT(on_LayoutDataChanged()));
+    connect(m_config, &LayoutConfig::layoutConfigChanged, this, &AbstractLayouter::on_LayoutDataChanged);
 }
 
 void AbstractLayouter::setData(LayoutData* data) {
     m_data = data;
 }
 
-void AbstractLayouter::DoPlace(const std::vector<LayoutChar>& chars) {
-    m_data->beginPlacing();
+
+void AbstractLayouter::DoPlace(const std::vector<LayoutChar>& chars)
+{
+    m_data->clearLayout();
     m_compact_w = 0;
     m_compact_h = 0;
     PlaceImages(chars);
     resize(m_compact_w,m_compact_h);
-    m_data->endPlacing();
+    m_data->render(m_config->offset().topLeft());
 }
+
 
 void AbstractLayouter::OptimizeLayout(std::vector<LayoutChar> &)
 {
 }
 
-void AbstractLayouter::on_ReplaceImages(const std::vector<LayoutChar>& chars) {
+void AbstractLayouter::on_ReplaceImages(const std::vector<LayoutChar>& chars)
+{
+  Q_ASSERT(m_data);
+  Q_ASSERT(m_config);
+
     m_chars = chars;
 
     if (m_data!=0 && m_config!=0 ) {
@@ -75,10 +82,11 @@ void AbstractLayouter::on_LayoutDataChanged()
 {
   Q_ASSERT(m_data != nullptr);
   Q_ASSERT(m_config != nullptr);
-  std::vector<LayoutChar> chars = m_chars;
-  for(LayoutChar& c : chars)
+
+  auto chars = m_chars;
+  for(auto& character : chars)
   {
-    QSize sz = c.bounding.size();
+    QSize sz = character.bounding.size();
     if (m_config->onePixelOffset())
     {
       sz.rwidth()++;
@@ -86,7 +94,7 @@ void AbstractLayouter::on_LayoutDataChanged()
     }
     sz.rwidth () += m_config->offset().left() + m_config->offset().right();
     sz.rheight() += m_config->offset().top()  + m_config->offset().bottom();
-    c.bounding.setSize(sz);
+    character.bounding.setSize(sz);
   }
 
   OptimizeLayout(chars);
@@ -104,7 +112,11 @@ static uint32_t nextpot(uint32_t val) {
     return val;
 }
 
-void AbstractLayouter::resize(int32_t w,int32_t h) {
+void AbstractLayouter::resize(int32_t w,int32_t h)
+{
+  Q_ASSERT(m_data);
+  Q_ASSERT(m_config);
+
     if (m_config) {
         if (m_config->onePixelOffset())
         {
@@ -129,40 +141,38 @@ void AbstractLayouter::resize(int32_t w,int32_t h) {
     }
 }
 
-int32_t AbstractLayouter::width() const {
-    int32_t w = 0;
-    if (m_data) {
-        w = m_data->width();
-    }
-    if (m_config) {
-        if (m_config->onePixelOffset())
-            w-=2;
-    }
-    return w;
+int32_t AbstractLayouter::width() const
+{
+  Q_ASSERT(m_data);
+  Q_ASSERT(m_config);
+  int32_t w = m_data->width();
+  if (m_config->onePixelOffset())
+    w-=2;
+  return w;
 }
-int32_t AbstractLayouter::height() const {
-    int32_t h= 0;
-    if (m_data) {
-        h = m_data->height();
-    }
-    if (m_config) {
-        if (m_config->onePixelOffset())
-            h-=2;
-    }
-    return h;
+int32_t AbstractLayouter::height() const
+{
+  Q_ASSERT(m_data);
+  Q_ASSERT(m_config);
+  int32_t h = m_data->height();
+  if (m_config->onePixelOffset())
+    h -= 2;
+  return h;
 }
-void AbstractLayouter::place(const LayoutChar& c) {
-    LayoutChar out = c;
+
+void AbstractLayouter::place(const LayoutChar& character)
+{
+  Q_ASSERT(m_data);
+  Q_ASSERT(m_config);
+
+    auto out = character;
     if (out.bounding.x() + out.bounding.width() > m_compact_w)
         m_compact_w = out.bounding.x() + out.bounding.width();
     if (out.bounding.y() + out.bounding.height() > m_compact_h)
         m_compact_h = out.bounding.y() + out.bounding.height();
-    if (m_config) {
-        if (m_config->onePixelOffset()) {
-          out.bounding.adjust(1, 1, -1, -1);
-        }
-    }
-    if (m_data)
-        m_data->placeChar(out);
 
+    if (m_config->onePixelOffset()) {
+      out.bounding.adjust(1, 1, -1, -1);
+    }
+    m_data->placeChar(out);
 }

@@ -31,6 +31,7 @@
 #include "linelayouter.h"
 #include <rendererdata.h>
 #include <layoutdata.h>
+#include <vector>
 
 LineLayouter::LineLayouter(QObject *parent) :
     AbstractLayouter(parent)
@@ -44,7 +45,7 @@ void LineLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
       return;
     int32_t min_y = chars.front().bounding.y();
     int32_t max_y = chars.front().bounding.y() + chars.front().bounding.height();
-    for (const auto& character : chars)
+    for(const auto& character : chars)
     {
         w += character.bounding.width();
         if (character.bounding.y() < min_y)
@@ -55,11 +56,11 @@ void LineLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
     resize(w,max_y-min_y);
     int32_t x = 0;
     //int32_t y = 0;
+
     for (const auto& character : chars)
     {
         auto l = character;
-        l.bounding.setX(x);
-        l.bounding.setY(l.bounding.y() - min_y);
+        l.bounding.setTopLeft( { x, l.bounding.y() - min_y } );
         place(l);
         x += character.bounding.width();
     }

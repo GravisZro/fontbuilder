@@ -49,7 +49,7 @@ FontTestWidget::FontTestWidget(QWidget *parent) :
 }
 
 
-const LayoutChar*   FontTestWidget::layoutChar(char32_t symbol) const {
+const LayoutChar* FontTestWidget::layoutChar(char32_t symbol) const {
     for (const auto& c : m_layout_data->placed()) {
         if (symbol == c.symbol)
             return &c;
@@ -115,16 +115,14 @@ void FontTestWidget::paintEvent ( QPaintEvent * event )
         }
         else if (m_renderer_data->chars.contains(*pos))
         {
-            const RenderedChar& rendered = m_renderer_data->chars[*pos];
-            const LayoutChar* layout = layoutChar(*pos);
+            const auto& rendered = m_renderer_data->chars[*pos];
+            const auto* layout = layoutChar(*pos);
             if (layout)
             {
-                painter.drawImage(x + rendered.offset.x(), y - rendered.offset.y(),
+                painter.drawImage(
+                      rendered.image.offset() + QPoint {x, y},
                                   m_layout_data->image(),
-                                  layout->bounding.x(),
-                                  layout->bounding.y(),
-                                  layout->bounding.width(),
-                                  layout->bounding.height());
+                      layout->bounding);
             }
 
             x += rendered.advance + m_font_config->charSpacing();
@@ -160,21 +158,22 @@ void FontTestWidget::calcBBox(void)
         }
         else if (m_renderer_data->chars.contains(*pos))
         {
-            const RenderedChar& rendered = m_renderer_data->chars[*pos];
-            const LayoutChar* layout = layoutChar(*pos);
-            if (!layout) continue;
+            const auto& rendered = m_renderer_data->chars[*pos];
+            const auto* layout = layoutChar(*pos);
+            if (!layout)
+              continue;
             last = (pos + 1 == m_text.end()) || (*(pos + 1) == '\n');
 
-            if (first && (rendered.offset.x()) < left)
-              left = rendered.offset.x();
+            if (first && (rendered.image.offset().x()) < left)
+              left = rendered.image.offset().x();
 
-            if (last &&  (rendered.offset.x() + layout->bounding.width() - rendered.advance - m_font_config->charSpacing()) > right)
-              right = rendered.offset.x() + layout->bounding.width() - rendered.advance - m_font_config->charSpacing();
+            if (last &&  (rendered.image.offset().x() + layout->bounding.width() - rendered.advance - m_font_config->charSpacing()) > right)
+              right = rendered.image.offset().x() + layout->bounding.width() - rendered.advance - m_font_config->charSpacing();
 
-            if ( (y - rendered.offset.y()) < top)
-                top = y - rendered.offset.y();
-            if ( (y - rendered.offset.y() + layout->bounding.height()) > bottom)
-                bottom = y - rendered.offset.y() + layout->bounding.height();
+            if ( (y - rendered.image.offset().y()) < top)
+                top = y - rendered.image.offset().y();
+            if ( (y - rendered.image.offset().y() + layout->bounding.height()) > bottom)
+                bottom = y - rendered.image.offset().y() + layout->bounding.height();
 
             x += rendered.advance + m_font_config->charSpacing();
             first = false;
@@ -198,10 +197,10 @@ void FontTestWidget::calcBBox(void)
 void FontTestWidget::setText(const QString& text)
 {
     m_text = convert(text);
-    repaint();
+    update();
 }
 
 void FontTestWidget::setBGColor(QColor c) {
     m_bg_color = c;
-    repaint();
+    update();
 }

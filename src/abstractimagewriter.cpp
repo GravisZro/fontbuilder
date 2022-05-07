@@ -86,9 +86,8 @@ QImage AbstractImageWriter::buildImage() {
     for (const auto& character : layout()->placed())
             if (rendered()->chars.contains(character.symbol))
             {
-                const RenderedChar& rend = rendered()->chars[character.symbol];
-                QPoint pos = character.bounding.topLeft() + layoutConfig()->offset().topLeft();
-                placeImage(pixmap, pos.x(), pos.y(), rend.img);
+                QPoint pos = rendered()->chars[character.symbol].image.offset() + layoutConfig()->offset().topLeft();
+                placeImage(pixmap, pos.x(), pos.y(), rendered()->chars[character.symbol].image);
             }
     return pixmap;
 }
@@ -110,7 +109,7 @@ void AbstractImageWriter::watch(const QString& file) {
     if (m_reload_support) {
         m_watcher = new QFileSystemWatcher(this);
         m_watcher->addPath(file);
-        connect(m_watcher,SIGNAL(fileChanged(QString)),this,SLOT(onFileChanged(QString)));
+        connect(m_watcher, &QFileSystemWatcher::fileChanged, this, &AbstractImageWriter::onFileChanged);
     }
 }
 
@@ -120,7 +119,7 @@ void AbstractImageWriter::onFileChanged(const QString& fn) {
         m_reload_timer->stop();
     } else {
         m_reload_timer = new QTimer(this);
-        connect(m_reload_timer,SIGNAL(timeout()),this,SLOT(onReload()));
+        connect(m_reload_timer, &QTimer::timeout, this, &AbstractImageWriter::onReload);
     }
     m_reload_timer->setSingleShot(true);
     m_reload_timer->setInterval(2000);
@@ -129,7 +128,7 @@ void AbstractImageWriter::onFileChanged(const QString& fn) {
 }
 
 void AbstractImageWriter::onReload() {
-    imageChanged(m_reload_file);
+    emit imageChanged(m_reload_file);
 }
 
 void AbstractImageWriter::forget() {

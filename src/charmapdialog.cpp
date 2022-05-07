@@ -367,7 +367,7 @@ std::u32string CharMapDialog::getCharacters(void) const
   return std::u32string(values.begin(), values.end());
 }
 
-void CharMapDialog::onCharsChanged(uint32_t code,bool add)
+void CharMapDialog::onCharsChanged(char32_t code,bool add)
 {
     for (int32_t row=0 ; row < m_list->count(); row++)
     {
@@ -380,12 +380,11 @@ void CharMapDialog::onCharsChanged(uint32_t code,bool add)
                 item->setCheckState(Qt::Checked);
             } else {
                 bool have = false;
-                foreach (uint32_t c, m_char_select->getCharacterCodes() ) {
+                for(char32_t c : m_char_select->getCharacterCodes() )
                     if (c>=begin && c<=end) {
                         have = true;
                         break;
                     }
-                }
                 item->setCheckState(have ? Qt::Checked : Qt::Unchecked );
             }
             m_list->blockSignals(block);

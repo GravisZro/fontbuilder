@@ -42,17 +42,17 @@
 
 #include <math.h>
 
-FontRenderer::FontRenderer(QObject *parent,const FontConfig* config) :
-    QObject(parent), m_config(config)
+FontRenderer::FontRenderer(const FontConfig* config, QObject *parent)
+  : QObject(parent), m_config(config)
 {
     m_ft_library = 0;
     m_ft_face = 0;
     m_scale = 1.0f;
-    connect(config,SIGNAL(fileChanged()),this,SLOT(on_fontFileChanged()));
-    connect(config,SIGNAL(faceIndexChanged()),this,SLOT(on_fontFaceIndexChanged()));
-    connect(config,SIGNAL(sizeChanged()),this,SLOT(on_fontSizeChanged()));
-    connect(config,SIGNAL(charactersChanged()),this,SLOT(on_fontCharactersChanged()));
-    connect(config,SIGNAL(renderingOptionsChanged()),this,SLOT(on_fontOptionsChanged()));
+    connect(config, &FontConfig::fileChanged, this, &FontRenderer::on_fontFileChanged);
+    connect(config, &FontConfig::faceIndexChanged, this, &FontRenderer::on_fontFaceIndexChanged);
+    connect(config, &FontConfig::sizeChanged, this, &FontRenderer::on_fontSizeChanged);
+    connect(config, &FontConfig::charactersChanged, this, &FontRenderer::on_fontCharactersChanged);
+    connect(config, &FontConfig::renderingOptionsChanged, this, &FontRenderer::on_fontOptionsChanged);
     int error =  FT_Init_FreeType(&m_ft_library);
     if (error) {
         qDebug() << "FT_Init_FreeType error " << error;
@@ -192,8 +192,11 @@ void FontRenderer::clear_bitmaps() {
     }
 }
 
-bool FontRenderer::append_bitmap(char32_t symbol) {
-    if (m_rendered.chars[symbol].locked) return false;
+bool FontRenderer::append_bitmap(char32_t symbol)
+{
+    if (m_rendered.chars[symbol].locked)
+      return false;
+
     const FT_GlyphSlot  slot = m_ft_face->glyph;
     const FT_Bitmap* bm = &(slot->bitmap);
     int w = bm->width;
@@ -251,8 +254,8 @@ bool FontRenderer::append_bitmap(char32_t symbol) {
         }
     }
 
-    m_rendered.chars[symbol]=RenderedChar(symbol,slot->bitmap_left,slot->bitmap_top,slot->advance.x/64,img);
-    m_chars.push_back(LayoutChar(symbol,slot->bitmap_left,-slot->bitmap_top,w,h));
+    img.setOffset( { slot->bitmap_left, slot->bitmap_top } );
+    m_rendered.chars[symbol] = RenderedChar(symbol, slot->advance.x / 64, img);
 
     return true;
 }
@@ -346,12 +349,9 @@ void FontRenderer::render(float scale) {
     on_fontSizeChanged();
 }
 
-
-
 void FontRenderer::placeImage(QPainter& p, char32_t symbol, int x, int y) {
-    p.drawImage(x,y,m_rendered.chars[symbol].img);
+    p.drawImage(x,y,m_rendered.chars[symbol].image);
 }
-
 
 void FontRenderer::LockAll() {
      auto it = m_rendered.chars.begin();
@@ -362,7 +362,7 @@ void FontRenderer::LockAll() {
 }
 
 void FontRenderer::SetImage(char32_t symbol, const QImage& img) {
-    m_rendered.chars[symbol].img = img;
+    m_rendered.chars[symbol].image = img;
     m_rendered.chars[symbol].locked = true;
 }
 

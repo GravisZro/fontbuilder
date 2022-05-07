@@ -31,12 +31,13 @@
 #ifndef LAYOUTDATA_H
 #define LAYOUTDATA_H
 
-
 #include "layoutchar.h"
+#include "rendererdata.h"
 
 #include <QObject>
 #include <QImage>
 #include <vector>
+
 
 class LayoutData : public QObject
 {
@@ -45,27 +46,30 @@ public:
     explicit LayoutData(QObject *parent = nullptr);
     ~LayoutData();
 
-    int width() const { return m_width;}
-    int height() const { return m_height;}
-    Q_PROPERTY( int width READ width );
-    Q_PROPERTY( int height READ height );
+    int32_t width() const { return m_width;}
+    int32_t height() const { return m_height;}
+//    Q_PROPERTY( int32_t width READ width CONSTANT);
+//    Q_PROPERTY( int32_t height READ height CONSTANT);
+
     void resize(int32_t w,int32_t h);
-    void beginPlacing();
+
+    void clearLayout();
     void placeChar(const LayoutChar& c);
-    void endPlacing();
+    void render(QPoint offset);
 
     const std::vector<LayoutChar>& placed() const { return m_placed;}
+
     void setImage(const QImage& image) { m_image = image;}
     const QImage& image() const { return m_image;}
+
+signals:
+    void layoutChanged();
+
 private:
     int32_t m_width;
     int32_t m_height;
     std::vector<LayoutChar> m_placed;
-    QImage    m_image;
-signals:
-    void layoutChanged();
-public slots:
-
+    QImage m_image;
 };
 
 #endif // LAYOUTDATA_H

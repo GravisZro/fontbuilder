@@ -30,6 +30,9 @@
 
 #include "layoutdata.h"
 
+#include <QPainter>
+#include <QDebug>
+
 LayoutData::LayoutData(QObject *parent) :
     QObject(parent)
 {
@@ -38,14 +41,13 @@ LayoutData::LayoutData(QObject *parent) :
 LayoutData::~LayoutData() {
 }
 
-
-
-void LayoutData::resize(int32_t w,int32_t h) {
+void LayoutData::resize(int32_t w, int32_t h)
+{
     m_width = w;
     m_height = h;
 }
 
-void LayoutData::beginPlacing() {
+void LayoutData::clearLayout() {
     m_placed.clear();
 }
 
@@ -54,6 +56,8 @@ void LayoutData::placeChar(const LayoutChar& c) {
 }
 
 
-void LayoutData::endPlacing() {
-    layoutChanged();
+void LayoutData::render(QPoint offset)
+{
+  emit layoutChanged();
 }
+

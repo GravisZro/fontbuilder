@@ -52,8 +52,8 @@ struct FontDef {
 class FontConfig;
 
 typedef std::vector<FontDef> FontStyles;
-typedef std::pair<QString,FontStyles> FontFamilsElement;
-typedef QMap<QString,FontStyles> FontFamilys;
+typedef std::pair<QString, FontStyles> FontFamilsElement;
+typedef QMap<QString, FontStyles> FontFamilys;
 
 namespace Ui {
     class FontSelectFrame;

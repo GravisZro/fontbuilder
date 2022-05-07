@@ -5,19 +5,19 @@ BoxLayouterOptimized::BoxLayouterOptimized(QObject *parent)
 {
 }
 
-bool BoxLayouterOptimized::SortCharsByHeight(const LayoutChar &a, const LayoutChar &b)
+bool BoxLayouterOptimized::SortCharsByHeight(const RenderedChar &a, const RenderedChar &b)
 {
-    if (a.bounding.height() + a.bounding.y() > b.bounding.height() + b.bounding.y())
+    if (a.image.height() + a.image.offset().y() > b.image.height() + b.image.offset().y())
         return false;
-    else if (a.bounding.height() + a.bounding.y() == b.bounding.height() + b.bounding.y())
+    else if (a.image.height() + a.image.offset().y() == b.image.height() + b.image.offset().y())
     {
-        if (a.bounding.width() > b.bounding.width())
+        if (a.image.width() > b.image.width())
             return false;
-        else if (a.bounding.width() == b.bounding.width())
+        else if (a.image.width() == b.image.width())
         {
-            if (a.bounding.y() > b.bounding.y())
+            if (a.image.offset().y() > b.image.offset().y())
                 return false;
-            else if (a.bounding.y() == b.bounding.y())
+            else if (a.image.offset().y() == b.image.offset().y())
             {
                 if (a.symbol > b.symbol)
                     return false;
@@ -27,7 +27,7 @@ bool BoxLayouterOptimized::SortCharsByHeight(const LayoutChar &a, const LayoutCh
     return true;
 }
 
-void BoxLayouterOptimized::OptimizeLayout(std::vector<LayoutChar> &chars)
+void BoxLayouterOptimized::OptimizeLayout(std::vector<RenderedChar> &chars)
 {
   std::sort(chars.begin(), chars.end(), SortCharsByHeight);
 }

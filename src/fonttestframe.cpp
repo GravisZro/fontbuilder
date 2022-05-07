@@ -45,8 +45,6 @@ FontTestFrame::FontTestFrame(QWidget *parent) :
 
   setSizePolicy(sp);
 
-  QPlainTextEdit* test_text = nullptr;
-
   auto vb = new QVBoxLayout(this);
   vb->setContentsMargins(0, 0, 0, 0);
 
@@ -111,17 +109,16 @@ FontTestFrame::FontTestFrame(QWidget *parent) :
     }
 
     {
-      test_text = new QPlainTextEdit;
+      auto test_text = new QPlainTextEdit;
       sp.setHeightForWidth(test_text->sizePolicy().hasHeightForWidth());
       sp.setHorizontalPolicy(QSizePolicy::Minimum);
       sp.setVerticalStretch(0);
       test_text->setSizePolicy(sp);
       test_text->setMaximumSize(16777215, 16777215);
+      gl->addWidget(test_text, 0, 2, 4, 1);
 
       connect(test_text, &QPlainTextEdit::textChanged, m_font_test,
               [this, test_text]() { m_font_test->setText(test_text->document()->toPlainText()); });
-
-      gl->addWidget(test_text, 0, 2, 4, 1);
     }
 
     {
@@ -152,7 +149,8 @@ FontTestFrame::FontTestFrame(QWidget *parent) :
   }
   vb->setStretch(0, 1);
 
-  m_font_test->setText(test_text->document()->toPlainText());
+  //qDebug() << "test text: " << test_text->document()->toPlainText();
+  //m_font_test->setText(test_text->document()->toPlainText());
 }
 
 FontTestFrame::~FontTestFrame()

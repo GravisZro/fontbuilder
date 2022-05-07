@@ -35,16 +35,16 @@
 #include <QRect>
 
 struct LayoutChar {
-    uint32_t symbol;
+    char32_t symbol;
     QRect bounding;
-    LayoutChar(uint32_t s,
+    LayoutChar(char32_t s,
                int32_t x, int32_t y,
                int32_t w, int32_t h) :
             symbol(s),
             bounding(x, y, w, h)
     { }
 
-    LayoutChar(uint32_t s,int32_t w,int32_t h)
+    LayoutChar(char32_t s,int32_t w,int32_t h)
       : LayoutChar(s, 0, 0, w, h) {}
 
     LayoutChar(void) : LayoutChar(0, 0, 0, 0, 0) {}

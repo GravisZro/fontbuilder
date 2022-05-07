@@ -12,10 +12,10 @@ void GridLayouter::PlaceImages(const std::vector<LayoutChar> &chars)
     int32_t maxW = 0;
     int32_t maxH = 0;
 
-    for (const auto& character : chars)
+    for(const auto& character : chars)
     {
-        minY = std::min(minY, character.bounding.y());
-        maxW = std::max(maxW, character.bounding.x() + character.bounding.width());
+        minY = std::min(minY, character.bounding.topLeft().y());
+        maxW = std::max(maxW, character.bounding.topLeft().x() + character.bounding.width());
         maxH = std::max(maxH, character.bounding.height());
     }
     maxH -= minY;
@@ -35,10 +35,10 @@ void GridLayouter::PlaceImages(const std::vector<LayoutChar> &chars)
     int32_t col = 0;
     for (const auto& character : chars)
     {
-        auto l = character;
-        l.bounding.setX(l.bounding.x() + (col * maxW));
-        l.bounding.setY(l.bounding.y() + (row * maxH - minY));
-        place(l);
+      auto l = character;
+      l.bounding.setTopLeft( { l.bounding.topLeft().x() + (col * maxW),
+                               l.bounding.topLeft().y() + (row * maxH - minY) } );
+      place(l);
 
         if (++col >= charsPerRow)
         {

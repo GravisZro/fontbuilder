@@ -50,7 +50,7 @@ void ColorButton::onClicked(bool)
   if (cd.exec() == QDialog::Accepted)
   {
     setColor(cd.selectedColor());
-    repaint();
+    update();
     emit colorChanged(color());
   }
 }

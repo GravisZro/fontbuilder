@@ -43,25 +43,26 @@ struct Line {
     int32_t max_y;
     int32_t y;
     Line() : min_y(0),max_y(0),y(0) {}
-    explicit Line(const LayoutChar& c) : y(0)
+    explicit Line(const LayoutChar& character) : y(0)
     {
-        min_y = c.bounding.y();
-        max_y = c.bounding.y() + c.bounding.height();
+        min_y = character.bounding.y();
+        max_y = character.bounding.y() + character.bounding.height();
         //chars.push_back(&c);
     }
     int32_t h() const { return max_y - min_y;}
-    void append(const LayoutChar& c) {
-        if (c.bounding.y() < min_y)
-            min_y = c.bounding.y();
-        if (c.bounding.y() + c.bounding.height() > max_y)
-            max_y = c.bounding.y() + c.bounding.height();
-        chars.push_back(&c);
+    void append(const LayoutChar& character) {
+        if (character.bounding.y() < min_y)
+            min_y = character.bounding.y();
+        if (character.bounding.y() + character.bounding.height() > max_y)
+            max_y = character.bounding.y() + character.bounding.height();
+        chars.push_back(&character);
     }
 
     std::vector<const LayoutChar*> chars;
 };
 
-void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
+void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars)
+{
     int32_t h = 0;
     int32_t w = 0;
     if (chars.empty())
@@ -69,8 +70,10 @@ void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
 
     /// speed up
     int32_t area = 0;
-    for (const auto& character : chars)
-        area += character.bounding.width() * character.bounding.height();
+
+    for (const auto& c : chars)
+        area += c.bounding.width() * c.bounding.height();
+
     int32_t dim = ::sqrt(area);
 
     resize(dim,dim);
@@ -86,10 +89,11 @@ void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
         lines.clear();
         lines.push_back(Line(chars.front()));
         iteration = false;
-        for (const auto& character : chars)
-        {
 
+        for(const auto& character : chars)
+        {
             if ((x + character.bounding.width()) > w) {
+
                 x = 0;
                 int32_t y = lines.back().y;
                 int32_t h = lines.back().h();
@@ -110,8 +114,6 @@ void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
                 break;
             }
 
-
-
             /// place
            lines.back().append(character);
            x += character.bounding.width();
@@ -125,9 +127,8 @@ void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
         x = 0;
         for (const auto* c : line.chars )
         {
-            LayoutChar l = *c;
-            l.bounding.setX(x);
-            l.bounding.setY(line.y + l.bounding.y() - line.min_y);
+            auto l = *c;
+            l.bounding.setTopLeft({ x, line.y + l.bounding.y() - line.min_y });
             place(l);
             x += c->bounding.width();
         }

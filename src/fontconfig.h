@@ -38,8 +38,6 @@
 class FontConfig : public QObject
 {
 Q_OBJECT
-Q_ENUMS(HintingMethod)
-Q_ENUMS(AAMethod)
 public:
     explicit FontConfig(QObject *parent = nullptr);
 
@@ -51,6 +49,7 @@ public:
         HintingForceFreetypeAuto,
         HintingDisableFreetypeAuto
     };
+    Q_ENUM(HintingMethod)
 
     enum AAMethod {
         AAliasingNormal,
@@ -58,6 +57,7 @@ public:
         AAliasingLCDhor,
         AAliasingLCDvert
     };
+    Q_ENUM(AAMethod)
 
     const QString& path() const { return m_path; }
     void setPath(const QString& path);
@@ -137,25 +137,7 @@ public:
 
     static QString defaultFontsPath();
     void emmitChange();
-private:
-    QString m_path;
-    QString m_filename;
-    QString m_family;
-    QString m_style;
-    int32_t m_face_index;
-    int32_t m_size;
-    std::u32string m_characters;
-    int32_t    m_hinting;
-    bool    m_render_missing;
-    bool    m_antialiased;
-    int32_t     m_aamethod;
-    int32_t    m_bold;
-    int32_t    m_italic;
-    float   m_width;
-    float   m_height;
-    int32_t m_char_spacing;
-    int32_t m_line_spacing;
-    int32_t m_dpi;
+
 signals:
     void nameChanged();
     void fileChanged();
@@ -164,8 +146,26 @@ signals:
     void charactersChanged();
     void renderingOptionsChanged();
     void spacingChanged();
-public slots:
 
+private:
+    QString m_path;
+    QString m_filename;
+    QString m_family;
+    QString m_style;
+    int32_t m_face_index;
+    int32_t m_size;
+    std::u32string m_characters;
+    int32_t m_hinting;
+    bool    m_render_missing;
+    bool    m_antialiased;
+    int32_t m_aamethod;
+    int32_t m_bold;
+    int32_t m_italic;
+    float   m_width;
+    float   m_height;
+    int32_t m_char_spacing;
+    int32_t m_line_spacing;
+    int32_t m_dpi;
 };
 
 

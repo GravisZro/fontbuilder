@@ -294,7 +294,7 @@ void FontSelectFrame::on_comboBoxStyle_currentIndexChanged(int index )
     int32_t item_no = ui->comboBoxStyle->itemData(index).toInt();
     QString family = ui->comboBoxFamily->currentText();
 
-    if (item_no>=0 && item_no<m_database[family].size()) {
+    if (item_no>=0 && item_no < m_database[family].size()) {
         ui->label_FileName->setText(
             QString(tr("File"))+" : " + m_database[family][item_no].file
             );

@@ -44,17 +44,26 @@ public:
     FontTestFrame(QWidget *parent = nullptr);
     ~FontTestFrame();
 
-    [[gnu::always_inline]] void setLayoutData (const LayoutData* data)
+    //[[gnu::always_inline]]
+    void setLayoutData (const LayoutData* data)
       { m_font_test->setLayoutData(data); }
 
-    [[gnu::always_inline]] void setRendererData (const RendererData* data)
+    //[[gnu::always_inline]]
+    void setRendererData (const RendererData* data)
       { m_font_test->setRendererData(data); }
 
-    [[gnu::always_inline]] void setFontConfig (const FontConfig* config)
+    //[[gnu::always_inline]]
+    void setFontConfig (const FontConfig* config)
       { m_font_test->setFontConfig(config); }
+
 public slots:
     void refresh(void) { update(); }
-    void update (void) { m_font_test->update(); }
+    void update(void)
+    {
+      Q_ASSERT(m_font_test);
+      m_font_test->update();
+    }
+
 protected:
     void changeEvent(QEvent *e);
 

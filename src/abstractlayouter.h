@@ -35,10 +35,10 @@
 #include <vector>
 
 #include "layoutchar.h"
+#include "rendererdata.h"
 
 class LayoutConfig;
 class LayoutData;
-
 
 
 class AbstractLayouter : public QObject
@@ -51,7 +51,7 @@ public:
 private:
     const LayoutConfig*   m_config;
     LayoutData* m_data;
-    std::vector<LayoutChar>    m_chars;
+    std::vector<LayoutChar> m_chars;
     int32_t m_compact_w;
     int32_t m_compact_h;
     void DoPlace(const std::vector<LayoutChar>& chars);
@@ -60,8 +60,10 @@ protected:
     void resize(int32_t w,int32_t h);
     int32_t width() const;
     int32_t height() const;
+
     void place(const LayoutChar&);
     virtual void PlaceImages(const std::vector<LayoutChar>& chars) = 0;
+
 protected slots:
     void on_LayoutDataChanged();
 signals:

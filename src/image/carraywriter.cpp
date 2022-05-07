@@ -39,6 +39,8 @@
 
 #include <QDebug>
 
+// clazy:excludeall=qstring-arg
+
 CArrayImageWriter::CArrayImageWriter(QString ext,QObject *parent) :
     AbstractImageWriter(parent)
 {

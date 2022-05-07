@@ -42,24 +42,24 @@ public:
 
     bool onePixelOffset() const { return m_one_pixel_offset;}
     void setOnePixelOffset(bool b);
-    Q_PROPERTY( bool onePixelOffset READ onePixelOffset WRITE setOnePixelOffset CONSTANT);
+    Q_PROPERTY( bool onePixelOffset READ onePixelOffset WRITE setOnePixelOffset );
 
     bool potImage() const { return m_pot_image;}
     void setPotImage(bool b);
-    Q_PROPERTY( bool potImage READ potImage WRITE setPotImage CONSTANT);
+    Q_PROPERTY( bool potImage READ potImage WRITE setPotImage );
 
     int sizeIncrement() const { return m_size_increment;}
     void setSizeIncrement(int v);
-    Q_PROPERTY( int sizeIncrement READ sizeIncrement WRITE setSizeIncrement CONSTANT);
+    Q_PROPERTY( int sizeIncrement READ sizeIncrement WRITE setSizeIncrement );
 
 
     QRect offset(void) const { return m_offset; }
     void setOffset(QRect o);
-    Q_PROPERTY( QRect offset READ offset WRITE setOffset CONSTANT);
+    Q_PROPERTY( QRect offset READ offset WRITE setOffset );
 
     const QString& layouter() const { return m_layouter;}
     void setLayouter(const QString& layouter) { m_layouter = layouter;}
-    Q_PROPERTY( QString layouter READ layouter WRITE setLayouter CONSTANT);
+    Q_PROPERTY( QString layouter READ layouter WRITE setLayouter );
 
 signals:
     void layoutConfigChanged();

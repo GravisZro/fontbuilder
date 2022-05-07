@@ -41,10 +41,6 @@ public:
 
 protected:
     virtual void PlaceImages(const std::vector<LayoutChar>& chars) ;
-signals:
-
-public slots:
-
 };
 
 

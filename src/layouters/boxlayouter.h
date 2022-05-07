@@ -39,11 +39,7 @@ Q_OBJECT
 public:
     explicit BoxLayouter(QObject *parent = nullptr);
 
-    virtual void PlaceImages(const std::vector<LayoutChar>& chars) ;
-signals:
-
-public slots:
-
+    virtual void PlaceImages(const std::vector<LayoutChar>& chars);
 };
 
 #endif // BOXLAYOUTER_H
