@@ -39,19 +39,19 @@ LineLayouter::LineLayouter(QObject *parent) :
 }
 
 
-void LineLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
+void LineLayouter::PlaceImages(const std::vector<RenderedChar>& chars) {
     int32_t w = 0;
     if (chars.empty())
       return;
-    int32_t min_y = chars.front().bounding.y();
-    int32_t max_y = chars.front().bounding.y() + chars.front().bounding.height();
+    int32_t min_y = chars.front().image.offset().y();
+    int32_t max_y = chars.front().image.offset().y() + chars.front().image.height();
     for(const auto& character : chars)
     {
-        w += character.bounding.width();
-        if (character.bounding.y() < min_y)
-            min_y = character.bounding.y();
-        if (character.bounding.y() + character.bounding.height() > max_y)
-            max_y = character.bounding.y() + character.bounding.height();
+        w += character.image.width();
+        if (character.image.offset().y() < min_y)
+            min_y = character.image.offset().y();
+        if (character.image.offset().y() + character.image.height() > max_y)
+            max_y = character.image.offset().y() + character.image.height();
     }
     resize(w,max_y-min_y);
     int32_t x = 0;
@@ -60,9 +60,9 @@ void LineLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
     for (const auto& character : chars)
     {
         auto l = character;
-        l.bounding.setTopLeft( { x, l.bounding.y() - min_y } );
+        l.image.setOffset( { x, l.image.offset().y() - min_y } );
         place(l);
-        x += character.bounding.width();
+        x += character.image.width();
     }
 }
 

@@ -351,7 +351,6 @@ FontBuilder::FontBuilder(QWidget *parent) :
     m_font_test_frame->setFontConfig(m_font_config);
 
     m_font_preview_widget->setLayoutData(m_layout_data);
-    m_font_preview_widget->setRendererData(&m_font_renderer->data());
     m_font_preview_widget->setLayoutConfig(m_layout_config);
 
     m_font_config->blockSignals(font_config_block);
@@ -460,22 +459,10 @@ void FontBuilder::setLayoutImage(const QImage& image) {
 
 void FontBuilder::onLayoutChanged()
 {
-    QImage image (m_layout_data->width(),m_layout_data->height(),QImage::Format_ARGB32);
-    image.fill(0);
-    {
-        QPainter painter(&image);
-        for (const LayoutChar& c : m_layout_data->placed())
-        {
-          QPoint pos = c.bounding.topLeft() + m_layout_config->offset().topLeft();
-          m_font_renderer->placeImage(painter,c.symbol, pos.x(), pos.y());
-        }
-    }
-    qDebug() << "set layout image from rendered";
-    m_layout_data->setImage(image);
-    setLayoutImage(image);
-    m_font_test_frame->refresh();
-    if (m_image_writer)
-        m_image_writer->forget();
+  setLayoutImage(m_layout_data->image());
+  m_font_test_frame->update();
+  if (m_image_writer)
+    m_image_writer->forget();
 }
 
 void FontBuilder::on_checkBoxDrawGrid_toggled(bool dg) {

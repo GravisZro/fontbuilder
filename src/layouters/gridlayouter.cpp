@@ -6,7 +6,7 @@ GridLayouter::GridLayouter(QObject *parent)
 {
 }
 
-void GridLayouter::PlaceImages(const std::vector<LayoutChar> &chars)
+void GridLayouter::PlaceImages(const std::vector<RenderedChar> &chars)
 {
     int32_t minY = INT_MAX;
     int32_t maxW = 0;
@@ -14,9 +14,9 @@ void GridLayouter::PlaceImages(const std::vector<LayoutChar> &chars)
 
     for(const auto& character : chars)
     {
-        minY = std::min(minY, character.bounding.topLeft().y());
-        maxW = std::max(maxW, character.bounding.topLeft().x() + character.bounding.width());
-        maxH = std::max(maxH, character.bounding.height());
+        minY = std::min(minY, character.image.offset().y());
+        maxW = std::max(maxW, character.image.offset().x() + character.image.width());
+        maxH = std::max(maxH, character.image.height());
     }
     maxH -= minY;
 
@@ -36,8 +36,8 @@ void GridLayouter::PlaceImages(const std::vector<LayoutChar> &chars)
     for (const auto& character : chars)
     {
       auto l = character;
-      l.bounding.setTopLeft( { l.bounding.topLeft().x() + (col * maxW),
-                               l.bounding.topLeft().y() + (row * maxH - minY) } );
+      l.image.setOffset( { l.image.offset().x() + (col * maxW),
+                           l.image.offset().y() + (row * maxH - minY) } );
       place(l);
 
         if (++col >= charsPerRow)

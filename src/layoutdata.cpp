@@ -41,8 +41,7 @@ LayoutData::LayoutData(QObject *parent) :
 LayoutData::~LayoutData() {
 }
 
-void LayoutData::resize(int32_t w, int32_t h)
-{
+void LayoutData::resize(int32_t w,int32_t h) {
     m_width = w;
     m_height = h;
 }
@@ -51,13 +50,22 @@ void LayoutData::clearLayout() {
     m_placed.clear();
 }
 
-void LayoutData::placeChar(const LayoutChar& c) {
+void LayoutData::placeChar(const RenderedChar& c) {
   m_placed.push_back(c);
 }
 
 
 void LayoutData::render(QPoint offset)
 {
+  m_image = QImage (m_width, m_height, QImage::Format_ARGB32);
+  m_image.fill(0);
+
+  QPainter painter(&m_image);
+  for (const auto& character : m_placed)
+  {
+    QPoint pos = character.image.offset() + offset;
+    painter.drawImage(pos.x(), pos.y(), character.image);
+  }
   emit layoutChanged();
 }
 

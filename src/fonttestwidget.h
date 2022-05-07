@@ -35,7 +35,7 @@
 
 class LayoutData;
 struct RendererData;
-struct LayoutChar;
+struct RenderedChar;
 class FontConfig;
 
 Q_DECLARE_METATYPE(char16_t);
@@ -81,7 +81,7 @@ public slots:
     void setBGColor(QColor c);
 private:
     void calcBBox(void);
-    const LayoutChar* layoutChar(char32_t symbol) const;
+    const RenderedChar* layoutChar(char32_t symbol) const;
 private:
     std::u32string m_text;
     const LayoutData*   m_layout_data;

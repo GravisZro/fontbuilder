@@ -49,7 +49,7 @@ FontTestWidget::FontTestWidget(QWidget *parent) :
 }
 
 
-const LayoutChar* FontTestWidget::layoutChar(char32_t symbol) const {
+const RenderedChar* FontTestWidget::layoutChar(char32_t symbol) const {
     for (const auto& c : m_layout_data->placed()) {
         if (symbol == c.symbol)
             return &c;
@@ -64,7 +64,7 @@ int32_t FontTestWidget::lineWidth(std::u32string::const_iterator start) const
     {
       if (m_renderer_data->chars.contains(*pos))
       {
-        const RenderedChar& rendered = m_renderer_data->chars[*pos];
+        const auto& rendered = m_renderer_data->chars[*pos];
         x += rendered.advance + m_font_config->charSpacing();
         if (useKerning())
           if (auto r = rendered.kerning.find(*pos); r != rendered.kerning.end())
@@ -116,13 +116,13 @@ void FontTestWidget::paintEvent ( QPaintEvent * event )
         else if (m_renderer_data->chars.contains(*pos))
         {
             const auto& rendered = m_renderer_data->chars[*pos];
-            const auto* layout = layoutChar(*pos);
-            if (layout)
+            const auto* rend = layoutChar(*pos);
+            if (rend)
             {
                 painter.drawImage(
                       rendered.image.offset() + QPoint {x, y},
-                                  m_layout_data->image(),
-                      layout->bounding);
+                      m_layout_data->image(),
+                      rendered.image.rect());
             }
 
             x += rendered.advance + m_font_config->charSpacing();
@@ -167,13 +167,13 @@ void FontTestWidget::calcBBox(void)
             if (first && (rendered.image.offset().x()) < left)
               left = rendered.image.offset().x();
 
-            if (last &&  (rendered.image.offset().x() + layout->bounding.width() - rendered.advance - m_font_config->charSpacing()) > right)
-              right = rendered.image.offset().x() + layout->bounding.width() - rendered.advance - m_font_config->charSpacing();
+            if (last &&  (rendered.image.offset().x() + layout->image.width() - rendered.advance - m_font_config->charSpacing()) > right)
+              right = rendered.image.offset().x() + layout->image.width() - rendered.advance - m_font_config->charSpacing();
 
             if ( (y - rendered.image.offset().y()) < top)
                 top = y - rendered.image.offset().y();
-            if ( (y - rendered.image.offset().y() + layout->bounding.height()) > bottom)
-                bottom = y - rendered.image.offset().y() + layout->bounding.height();
+            if ( (y - rendered.image.offset().y() + layout->image.height()) > bottom)
+                bottom = y - rendered.image.offset().y() + layout->image.height();
 
             x += rendered.advance + m_font_config->charSpacing();
             first = false;

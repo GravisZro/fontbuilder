@@ -50,8 +50,7 @@ public:
     explicit FontRenderer(const FontConfig* config, QObject *parent);
     ~FontRenderer();
 
-    const std::vector<LayoutChar>& rendered(void) const { return m_chars;}
-    void placeImage(QPainter& p, char32_t symbol, int32_t x,int32_t y);
+    const std::vector<RenderedChar>& rendered(void) const { return m_chars;}
     const RendererData& data() const { return m_rendered;}
     void LockAll();
     void SetImage(char32_t symbol, const QImage& img);
@@ -61,7 +60,7 @@ public:
 
 signals:
     void imagesChanged();
-    void imagesChangedWithData(const std::vector<LayoutChar>&);
+    void imagesChangedWithData(const std::vector<RenderedChar>&);
 
 private slots:
     void on_fontFileChanged();
@@ -82,7 +81,7 @@ private:
     FT_Face m_ft_face;
     QByteArray  m_data;
     RendererData m_rendered;
-    std::vector<LayoutChar> m_chars;
+    std::vector<RenderedChar> m_chars;
     float   m_scale;
 };
 

@@ -50,7 +50,7 @@ void AbstractLayouter::setData(LayoutData* data) {
 }
 
 
-void AbstractLayouter::DoPlace(const std::vector<LayoutChar>& chars)
+void AbstractLayouter::DoPlace(const std::vector<RenderedChar>& chars)
 {
     m_data->clearLayout();
     m_compact_w = 0;
@@ -61,11 +61,11 @@ void AbstractLayouter::DoPlace(const std::vector<LayoutChar>& chars)
 }
 
 
-void AbstractLayouter::OptimizeLayout(std::vector<LayoutChar> &)
+void AbstractLayouter::OptimizeLayout(std::vector<RenderedChar> &)
 {
 }
 
-void AbstractLayouter::on_ReplaceImages(const std::vector<LayoutChar>& chars)
+void AbstractLayouter::on_ReplaceImages(const std::vector<RenderedChar>& chars)
 {
   Q_ASSERT(m_data);
   Q_ASSERT(m_config);
@@ -86,7 +86,7 @@ void AbstractLayouter::on_LayoutDataChanged()
   auto chars = m_chars;
   for(auto& character : chars)
   {
-    QSize sz = character.bounding.size();
+    QSize sz = character.image.size();
     if (m_config->onePixelOffset())
     {
       sz.rwidth()++;
@@ -94,7 +94,7 @@ void AbstractLayouter::on_LayoutDataChanged()
     }
     sz.rwidth () += m_config->offset().left() + m_config->offset().right();
     sz.rheight() += m_config->offset().top()  + m_config->offset().bottom();
-    character.bounding.setSize(sz);
+    //character.image.setSize(sz);
   }
 
   OptimizeLayout(chars);
@@ -160,19 +160,19 @@ int32_t AbstractLayouter::height() const
   return h;
 }
 
-void AbstractLayouter::place(const LayoutChar& character)
+void AbstractLayouter::place(const RenderedChar& character)
 {
   Q_ASSERT(m_data);
   Q_ASSERT(m_config);
 
-    auto out = character;
-    if (out.bounding.x() + out.bounding.width() > m_compact_w)
-        m_compact_w = out.bounding.x() + out.bounding.width();
-    if (out.bounding.y() + out.bounding.height() > m_compact_h)
-        m_compact_h = out.bounding.y() + out.bounding.height();
+    RenderedChar out = character;
+    if (out.image.offset().x() + out.image.width() > m_compact_w)
+        m_compact_w = out.image.offset().x() + out.image.width();
+    if (out.image.offset().y() + out.image.height() > m_compact_h)
+        m_compact_h = out.image.offset().y() + out.image.height();
 
     if (m_config->onePixelOffset()) {
-      out.bounding.adjust(1, 1, -1, -1);
+      //out.image.adjust(1, 1, -1, -1);
     }
     m_data->placeChar(out);
 }

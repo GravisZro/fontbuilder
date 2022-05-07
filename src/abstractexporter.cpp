@@ -53,7 +53,7 @@ void AbstractExporter::setData(const LayoutData* data,const RendererData& render
     {
         Symbol symb;
         symb.id = character.symbol;
-        symb.place = character.bounding;
+        symb.place = character.image.rect();
         const RenderedChar& rc = rendered.chars[symb.id];
         symb.offset = rc.image.offset();
         symb.offset.rx() -= layoutConfig()->offset().left();

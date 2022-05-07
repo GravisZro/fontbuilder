@@ -42,7 +42,7 @@ private:
 
     // AbstractLayouter interface
 protected:
-    void PlaceImages(const std::vector<LayoutChar> &chars);
+    void PlaceImages(const std::vector<RenderedChar> &chars);
 
     virtual void calculateSize(int32_t maxW, int32_t maxH, size_t count);
 };

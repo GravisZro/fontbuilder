@@ -36,7 +36,6 @@ FontDrawWidget::FontDrawWidget(QWidget *parent) :
     m_scale(1.0f),
     m_draw_grid(true),
     m_layout_data(nullptr),
-    m_renderer_data(nullptr),
     m_layout_config(nullptr)
 {
 }
@@ -59,7 +58,6 @@ void FontDrawWidget::setDrawGrid(bool draw) {
 void FontDrawWidget::paintEvent(QPaintEvent *)
 {
   Q_ASSERT(m_layout_data);
-  Q_ASSERT(m_renderer_data);
   Q_ASSERT(m_layout_config);
 
   QPainter painter(this);
@@ -71,12 +69,12 @@ void FontDrawWidget::paintEvent(QPaintEvent *)
   if (m_draw_grid)
     for(const auto& character : m_layout_data->placed())
     {
-        if (m_renderer_data->chars[character.symbol].locked)
+        if (character.locked)
             painter.setPen(QColor(255,0,0,255));
         else
             painter.setPen(QColor(0,0,255,255));
-        painter.drawRect(QRect { character.bounding.topLeft() * m_scale,
-                                 character.bounding.size() * m_scale });
+        painter.drawRect(QRect { character.image.offset() * m_scale,
+                                 character.image.size() * m_scale });
     }
 }
 

@@ -49,7 +49,6 @@ public:
     void setDrawGrid(bool draw);
 
     void setLayoutData(const LayoutData* layoutData) { m_layout_data = layoutData;}
-    void setRendererData(const RendererData* rendererData) { m_renderer_data = rendererData;}
     void setLayoutConfig(const LayoutConfig* layoutConfig) { m_layout_config = layoutConfig;}
 
     void paintEvent(QPaintEvent *);
@@ -58,12 +57,7 @@ private:
     bool    m_draw_grid;
     QImage  m_image;
     const LayoutData*   m_layout_data;
-    const RendererData* m_renderer_data;
     const LayoutConfig* m_layout_config;
-signals:
-
-public slots:
-
 };
 
 #endif // FONTDRAWWIDGET_H

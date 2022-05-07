@@ -51,25 +51,25 @@ public:
 private:
     const LayoutConfig*   m_config;
     LayoutData* m_data;
-    std::vector<LayoutChar> m_chars;
+    std::vector<RenderedChar> m_chars;
     int32_t m_compact_w;
     int32_t m_compact_h;
-    void DoPlace(const std::vector<LayoutChar>& chars);
-    virtual void OptimizeLayout(std::vector<LayoutChar>& chars);
+    void DoPlace(const std::vector<RenderedChar>& chars);
+    virtual void OptimizeLayout(std::vector<RenderedChar>& chars);
 protected:
     void resize(int32_t w,int32_t h);
     int32_t width() const;
     int32_t height() const;
 
-    void place(const LayoutChar&);
-    virtual void PlaceImages(const std::vector<LayoutChar>& chars) = 0;
+    void place(const RenderedChar&);
+    virtual void PlaceImages(const std::vector<RenderedChar>& chars) = 0;
 
 protected slots:
     void on_LayoutDataChanged();
 signals:
 
 public slots:
-    void on_ReplaceImages(const std::vector<LayoutChar>& chars);
+    void on_ReplaceImages(const std::vector<RenderedChar>& chars);
 };
 
 #endif // ABSTRACTLAYOUTER_H

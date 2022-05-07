@@ -31,7 +31,6 @@
 #ifndef LAYOUTDATA_H
 #define LAYOUTDATA_H
 
-#include "layoutchar.h"
 #include "rendererdata.h"
 
 #include <QObject>
@@ -54,10 +53,10 @@ public:
     void resize(int32_t w,int32_t h);
 
     void clearLayout();
-    void placeChar(const LayoutChar& c);
+    void placeChar(const RenderedChar& c);
     void render(QPoint offset);
 
-    const std::vector<LayoutChar>& placed() const { return m_placed;}
+    const std::vector<RenderedChar>& placed() const { return m_placed;}
 
     void setImage(const QImage& image) { m_image = image;}
     const QImage& image() const { return m_image;}
@@ -68,7 +67,7 @@ signals:
 private:
     int32_t m_width;
     int32_t m_height;
-    std::vector<LayoutChar> m_placed;
+    std::vector<RenderedChar> m_placed;
     QImage m_image;
 };
 

@@ -349,9 +349,6 @@ void FontRenderer::render(float scale) {
     on_fontSizeChanged();
 }
 
-void FontRenderer::placeImage(QPainter& p, char32_t symbol, int x, int y) {
-    p.drawImage(x,y,m_rendered.chars[symbol].image);
-}
 
 void FontRenderer::LockAll() {
      auto it = m_rendered.chars.begin();
