@@ -32,7 +32,7 @@
 #define CHARSSELECTWIDGET_H
 
 #include <QWidget>
-#include <QSet>
+#include <set>
 
 class CharsSelectWidget : public QWidget
 {
@@ -42,10 +42,10 @@ public:
 
     void setRange(char32_t begin, char32_t end);
 
-    QSet<char32_t> getCharacterCodes(void) { return m_character_codes; }
+    std::set<char32_t> getCharacterCodes(void) { return m_character_codes; }
     void clearCharacterCodes(void) { m_character_codes.clear(); }
     void insertCharacterCode(char32_t c) { m_character_codes.insert(c); }
-    bool removeCharacterCode(char32_t c) { return m_character_codes.remove(c); }
+    bool removeCharacterCode(char32_t c) { return m_character_codes.erase(c); }
 
 protected:
     virtual void paintEvent(QPaintEvent *);
@@ -58,7 +58,7 @@ signals:
 public slots:
 
 private:
-    QSet<char32_t> m_character_codes;
+    std::set<char32_t> m_character_codes;
     char32_t    m_codes_begin;
     char32_t    m_codes_end;
     char32_t    m_select_begin_code;

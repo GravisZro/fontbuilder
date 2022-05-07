@@ -363,8 +363,8 @@ void CharMapDialog::setChars(const std::u32string& string)
 
 std::u32string CharMapDialog::getCharacters(void) const
 {
-  auto values = m_char_select->getCharacterCodes().values();
-  return std::u32string(values.begin(), values.end());
+  return std::u32string(m_char_select->getCharacterCodes().begin(),
+                        m_char_select->getCharacterCodes().end());
 }
 
 void CharMapDialog::onCharsChanged(char32_t code,bool add)

@@ -31,14 +31,9 @@
 #ifndef CHARMAPDIALOG_H
 #define CHARMAPDIALOG_H
 
-#include <QDialog>
-#include <QSet>
-#include <QListWidget>
-#include <QListWidgetItem>
-#include <QCheckBox>
-
 #include <QtWidgets>
 #include <string>
+#include <set>
 
 #include "charsselectwidget.h"
 

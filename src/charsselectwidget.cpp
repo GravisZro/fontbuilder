@@ -84,7 +84,7 @@ void CharsSelectWidget::paintEvent(QPaintEvent *event) {
         for (int32_t column = beginColumn; (column <= endColumn ) && (column < columns); ++column) {
             uint32_t key =  m_codes_begin+row*columns + column;
             if ( key <= m_codes_end) {
-                if (m_character_codes.contains(key))
+                if (m_character_codes.find(key) != m_character_codes.end())
                     painter.fillRect(column*cell_size, row*cell_size, cell_size, cell_size,QBrush(Qt::lightGray));
                 painter.drawRect(column*cell_size, row*cell_size, cell_size, cell_size);
             }
@@ -126,8 +126,8 @@ void CharsSelectWidget::mousePressEvent(QMouseEvent *event)
          if (QChar::category(m_select_begin_code) != QChar::NoCategory) {
 #endif
              m_track_mouse = true;
-             if (m_character_codes.contains(m_select_begin_code)) {
-                 m_character_codes.erase(m_character_codes.find(m_select_begin_code));
+             if (auto pos = m_character_codes.find(m_select_begin_code); pos != m_character_codes.end()) {
+                 m_character_codes.erase(pos);
                  emit codesChanged(m_select_begin_code,false);
                  m_track_erase = true;
              } else {
