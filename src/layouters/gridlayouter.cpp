@@ -6,7 +6,7 @@ GridLayouter::GridLayouter(QObject *parent)
 {
 }
 
-void GridLayouter::PlaceImages(const QVector<LayoutChar> &chars)
+void GridLayouter::PlaceImages(const std::vector<LayoutChar> &chars)
 {
     int32_t minY = INT_MAX;
     int32_t maxW = 0;

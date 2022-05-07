@@ -56,7 +56,7 @@ const LayoutChar*   FontTestWidget::layoutChar(uint32_t c) const {
     return 0;
 }
 
-int32_t FontTestWidget::lineWidth(QVector<uint32_t>::ConstIterator start) const
+int32_t FontTestWidget::lineWidth(std::vector<uint32_t>::const_iterator start) const
 {
     int32_t x = 0;
     for(auto pos = start; pos < m_text.end() && *pos != '\n'; ++pos)
@@ -195,7 +195,8 @@ void FontTestWidget::calcBBox(void)
 }
 
 void FontTestWidget::setText(const QString& text) {
-    m_text = text.toUcs4();
+  auto tmp = text.toUcs4();
+    m_text = std::vector<uint32_t>(tmp.begin(), tmp.end());
     repaint();
 }
 

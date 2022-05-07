@@ -40,7 +40,7 @@ public:
     explicit LineLayouter(QObject *parent = nullptr);
 
 protected:
-    virtual void PlaceImages(const QVector<LayoutChar>& chars) ;
+    virtual void PlaceImages(const std::vector<LayoutChar>& chars) ;
 signals:
 
 public slots:

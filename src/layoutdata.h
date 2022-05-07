@@ -35,8 +35,8 @@
 #include "layoutchar.h"
 
 #include <QObject>
-#include <QVector>
 #include <QImage>
+#include <vector>
 
 class LayoutData : public QObject
 {
@@ -54,13 +54,13 @@ public:
     void placeChar(const LayoutChar& c);
     void endPlacing();
 
-    const QVector<LayoutChar>& placed() const { return m_placed;}
+    const std::vector<LayoutChar>& placed() const { return m_placed;}
     void setImage(const QImage& image) { m_image = image;}
     const QImage& image() const { return m_image;}
 private:
     int32_t m_width;
     int32_t m_height;
-    QVector<LayoutChar> m_placed;
+    std::vector<LayoutChar> m_placed;
     QImage    m_image;
 signals:
     void layoutChanged();

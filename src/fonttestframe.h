@@ -53,7 +53,8 @@ public:
     [[gnu::always_inline]] void setFontConfig (const FontConfig* config)
       { m_font_test->setFontConfig(config); }
 public slots:
-    void refresh (void) { if(m_font_test) { m_font_test->refresh(); } }
+    void refresh(void) { update(); }
+    void update (void) { m_font_test->update(); }
 protected:
     void changeEvent(QEvent *e);
 

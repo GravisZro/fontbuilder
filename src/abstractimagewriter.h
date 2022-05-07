@@ -36,8 +36,10 @@
 
 #include <QObject>
 #include <QFile>
-#include <QVector>
 #include <QImage>
+
+#include <vector>
+
 #include "rendererdata.h"
 
 class LayoutData;

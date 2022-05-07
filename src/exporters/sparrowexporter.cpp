@@ -28,7 +28,7 @@ bool SparrowExporter::Export(QByteArray& out) {
     page.setAttribute("file", texFilename());
     QDomElement chars = doc.createElement("chars");
     root.appendChild(chars);
-    chars.setAttribute("count", symbols().size());
+    chars.setAttribute("count", QString::number(symbols().size()));
     QDomElement kernings = doc.createElement("kernings");
     int32_t kernNumber = 0;
     foreach(const Symbol& c , symbols()) {

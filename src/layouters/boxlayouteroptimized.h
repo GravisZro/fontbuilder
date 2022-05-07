@@ -10,7 +10,7 @@ public:
 
 private:
     static bool SortCharsByHeight(const LayoutChar &a, const LayoutChar &b);
-    void OptimizeLayout(QVector<LayoutChar> &chars);
+    void OptimizeLayout(std::vector<LayoutChar> &chars);
 };
 
 #endif // BOXLAYOUTEROPTIMIZED_H

@@ -179,7 +179,7 @@ void FontRenderer::clear_bitmaps() {
     while (it!=m_rendered.chars.end()) {
         if (!it->locked) {
             uint symb = it.key();
-            QVector<LayoutChar>::iterator ci = m_chars.begin();
+            std::vector<LayoutChar>::iterator ci = m_chars.begin();
             while (ci!=m_chars.end()) {
                 if (ci->symbol==symb)
                     ci = m_chars.erase(ci);

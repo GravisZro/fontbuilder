@@ -742,7 +742,7 @@ void FontBuilder::on_pushButtonImportJson_clicked()
             qDebug() << "Failed to load file";
         }
         QJsonObject obj = doc.object();
-        QVector<QPointF> listOfSettings;
+        std::vector<QPointF> listOfSettings;
 
         QJsonArray settingArray = obj.value("fonts").toArray();
         foreach(const QJsonValue & val, settingArray) {

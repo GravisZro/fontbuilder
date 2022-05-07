@@ -35,7 +35,7 @@
 #include <QObject>
 #include <QByteArray>
 #include <QDir>
-#include <QVector>
+#include <vector>
 #include "rendererdata.h"
 
 #include <ft2build.h>
@@ -83,7 +83,7 @@ protected:
 
     const FontConfig* fontConfig() const { return m_font_config;}
     const LayoutConfig* layoutConfig() const { return m_layout_config;}
-    const QVector<Symbol>& symbols() const { return m_symbols;}
+    const std::vector<Symbol>& symbols() const { return m_symbols;}
     void setExtension(const QString& extension) { m_extension = extension;}
     void setErrorMessage(const QString& str) { m_error_string=str; }
     int32_t texWidth() const { return m_tex_width;}
@@ -95,7 +95,7 @@ protected:
     FT_Face face() const {return m_face;}
     float scale() const { return m_scale; }
 private:
-     QVector<Symbol> m_symbols;
+     std::vector<Symbol> m_symbols;
 };
 
 

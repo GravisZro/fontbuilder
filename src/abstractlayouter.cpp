@@ -49,7 +49,7 @@ void AbstractLayouter::setData(LayoutData* data) {
     m_data = data;
 }
 
-void AbstractLayouter::DoPlace(const QVector<LayoutChar>& chars) {
+void AbstractLayouter::DoPlace(const std::vector<LayoutChar>& chars) {
     m_data->beginPlacing();
     m_compact_w = 0;
     m_compact_h = 0;
@@ -58,11 +58,11 @@ void AbstractLayouter::DoPlace(const QVector<LayoutChar>& chars) {
     m_data->endPlacing();
 }
 
-void AbstractLayouter::OptimizeLayout(QVector<LayoutChar> &)
+void AbstractLayouter::OptimizeLayout(std::vector<LayoutChar> &)
 {
 }
 
-void AbstractLayouter::on_ReplaceImages(const QVector<LayoutChar>& chars) {
+void AbstractLayouter::on_ReplaceImages(const std::vector<LayoutChar>& chars) {
     m_chars = chars;
 
     if (m_data!=0 && m_config!=0 ) {
@@ -75,7 +75,7 @@ void AbstractLayouter::on_LayoutDataChanged()
 {
   Q_ASSERT(m_data != nullptr);
   Q_ASSERT(m_config != nullptr);
-  QVector<LayoutChar> chars = m_chars;
+  std::vector<LayoutChar> chars = m_chars;
   for(LayoutChar& c : chars)
   {
     QSize sz = c.bounding.size();

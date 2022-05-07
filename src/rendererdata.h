@@ -32,10 +32,7 @@
 #define RENDERERDATA_H
 
 #include <QMap>
-#include <QVector>
 #include <QImage>
-
-
 
 struct RenderedChar {
     uint32_t symbol;

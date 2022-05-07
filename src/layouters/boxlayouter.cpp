@@ -58,13 +58,13 @@ struct Line {
         chars.push_back(&c);
     }
 
-    QVector<const LayoutChar*> chars;
+    std::vector<const LayoutChar*> chars;
 };
 
-void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
+void BoxLayouter::PlaceImages(const std::vector<LayoutChar>& chars) {
     int32_t h = 0;
     int32_t w = 0;
-    if (chars.isEmpty())
+    if (chars.empty())
       return;
 
     /// speed up
@@ -78,7 +78,7 @@ void BoxLayouter::PlaceImages(const QVector<LayoutChar>& chars) {
     h = height();
 
 
-    QVector<Line> lines;
+    std::vector<Line> lines;
 
     bool iteration = true;
     while (iteration) {

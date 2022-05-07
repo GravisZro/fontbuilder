@@ -17,7 +17,7 @@ bool SimpleExporter::Export(QByteArray &out)
            .arg(cfg->size())
            .arg(metrics().height)
            .arg(texFilename())
-           .arg(symbols().count());
+           .arg(symbols().size());
 
     foreach(const Symbol& c , symbols()) {
       res += QString("%1 %2 %3 %4 %5 %6 %7 %8\n")

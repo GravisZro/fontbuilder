@@ -32,9 +32,9 @@
 #define ABSTRACTLAYOUTER_H
 
 #include <QObject>
-#include <QVector>
-#include "layoutchar.h"
+#include <vector>
 
+#include "layoutchar.h"
 
 class LayoutConfig;
 class LayoutData;
@@ -51,23 +51,23 @@ public:
 private:
     const LayoutConfig*   m_config;
     LayoutData* m_data;
-    QVector<LayoutChar>    m_chars;
+    std::vector<LayoutChar>    m_chars;
     int32_t m_compact_w;
     int32_t m_compact_h;
-    void DoPlace(const QVector<LayoutChar>& chars);
-    virtual void OptimizeLayout(QVector<LayoutChar>& chars);
+    void DoPlace(const std::vector<LayoutChar>& chars);
+    virtual void OptimizeLayout(std::vector<LayoutChar>& chars);
 protected:
     void resize(int32_t w,int32_t h);
     int32_t width() const;
     int32_t height() const;
     void place(const LayoutChar&);
-    virtual void PlaceImages(const QVector<LayoutChar>& chars) = 0;
+    virtual void PlaceImages(const std::vector<LayoutChar>& chars) = 0;
 protected slots:
     void on_LayoutDataChanged();
 signals:
 
 public slots:
-    void on_ReplaceImages(const QVector<LayoutChar>& chars);
+    void on_ReplaceImages(const std::vector<LayoutChar>& chars);
 };
 
 #endif // ABSTRACTLAYOUTER_H

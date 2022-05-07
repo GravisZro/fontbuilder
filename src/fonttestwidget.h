@@ -74,7 +74,7 @@ public:
 protected:
     virtual void paintEvent ( QPaintEvent * event );
     void calculateBoundingBox();
-    int32_t lineWidth(QVector<uint32_t>::ConstIterator start) const;
+    int32_t lineWidth(std::vector<uint32_t>::const_iterator start) const;
 signals:
 
 public slots:
@@ -83,7 +83,7 @@ private:
     void calcBBox(void);
     const LayoutChar* layoutChar(uint32_t c) const;
 private:
-    QVector<uint32_t> m_text;
+    std::vector<uint32_t> m_text;
     const LayoutData*   m_layout_data;
     const RendererData* m_renderer_data;
     const FontConfig*   m_font_config;
